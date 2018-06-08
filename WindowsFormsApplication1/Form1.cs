@@ -86,16 +86,9 @@ namespace WindowsFormsApplication1
                     int x = 'k' - 'a';
                     PostMessage(handle, WM_CHAR, 107 - x, 0);
                     PostMessage(handle, 258, 13, 0);
+                 //   SendMessage(edithWnd, WM_SETTEXT, IntPtr.Zero, new StringBuilder("Hello World!"));
                     return true;
                 });
-                //返回写字板编辑窗口句柄  
-                /* IntPtr edithWnd = FindWindowEx(hWnd, IntPtr.Zero, "Edit", null);
-                 if (!edithWnd.Equals(IntPtr.Zero))
-                     // 发送WM_SETTEXT 消息： "Hello World!"  
-                 {
-                     SendMessage(edithWnd, WM_SETTEXT, IntPtr.Zero, new StringBuilder("Hello World!"));
- 
-                 }/**/
             }
             else
                 MessageBox.Show("not found");
