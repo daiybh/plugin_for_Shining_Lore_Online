@@ -6,9 +6,10 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Configuration;
 namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
@@ -16,28 +17,65 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
+         
+            trackBar_H.Value = 29;
+            trackBar1_W.Value = 17;
+            try
+            {
+
+                if (ConfigurationManager.AppSettings["trackBar_H"] != null)
+                {
+                    trackBar_H.Value = Int32.Parse(ConfigurationManager.AppSettings["trackBar_H"]);
+                }
+
+
+                if (ConfigurationManager.AppSettings["trackBar_W"] != null)
+                {
+                    trackBar1_W.Value = Int32.Parse(ConfigurationManager.AppSettings["trackBar_W"]);
+                }
+            }
+            catch (System.FormatException)
+            {
+            }
         }
 
-        private List<ObjectInfo> m_objInfo;
+        private List<ObjectInfo> m_objInfo=new List<ObjectInfo>();
+
+        void findCB(ObjectInfo objectInfo)
+        {
+            objectInfo.step_H = trackBar_H.Value;
+            objectInfo.step_W = trackBar1_W.Value;
+
+            m_objInfo.Add(objectInfo);
+            Console.WriteLine(objectInfo.ToString());
+            listBox1.Items.Add(objectInfo.userName);
+            listView1.Items.Add(objectInfo.userName);
+        }
         void findAngle()
         {
-            MyFindWindow fw = new MyFindWindow(ObjectInfo.filterName, null);
-            foreach (var va in fw.m_objInfo)
-            {
-                Console.WriteLine(va.ToString());
-                listBox1.Items.Add(va.userName);
-            }
-
-            m_objInfo = fw.m_objInfo;
+            MyFindWindow fw = new MyFindWindow(findCB);
         }
+
+        private bool bInited = false;
         private void Form1_Load(object sender, EventArgs e)
         {
            findAngle();
+            listBox1.SelectedIndex = 0;
+            bInited = true;
         }
         private void button1_Click(object sender, EventArgs e)
         {
             // m_objInfo[listBox1.SelectedIndex].attack(540,768/2);
-            m_objInfo[listBox1.SelectedIndex].startWork();
+            if (button1.Text == "开始")
+            {
+                m_objInfo[listBox1.SelectedIndex].startWork();
+                button1.Text = "停止";
+            }
+            else
+            {
+                m_objInfo[listBox1.SelectedIndex].stopWork();
+                button1.Text = "开始";
+            }
             // createTextBitmap(m_objInfo[listBox1.SelectedIndex].userName);
 
         }
@@ -45,54 +83,14 @@ namespace WindowsFormsApplication1
         {
             m_objInfo[listBox1.SelectedIndex].pauseWork();
         }
-        private void button2_Click(object sender, EventArgs e)
+       
+        private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            m_objInfo[listBox1.SelectedIndex].stopWork();
+            if (!bInited) return;
+           m_objInfo[e.Item.Index].showWindow(e.Item.Checked);
         }
-        private const int WM_SETTEXT = 0x000C;
-
-        public const int WM_CHAR = 0x0102;
-        [DllImport("user32.dll")]
-        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-        [DllImport("User32.dll")]
-        private static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindows);
-
-        [DllImport("User32.dll")]
-        private static extern Int32 SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
-        [DllImport("User32.dll")]
-        private static extern Int32 PostMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
-
-        private bool EnumChild(IntPtr handle, IntPtr lParam)
-        {
-           
-            return true;
-        }
-
-        private void xxxx()
-        {
-            // 返回写字板主窗口句柄  
-            IntPtr hWnd = FindWindow(null, " 永恒天使 - 654fdsaf");
-            //IntPtr hWnd = FindWindow(null, "无标题 - 记事本");
-            if (!hWnd.Equals(IntPtr.Zero))
-            {
-                MyFindWindow fw = new MyFindWindow();
-                fw.SendMyKey(hWnd, (IntPtr handle, IntPtr lParam) =>
-                {  // MessageBox.Show(string.Format("{0}>>Enumxxxxxx:{1}", saveCount++, handle));
-
-                    Console.WriteLine("{0}>>Enumxxxxxx:{1}", saveCount++, handle);
-                    int x = 'k' - 'a';
-                    PostMessage(handle, WM_CHAR, 107 - x, 0);
-                    PostMessage(handle, 258, 13, 0);
-                 //   SendMessage(edithWnd, WM_SETTEXT, IntPtr.Zero, new StringBuilder("Hello World!"));
-                    return true;
-                });
-            }
-            else
-                MessageBox.Show("not found");
-        }
+       
+      
         void createTextBitmap(string text)
         {
             Bitmap destBmp = new Bitmap((text.Length+1)*12,16);
@@ -112,5 +110,27 @@ namespace WindowsFormsApplication1
 
         private int saveCount = 0;
 
+        void savetoConfig()
+        {
+            Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            cfa.AppSettings.Settings.Remove("trackBar_H");
+            cfa.AppSettings.Settings.Remove("trackBar_W");
+            cfa.AppSettings.Settings.Add("trackBar_H", trackBar_H.Value.ToString());//["key名称"].Value = "要改成的value值";
+            cfa.AppSettings.Settings.Add("trackBar_W", trackBar1_W.Value.ToString());//["key名称"].Value = "要改成的value值";
+            cfa.Save();
+        }
+        private void trackBar_H_ValueChanged(object sender, EventArgs e)
+        {
+            if (!bInited) return;
+            m_objInfo[listBox1.SelectedIndex].step_H = trackBar_H.Value;
+            savetoConfig();
+        }
+
+        private void trackBar1_W_ValueChanged(object sender, EventArgs e)
+        {
+            if (!bInited) return;
+            m_objInfo[listBox1.SelectedIndex].step_W = trackBar1_W.Value;
+            savetoConfig();
+        }
     }
 }

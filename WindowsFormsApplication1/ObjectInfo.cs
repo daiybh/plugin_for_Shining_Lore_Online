@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
@@ -28,7 +29,6 @@ namespace WindowsFormsApplication1
         private Thread t1 = null;
         public void startWork()
         {
-            //发送键盘按键 +
             t1 = new Thread(new ThreadStart(captureObj));
             t1.IsBackground = true;
             t1.Start();
@@ -40,14 +40,22 @@ namespace WindowsFormsApplication1
             if (t1!=null && t1.IsAlive)
                 t1.Abort();
         }
-        public IntPtr hWnd;
-        public string title;
-        public string userName;
+
+        public IntPtr hWnd { get; set; }
+        public string title { get; set; }
+        public string userName { get; set; }
         public int center_X = 0;
         public int center_y = 0;
         public int Object_H = 247;
         public MyFindWindow.RECT rt;
 
+        public int step_W = 3;
+
+        public int step_H = 3;
+        public void showWindow(bool isShow)
+        {
+            MouseEvent.SendMessage(hWnd, MouseEvent.WM_SYSCOMMAND, isShow?MouseEvent.SC_MINIMIZE: MouseEvent.SC_RESTORE, 0);
+        }
         ManualResetEvent autoEvent = new ManualResetEvent(true);
         private bool bPause = false;
         internal void pauseWork()
@@ -69,15 +77,27 @@ namespace WindowsFormsApplication1
         }
 
         private bool bExit = false;
+
         public void captureObj()
         {
             int X = 0;
             int Y = 0;
+
+            //发送键盘按键 +
+            for (int i = 0; i < 10; i++)
+            {
+                    MouseEvent.pressKey(hWnd, Keys.Add);
+                Thread.Sleep(1000);
+            }
+        
+
+        Thread.Sleep(100);
             while (!bExit)
             {
-                for (int h = Object_H * -1; h < 10; h += 3)
+                pressZ();
+                for (int h = Object_H * -1; h < 10; h += step_H)
                 {
-                    for (int w = -45; w < 30; w += 3)
+                    for (int w = -45; w < 30; w += step_W)
                     {
                         X = center_X + w;
                         Y = center_y + h;
@@ -88,10 +108,23 @@ namespace WindowsFormsApplication1
 
             }
         }
+        public void pressZ()
+        {
+            MouseEvent.pressKey(hWnd,Keys.Z);
+        }
         class MouseEvent
         {
             [DllImport("user32.dll", SetLastError = true)]
             public static extern int SendMessage(IntPtr hWnd, int uMsg, int wParam, int lParam);
+            [DllImport("user32.dll")]
+            public static extern Keys VkKeyScan(char ch);
+            [DllImport("user32.dll")]
+            public static extern int MapVirtualKey(int Ucode, uint uMapType);
+
+            public const int WM_SHOWWINDOW = 0x0018;
+            public const int WM_SYSCOMMAND = 0x0112;
+            public const int SC_MINIMIZE = 0xF020;
+            public const int SC_RESTORE = 0xF120;
             public const int WM_LBUTTONDOWN = 513; // 鼠标左键按下 
             public const int WM_LBUTTONUP = 514; // 鼠标左键抬起 
             public const int WM_RBUTTONDOWN = 516; // 鼠标右键按下 
@@ -110,6 +143,17 @@ namespace WindowsFormsApplication1
             public const int WM_KEYUP = 0x101;
             public const int WM_CHAR = 0x0102;
 
+            public static void pressKey(IntPtr hWnd,Keys key)
+            {
+
+                int lParam = 1;
+                lParam += MapVirtualKey(key.GetHashCode(), 0) << 16;
+                //2883585
+                SendMessage(hWnd, WM_KEYDOWN, key.GetHashCode(), lParam);//Thread.Sleep(100);
+                lParam += 1 << 30;
+                lParam += 1 << 31;
+                SendMessage(hWnd, WM_KEYUP, key.GetHashCode(), lParam);//up
+            }
             public static void LeftClick(IntPtr hWnd,int x, int y)
             {
                 send_message(hWnd, MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 2, x, y);
@@ -142,5 +186,6 @@ namespace WindowsFormsApplication1
                 return ((value >> 31) ^ value) - (value >> 31);
             }
         }
+
     }
 }

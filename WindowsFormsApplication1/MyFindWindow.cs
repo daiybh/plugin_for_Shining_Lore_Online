@@ -14,6 +14,7 @@ using System.Windows.Forms;
 namespace WindowsFormsApplication1
 {
     delegate bool EnumWindowProc(IntPtr hWnd, IntPtr parameter);
+    delegate void findObjectCB(ObjectInfo _objectInfo);
     class MyFindWindow
     {
         [DllImport("user32")]
@@ -45,19 +46,21 @@ namespace WindowsFormsApplication1
         private string m_caption; // caption name to look for
 
 
-
-        //private List<ObjectInfo> m_objInfo = null;
-        public List<ObjectInfo> m_objInfo = new List<ObjectInfo>();
+        
         public MyFindWindow()
         { }
-        public MyFindWindow(string caption, List<ObjectInfo> objList)
+      
+
+        private findObjectCB m_findObjectCB=null;
+        public MyFindWindow(findObjectCB _cb)
         {
-            m_caption = caption;
-          //  m_objInfo = objList;
+            m_findObjectCB = _cb;
+            m_caption = ObjectInfo.filterName;
+            //  m_objInfo = objList;
             EnumWindowProc ecw = new EnumWindowProc(EnumChild);
             EnumChildWindows(IntPtr.Zero, ecw, IntPtr.Zero);
-        }
 
+        }
         public void SendMyKey(IntPtr parentHwnd, EnumWindowProc _proc)
         {
             EnumChildWindows(parentHwnd, _proc, IntPtr.Zero);
@@ -75,11 +78,13 @@ namespace WindowsFormsApplication1
                                               //GetClassName(handle, type, 100);//取类型
 
 
-            if (title.ToString().Contains(m_caption))
+            if (m_findObjectCB != null && title.ToString().Contains(m_caption))
             {
+             
                 RECT rt = new RECT();
                 bool locationLookupSucceeded = GetWindowRect(handle,ref rt);
-                m_objInfo.Add(new ObjectInfo(handle, title.ToString(), rt));
+                m_findObjectCB(new ObjectInfo(handle, title.ToString(), rt));
+                //m_objInfo.Add(new ObjectInfo(handle, title.ToString(), rt));
             }
             return true;
         }
