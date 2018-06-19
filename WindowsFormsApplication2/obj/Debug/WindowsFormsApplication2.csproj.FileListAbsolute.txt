@@ -1,0 +1,11 @@
+C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\bin\Debug\WindowsFormsApplication2.exe.config
+C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\bin\Debug\WindowsFormsApplication2.exe
+C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\bin\Debug\WindowsFormsApplication2.pdb
+C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.csprojResolveAssemblyReference.cache
+C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.Form1.resources
+C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.Properties.Resources.resources
+C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.csproj.GenerateResource.Cache
+C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.exe
+C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.pdb
+C:\Users\Daili-nuc\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\obj\Debug\Interop.QM_GUI_Bkgnd.dll
+C:\Users\Daili-nuc\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication2\obj\Debug\WindowsFormsApplication2.csproj.ResolveComReference.cache

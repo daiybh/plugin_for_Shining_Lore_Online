@@ -1,0 +1,71 @@
+// QMPlugin.odl : type library source for QMPlugin.dll
+
+[ uuid(C7CC9058-59A4-4CE1-ACB3-4E2C049E4C31), version(1.0) ]
+library QMPlugin
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	//  Primary dispatch interface for CQMPlugin
+	
+	[ uuid(1E7051CE-6430-4BA9-A965-3EAC6D1AC422) ]
+	dispinterface IQMPlugin
+	{
+		properties:
+			// NOTE - ClassWizard will maintain property information here.
+			//    Use extreme caution when editing this section.
+			//{{AFX_ODL_PROP(CQMPlugin)
+			//}}AFX_ODL_PROP
+			
+		methods:
+			// NOTE - ClassWizard will maintain method information here.
+			//    Use extreme caution when editing this section.
+			//{{AFX_ODL_METHOD(CQMPlugin)
+			[id(1)] long WriteINI(BSTR lpszSectionName, BSTR lpszKeyName, BSTR lpszBuffer, BSTR lpszINIFilePath);
+			[id(2)] BSTR ReadINI(BSTR lpszSectionName, BSTR lpszKeyName, BSTR lpszINIFilePath);
+			[id(3)] long CopyFile(BSTR lpszSourceFile, BSTR lpszTargetFile);
+			[id(4)] boolean IsFileExit(BSTR lpszSourceFile);
+			[id(5)] long DeleteFile(BSTR FileName);
+			[id(6)] long MoveFile(BSTR lpszSourceFile, BSTR lpszTargetFile);
+			[id(7)] long CreateFolder(BSTR lpszDirectory);
+			[id(8)] long DeleteFolder(BSTR lpszDirectory);
+			[id(9)] long ReNameFile(BSTR oldName,BSTR newName);
+			[id(10)] boolean SetAttrib(BSTR lpszFilePath, boolean Sign);
+			[id(11)] long SetDate(BSTR lpszFileName, LPCTSTR lpLastWriteTime);
+			[id(12)] long GetFileLength(BSTR lpszFileName);
+			[id(13)] BSTR SelectFile();
+			[id(14)] BSTR SelectDirectory();
+			[id(15)] long SeekFile(long lpszHandle, long lpszOffset);
+			[id(16)] BSTR ReadLine(long hFile);
+			[id(17)] long WriteLine(long lpszHandle, BSTR lpszWriteContent);
+			[id(18)] BSTR ReadFileEx(BSTR lpszFileName);
+			[id(19)] long WriteFileEx(BSTR lpszFileName, BSTR lpszBeWrite);
+			[id(20)] BSTR ReadFile(long lpszHandle, long lpszReadLength);
+			[id(21)] long WriteFile(long lpszHandle, BSTR lpszWriteContent);
+			[id(22)] long ExistFile(BSTR FileAttr);
+			[id(23)] long OpenFile(BSTR FileName);
+			[id(24)] long CloseFile(long hwd);
+			//}}AFX_ODL_METHOD
+
+	};
+
+	[ uuid(EE1035BA-1025-4cde-AD4C-A04B3878BF00) ]
+	dispinterface IQMPluginStandard
+	{
+		properties:
+		methods:
+			[id(1)] BSTR Get_Plugin_Description(BSTR bstrItemName);
+			[id(2)] BSTR Get_Plugin_Interpret_Template(BSTR bstrItemName);
+	};
+
+	//  Class information for CQMPlugin
+	[ uuid(57477331-126E-4FC8-B430-1C6143484AA9) ]
+	coclass File
+	{
+		[default] dispinterface IQMPlugin;
+		dispinterface IQMPluginStandard;
+	};
+
+	//{{AFX_APPEND_ODL}}
+	//}}AFX_APPEND_ODL}}
+};
