@@ -17,25 +17,33 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
-         
-            trackBar_H.Value = 29;
-            trackBar1_W.Value = 17;
-            try
+            GolbalSetting.GetInstance().LoadConfig();
+            trackBar_H.Value = GolbalSetting.GetInstance().step_H;
+            trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
+            userControl_HP.isEnable = GolbalSetting.GetInstance().keyPress_HP[0];
+            userControl_SP.isEnable = GolbalSetting.GetInstance().keyPress_SP[0];
+            userControl_NP.isEnable = GolbalSetting.GetInstance().keyPress_NP[0];
+
             {
-
-                if (ConfigurationManager.AppSettings["trackBar_H"] != null)
-                {
-                    trackBar_H.Value = Int32.Parse(ConfigurationManager.AppSettings["trackBar_H"]);
-                }
-
-
-                if (ConfigurationManager.AppSettings["trackBar_W"] != null)
-                {
-                    trackBar1_W.Value = Int32.Parse(ConfigurationManager.AppSettings["trackBar_W"]);
-                }
+                userControl_HP.pressKey1 = GolbalSetting.GetInstance().keyPress_HP[1];
+                userControl_HP.pressKey2 = GolbalSetting.GetInstance().keyPress_HP[2];
+                userControl_HP.pressKey3 = GolbalSetting.GetInstance().keyPress_HP[3];
+                userControl_HP.pressKey4 = GolbalSetting.GetInstance().keyPress_HP[4];
+                userControl_HP.pressKey5 = GolbalSetting.GetInstance().keyPress_HP[5];
+           }
+            {
+                userControl_SP.pressKey1 = GolbalSetting.GetInstance().keyPress_SP[1];
+                userControl_SP.pressKey2 = GolbalSetting.GetInstance().keyPress_SP[2];
+                userControl_SP.pressKey3 = GolbalSetting.GetInstance().keyPress_SP[3];
+                userControl_SP.pressKey4 = GolbalSetting.GetInstance().keyPress_SP[4];
+                userControl_SP.pressKey5 = GolbalSetting.GetInstance().keyPress_SP[5];
             }
-            catch (System.FormatException)
             {
+                userControl_NP.pressKey1 = GolbalSetting.GetInstance().keyPress_NP[1];
+                userControl_NP.pressKey2 = GolbalSetting.GetInstance().keyPress_NP[2];
+                userControl_NP.pressKey3 = GolbalSetting.GetInstance().keyPress_NP[3];
+                userControl_NP.pressKey4 = GolbalSetting.GetInstance().keyPress_NP[4];
+                userControl_NP.pressKey5 = GolbalSetting.GetInstance().keyPress_NP[5];
             }
         }
 
@@ -43,9 +51,7 @@ namespace WindowsFormsApplication1
 
         void findCB(ObjectInfo objectInfo)
         {
-            objectInfo.step_H = trackBar_H.Value;
-            objectInfo.step_W = trackBar1_W.Value;
-
+            objectInfo.g = this.CreateGraphics();
             m_objInfo.Add(objectInfo);
             Console.WriteLine(objectInfo.ToString());
             listBox1.Items.Add(objectInfo.userName);
@@ -81,7 +87,10 @@ namespace WindowsFormsApplication1
         }
         private void button3_Click(object sender, EventArgs e)
         {
+            m_objInfo[listBox1.SelectedIndex].screenshotting();
+            return;
             m_objInfo[listBox1.SelectedIndex].pauseWork();
+            button1.Text = (button1.Text == "暂停") ? "继续运行" : "暂停";
         }
        
         private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -110,27 +119,51 @@ namespace WindowsFormsApplication1
 
         private int saveCount = 0;
 
-        void savetoConfig()
-        {
-            Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            cfa.AppSettings.Settings.Remove("trackBar_H");
-            cfa.AppSettings.Settings.Remove("trackBar_W");
-            cfa.AppSettings.Settings.Add("trackBar_H", trackBar_H.Value.ToString());//["key名称"].Value = "要改成的value值";
-            cfa.AppSettings.Settings.Add("trackBar_W", trackBar1_W.Value.ToString());//["key名称"].Value = "要改成的value值";
-            cfa.Save();
-        }
         private void trackBar_H_ValueChanged(object sender, EventArgs e)
         {
             if (!bInited) return;
-            m_objInfo[listBox1.SelectedIndex].step_H = trackBar_H.Value;
-            savetoConfig();
+            GolbalSetting.GetInstance().step_H = trackBar_H.Value;
+            
         }
 
         private void trackBar1_W_ValueChanged(object sender, EventArgs e)
         {
             if (!bInited) return;
-            m_objInfo[listBox1.SelectedIndex].step_W = trackBar1_W.Value;
-            savetoConfig();
+            GolbalSetting.GetInstance().step_W = trackBar1_W.Value;
+           
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+             GolbalSetting.GetInstance().step_H= trackBar_H.Value;
+            GolbalSetting.GetInstance().step_W= trackBar1_W.Value ;
+             GolbalSetting.GetInstance().keyPress_HP[0]= userControl_HP.isEnable ;
+            GolbalSetting.GetInstance().keyPress_SP[0] = userControl_SP.isEnable ;
+            GolbalSetting.GetInstance().keyPress_NP[0] = userControl_NP.isEnable ;
+
+            {
+                 GolbalSetting.GetInstance().keyPress_HP[1]= userControl_HP.pressKey1 ;
+                GolbalSetting.GetInstance().keyPress_HP[2] = userControl_HP.pressKey2 ;
+                GolbalSetting.GetInstance().keyPress_HP[3] = userControl_HP.pressKey3 ;
+                GolbalSetting.GetInstance().keyPress_HP[4] = userControl_HP.pressKey4 ;
+                GolbalSetting.GetInstance().keyPress_HP[5] = userControl_HP.pressKey5 ;
+            }
+            {
+                 GolbalSetting.GetInstance().keyPress_SP[1]= userControl_SP.pressKey1 ;
+                GolbalSetting.GetInstance().keyPress_SP[2] = userControl_SP.pressKey2 ;
+                GolbalSetting.GetInstance().keyPress_SP[3] = userControl_SP.pressKey3 ;
+                GolbalSetting.GetInstance().keyPress_SP[4] = userControl_SP.pressKey4 ;
+                GolbalSetting.GetInstance().keyPress_SP[5] = userControl_SP.pressKey5 ;
+            }                                              
+            {                                              
+                 GolbalSetting.GetInstance().keyPress_NP[1] = userControl_NP.pressKey1;
+                GolbalSetting.GetInstance().keyPress_NP[2] = userControl_NP.pressKey2 ;
+                GolbalSetting.GetInstance().keyPress_NP[3] = userControl_NP.pressKey3 ;
+                GolbalSetting.GetInstance().keyPress_NP[4] = userControl_NP.pressKey4 ;
+                GolbalSetting.GetInstance().keyPress_NP[5] = userControl_NP.pressKey5 ;
+            }
+
+            GolbalSetting.GetInstance().savetoConfig();
         }
     }
 }

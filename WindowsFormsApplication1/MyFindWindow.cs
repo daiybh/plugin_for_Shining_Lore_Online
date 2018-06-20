@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -32,7 +33,7 @@ namespace WindowsFormsApplication1
         public static extern int GetClassName(IntPtr WinHandle, StringBuilder Type, int size);
         [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hwnd, ref RECT rectangle);
-
+       
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
@@ -40,6 +41,16 @@ namespace WindowsFormsApplication1
             public int Top;         // y position of upper-left corner
             public int Right;       // x position of lower-right corner
             public int Bottom;      // y position of lower-right corner
+
+            public int Width()
+            {
+                return Right - Left;
+            }
+
+            public int Height()
+            {
+                return Bottom - Top;
+            }
         }
 
         private string m_classname; // class name to look for
@@ -88,6 +99,7 @@ namespace WindowsFormsApplication1
             }
             return true;
         }
+
 
     }
 }

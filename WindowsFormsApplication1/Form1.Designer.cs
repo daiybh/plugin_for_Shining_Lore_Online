@@ -40,10 +40,15 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.trackBar1_W = new System.Windows.Forms.TrackBar();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.userControl_NP = new WindowsFormsApplication1.UserControl1();
+            this.userControl_SP = new WindowsFormsApplication1.UserControl1();
+            this.userControl_HP = new WindowsFormsApplication1.UserControl1();
             this.objectInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.objectInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_H)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1_W)).BeginInit();
+            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectInfoBindingSource1)).BeginInit();
             this.SuspendLayout();
@@ -58,7 +63,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(4, 226);
+            this.button1.Location = new System.Drawing.Point(83, 64);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -68,7 +73,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(107, 226);
+            this.button3.Location = new System.Drawing.Point(164, 64);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 2;
@@ -82,9 +87,9 @@
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader2,
             this.columnHeader3});
-            this.listView1.Location = new System.Drawing.Point(10, 140);
+            this.listView1.Location = new System.Drawing.Point(83, 25);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(253, 71);
+            this.listView1.Size = new System.Drawing.Size(253, 33);
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -93,7 +98,7 @@
             // columnHeader2
             // 
             this.columnHeader2.Text = "Name";
-            this.columnHeader2.Width = 100;
+            this.columnHeader2.Width = 193;
             // 
             // columnHeader3
             // 
@@ -148,6 +153,60 @@
             this.trackBar1_W.Value = 3;
             this.trackBar1_W.ValueChanged += new System.EventHandler(this.trackBar1_W_ValueChanged);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.userControl_NP);
+            this.groupBox1.Controls.Add(this.userControl_SP);
+            this.groupBox1.Controls.Add(this.userControl_HP);
+            this.groupBox1.Location = new System.Drawing.Point(3, 139);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(316, 137);
+            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "吃药设置";
+            // 
+            // userControl_NP
+            // 
+            this.userControl_NP.Location = new System.Drawing.Point(10, 102);
+            this.userControl_NP.m_value = 1000;
+            this.userControl_NP.Name = "userControl_NP";
+            this.userControl_NP.pressKey1 = false;
+            this.userControl_NP.pressKey2 = false;
+            this.userControl_NP.pressKey3 = false;
+            this.userControl_NP.pressKey4 = false;
+            this.userControl_NP.pressKey5 = false;
+            this.userControl_NP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_NP.TabIndex = 2;
+            this.userControl_NP.Title = "NP";
+            // 
+            // userControl_SP
+            // 
+            this.userControl_SP.Location = new System.Drawing.Point(10, 61);
+            this.userControl_SP.m_value = 1000;
+            this.userControl_SP.Name = "userControl_SP";
+            this.userControl_SP.pressKey1 = false;
+            this.userControl_SP.pressKey2 = false;
+            this.userControl_SP.pressKey3 = false;
+            this.userControl_SP.pressKey4 = false;
+            this.userControl_SP.pressKey5 = false;
+            this.userControl_SP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_SP.TabIndex = 1;
+            this.userControl_SP.Title = "SP";
+            // 
+            // userControl_HP
+            // 
+            this.userControl_HP.Location = new System.Drawing.Point(10, 20);
+            this.userControl_HP.m_value = 1000;
+            this.userControl_HP.Name = "userControl_HP";
+            this.userControl_HP.pressKey1 = false;
+            this.userControl_HP.pressKey2 = false;
+            this.userControl_HP.pressKey3 = false;
+            this.userControl_HP.pressKey4 = false;
+            this.userControl_HP.pressKey5 = false;
+            this.userControl_HP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_HP.TabIndex = 0;
+            this.userControl_HP.Title = "HP";
+            // 
             // objectInfoBindingSource
             // 
             this.objectInfoBindingSource.DataSource = typeof(WindowsFormsApplication1.ObjectInfo);
@@ -161,6 +220,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(329, 409);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.trackBar1_W);
             this.Controls.Add(this.label2);
@@ -172,9 +232,11 @@
             this.Controls.Add(this.listBox1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_H)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1_W)).EndInit();
+            this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.objectInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectInfoBindingSource1)).EndInit();
             this.ResumeLayout(false);
@@ -197,6 +259,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TrackBar trackBar1_W;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private UserControl1 userControl_NP;
+        private UserControl1 userControl_SP;
+        private UserControl1 userControl_HP;
     }
 }
 

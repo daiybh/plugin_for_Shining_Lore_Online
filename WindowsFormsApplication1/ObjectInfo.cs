@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -41,6 +42,7 @@ namespace WindowsFormsApplication1
                 t1.Abort();
         }
 
+        public Graphics g { get; set; }
         public IntPtr hWnd { get; set; }
         public string title { get; set; }
         public string userName { get; set; }
@@ -48,10 +50,7 @@ namespace WindowsFormsApplication1
         public int center_y = 0;
         public int Object_H = 247;
         public MyFindWindow.RECT rt;
-
-        public int step_W = 3;
-
-        public int step_H = 3;
+        
         public void showWindow(bool isShow)
         {
             MouseEvent.SendMessage(hWnd, MouseEvent.WM_SYSCOMMAND, isShow?MouseEvent.SC_MINIMIZE: MouseEvent.SC_RESTORE, 0);
@@ -89,15 +88,13 @@ namespace WindowsFormsApplication1
                     MouseEvent.pressKey(hWnd, Keys.Add);
                 Thread.Sleep(1000);
             }
-        
-
-        Thread.Sleep(100);
+            Thread.Sleep(100);
             while (!bExit)
             {
                 pressZ();
-                for (int h = Object_H * -1; h < 10; h += step_H)
+                for (int h = Object_H * -1; h < 10; h += GolbalSetting.GetInstance().step_H)
                 {
-                    for (int w = -45; w < 30; w += step_W)
+                    for (int w = -45; w < 30; w += GolbalSetting.GetInstance().step_W)
                     {
                         X = center_X + w;
                         Y = center_y + h;
@@ -111,6 +108,57 @@ namespace WindowsFormsApplication1
         public void pressZ()
         {
             MouseEvent.pressKey(hWnd,Keys.Z);
+        }
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool PrintWindow(IntPtr hwnd, IntPtr hDC, uint nFlags);
+
+
+        private Bitmap bmp = null;
+        Graphics memoryGraphics = null;
+        private IntPtr dc ;
+        public void screenshotting()
+        {
+            if (bmp == null)
+            {
+                bmp = new Bitmap(this.rt.Width(), this.rt.Height(), g);
+                memoryGraphics = Graphics.FromImage(bmp);
+              //  dc = memoryGraphics.GetHdc();
+            }
+
+            dc = memoryGraphics.GetHdc();
+            bool success = PrintWindow(this.hWnd, dc, 0);
+            memoryGraphics.ReleaseHdc(dc);
+            // bmp now contains the screenshot
+            bmp.Save("c:\\jpeg\\ccccc.jpg");
+            float a = 0.6F;
+
+            int hh = 763 - 701;
+            int pos = Convert.ToInt32(hh * (1 - a) + 701);
+
+            //14,701 33,763
+            //52,701 63,763
+            //81,701 92,763
+            Color cLife = bmp.GetPixel(22, pos);//判断 Color.B 是否为0 
+            Color ctec = bmp.GetPixel(60, pos);//判断 Color.G 是否为0 
+            Color cPower = bmp.GetPixel(88, pos);//判断 Color.B 是否为0
+
+            if (cLife.B != 0)
+            {
+                //喝血
+                MouseEvent.pressKey(hWnd, Keys.D1);
+            }
+            if (ctec.B == 0)
+            {
+                //喝血
+               // MouseEvent.pressKey(hWnd, Keys.D0);
+            }
+            if (cPower.B == 0)
+            {
+                //喝血
+             //   MouseEvent.pressKey(hWnd, Keys.D0);
+            }
+            Console.WriteLine("{3}>>life:{0} tec:{1} power:{2}", cLife.ToString(), ctec.ToString(), cPower.ToString(), pos);
         }
         class MouseEvent
         {
