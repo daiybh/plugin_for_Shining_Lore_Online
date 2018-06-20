@@ -17,34 +17,9 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
-            GolbalSetting.GetInstance().LoadConfig();
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
-            userControl_HP.isEnable = GolbalSetting.GetInstance().keyPress_HP[0];
-            userControl_SP.isEnable = GolbalSetting.GetInstance().keyPress_SP[0];
-            userControl_NP.isEnable = GolbalSetting.GetInstance().keyPress_NP[0];
-
-            {
-                userControl_HP.pressKey1 = GolbalSetting.GetInstance().keyPress_HP[1];
-                userControl_HP.pressKey2 = GolbalSetting.GetInstance().keyPress_HP[2];
-                userControl_HP.pressKey3 = GolbalSetting.GetInstance().keyPress_HP[3];
-                userControl_HP.pressKey4 = GolbalSetting.GetInstance().keyPress_HP[4];
-                userControl_HP.pressKey5 = GolbalSetting.GetInstance().keyPress_HP[5];
-           }
-            {
-                userControl_SP.pressKey1 = GolbalSetting.GetInstance().keyPress_SP[1];
-                userControl_SP.pressKey2 = GolbalSetting.GetInstance().keyPress_SP[2];
-                userControl_SP.pressKey3 = GolbalSetting.GetInstance().keyPress_SP[3];
-                userControl_SP.pressKey4 = GolbalSetting.GetInstance().keyPress_SP[4];
-                userControl_SP.pressKey5 = GolbalSetting.GetInstance().keyPress_SP[5];
-            }
-            {
-                userControl_NP.pressKey1 = GolbalSetting.GetInstance().keyPress_NP[1];
-                userControl_NP.pressKey2 = GolbalSetting.GetInstance().keyPress_NP[2];
-                userControl_NP.pressKey3 = GolbalSetting.GetInstance().keyPress_NP[3];
-                userControl_NP.pressKey4 = GolbalSetting.GetInstance().keyPress_NP[4];
-                userControl_NP.pressKey5 = GolbalSetting.GetInstance().keyPress_NP[5];
-            }
+            
         }
 
         private List<ObjectInfo> m_objInfo=new List<ObjectInfo>();
@@ -87,8 +62,6 @@ namespace WindowsFormsApplication1
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            m_objInfo[listBox1.SelectedIndex].screenshotting();
-            return;
             m_objInfo[listBox1.SelectedIndex].pauseWork();
             button1.Text = (button1.Text == "暂停") ? "继续运行" : "暂停";
         }
@@ -135,34 +108,6 @@ namespace WindowsFormsApplication1
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            GolbalSetting.GetInstance().step_H = trackBar_H.Value;
-            GolbalSetting.GetInstance().step_W = trackBar1_W.Value;
-            GolbalSetting.GetInstance().keyPress_HP[0] = userControl_HP.isEnable;
-            GolbalSetting.GetInstance().keyPress_SP[0] = userControl_SP.isEnable;
-            GolbalSetting.GetInstance().keyPress_NP[0] = userControl_NP.isEnable;
-
-            {
-                GolbalSetting.GetInstance().keyPress_HP[1] = userControl_HP.pressKey1;
-                GolbalSetting.GetInstance().keyPress_HP[2] = userControl_HP.pressKey2;
-                GolbalSetting.GetInstance().keyPress_HP[3] = userControl_HP.pressKey3;
-                GolbalSetting.GetInstance().keyPress_HP[4] = userControl_HP.pressKey4;
-                GolbalSetting.GetInstance().keyPress_HP[5] = userControl_HP.pressKey5;
-            }
-            {
-                GolbalSetting.GetInstance().keyPress_SP[1] = userControl_SP.pressKey1;
-                GolbalSetting.GetInstance().keyPress_SP[2] = userControl_SP.pressKey2;
-                GolbalSetting.GetInstance().keyPress_SP[3] = userControl_SP.pressKey3;
-                GolbalSetting.GetInstance().keyPress_SP[4] = userControl_SP.pressKey4;
-                GolbalSetting.GetInstance().keyPress_SP[5] = userControl_SP.pressKey5;
-            }
-            {
-                GolbalSetting.GetInstance().keyPress_NP[1] = userControl_NP.pressKey1;
-                GolbalSetting.GetInstance().keyPress_NP[2] = userControl_NP.pressKey2;
-                GolbalSetting.GetInstance().keyPress_NP[3] = userControl_NP.pressKey3;
-                GolbalSetting.GetInstance().keyPress_NP[4] = userControl_NP.pressKey4;
-                GolbalSetting.GetInstance().keyPress_NP[5] = userControl_NP.pressKey5;
-            }
-
             GolbalSetting.GetInstance().savetoConfig();
         }
     }

@@ -8,9 +8,10 @@ namespace WindowsFormsApplication1
 {
     class ObjectInfo
     {
-       
+
         public static string filterName = " 永恒天使 - ";
         public static int filterLength = filterName.Length;
+
         public ObjectInfo(IntPtr _hwnd, string title, MyFindWindow.RECT rt)
         {
             this.hWnd = _hwnd;
@@ -28,9 +29,10 @@ namespace WindowsFormsApplication1
         }
 
         private Thread t1 = null;
+
         public void startWork()
         {
-            t1 = new Thread(new ThreadStart(captureObj));
+            t1 = new Thread(new ThreadStart(doWorkThread));
             t1.IsBackground = true;
             t1.Start();
         }
@@ -38,7 +40,7 @@ namespace WindowsFormsApplication1
         public void stopWork()
         {
             bExit = true;
-            if (t1!=null && t1.IsAlive)
+            if (t1 != null && t1.IsAlive)
                 t1.Abort();
         }
 
@@ -50,34 +52,37 @@ namespace WindowsFormsApplication1
         public int center_y = 0;
         public int Object_H = 247;
         public MyFindWindow.RECT rt;
-        
+
         public void showWindow(bool isShow)
         {
-            MouseEvent.SendMessage(hWnd, MouseEvent.WM_SYSCOMMAND, isShow?MouseEvent.SC_MINIMIZE: MouseEvent.SC_RESTORE, 0);
+            MouseEvent.SendMessage(hWnd, MouseEvent.WM_SYSCOMMAND,
+                isShow ? MouseEvent.SC_MINIMIZE : MouseEvent.SC_RESTORE, 0);
         }
+
         ManualResetEvent autoEvent = new ManualResetEvent(true);
         private bool bPause = false;
+
         internal void pauseWork()
         {
-            if(bPause)
+            if (bPause)
                 autoEvent.Set();
             else
                 autoEvent.Reset();
             bPause = !bPause;
         }
-        
+
 
         public void attack(int x, int y)
         {
-            MouseEvent.LeftClick(this.hWnd,x,y);
-             
-            MouseEvent.RightClick(this.hWnd,x,y);
+            MouseEvent.LeftClick(this.hWnd, x, y);
+
+            MouseEvent.RightClick(this.hWnd, x, y);
             Thread.Sleep(10);
         }
 
         private bool bExit = false;
 
-        public void captureObj()
+        public void doWorkThread()
         {
             int X = 0;
             int Y = 0;
@@ -85,9 +90,10 @@ namespace WindowsFormsApplication1
             //发送键盘按键 +
             for (int i = 0; i < 10; i++)
             {
-                    MouseEvent.pressKey(hWnd, Keys.Add);
+                MouseEvent.pressKey(hWnd, Keys.Add);
                 Thread.Sleep(1000);
             }
+
             Thread.Sleep(100);
             while (!bExit)
             {
@@ -99,16 +105,19 @@ namespace WindowsFormsApplication1
                         X = center_X + w;
                         Y = center_y + h;
                         attack(X, Y);
+                        screenshotting();
                         autoEvent.WaitOne();
                     }
                 }
 
             }
         }
+
         public void pressZ()
         {
-            MouseEvent.pressKey(hWnd,Keys.Z);
+            MouseEvent.pressKey(hWnd, Keys.Z);
         }
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool PrintWindow(IntPtr hwnd, IntPtr hDC, uint nFlags);
@@ -116,14 +125,20 @@ namespace WindowsFormsApplication1
 
         private Bitmap bmp = null;
         Graphics memoryGraphics = null;
-        private IntPtr dc ;
+        private IntPtr dc;
+        private int lastUpdateTime = 0;
+
         public void screenshotting()
         {
+            int curTime = System.Environment.TickCount & Int32.MaxValue;
+            if (curTime - lastUpdateTime < 2000) return;
+            lastUpdateTime = curTime;
+
             if (bmp == null)
             {
                 bmp = new Bitmap(this.rt.Width(), this.rt.Height(), g);
                 memoryGraphics = Graphics.FromImage(bmp);
-              //  dc = memoryGraphics.GetHdc();
+                //  dc = memoryGraphics.GetHdc();
             }
 
             dc = memoryGraphics.GetHdc();
@@ -139,101 +154,144 @@ namespace WindowsFormsApplication1
             //14,701 33,763
             //52,701 63,763
             //81,701 92,763
-            Color cLife = bmp.GetPixel(22, pos);//判断 Color.B 是否为0 
-            Color ctec = bmp.GetPixel(60, pos);//判断 Color.G 是否为0 
-            Color cPower = bmp.GetPixel(88, pos);//判断 Color.B 是否为0
+            Color cLife = bmp.GetPixel(22, pos); //判断 Color.B 是否为0 
+            Color ctec = bmp.GetPixel(60, pos); //判断 Color.G 是否为0 
+            Color cPower = bmp.GetPixel(88, pos); //判断 Color.B 是否为0
 
             if (cLife.B != 0)
             {
                 //喝血
-                MouseEvent.pressKey(hWnd, Keys.D1);
+                if (GolbalSetting.GetInstance().keyPress_HP[0])
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        if (GolbalSetting.GetInstance().keyPress_HP[i + 1])
+                        {
+                            MouseEvent.pressKey(hWnd, Keys.D1 + i);
+                            break;
+                        }
+                    }
+                }
+
+                Console.WriteLine("{0}>>life:{1} ", pos, cLife.ToString());
             }
-            if (ctec.B == 0)
+
+            if (ctec.G != 0)
             {
                 //喝血
-               // MouseEvent.pressKey(hWnd, Keys.D0);
+                // MouseEvent.pressKey(hWnd, Keys.D0);
+                if (GolbalSetting.GetInstance().keyPress_SP[0])
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        if (GolbalSetting.GetInstance().keyPress_SP[i + 1])
+                        {
+                            MouseEvent.pressKey(hWnd, Keys.D1 + i);
+                            break;
+                        }
+                    }
+                }
+
+                Console.WriteLine("{0}>>tec:{1} ", pos, ctec.ToString());
             }
-            if (cPower.B == 0)
+
+            if (cPower.B != 0)
             {
                 //喝血
-             //   MouseEvent.pressKey(hWnd, Keys.D0);
+                //   MouseEvent.pressKey(hWnd, Keys.D0);
+                if (GolbalSetting.GetInstance().keyPress_NP[0])
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        if (GolbalSetting.GetInstance().keyPress_NP[i + 1])
+                        {
+                            MouseEvent.pressKey(hWnd, Keys.D1 + i);
+                            break;
+                        }
+                    }
+                }
+                Console.WriteLine("{0}>>cPower:{1} ", pos, cPower.ToString());
             }
-            Console.WriteLine("{3}>>life:{0} tec:{1} power:{2}", cLife.ToString(), ctec.ToString(), cPower.ToString(), pos);
-        }
-        class MouseEvent
-        {
-            [DllImport("user32.dll", SetLastError = true)]
-            public static extern int SendMessage(IntPtr hWnd, int uMsg, int wParam, int lParam);
-            [DllImport("user32.dll")]
-            public static extern Keys VkKeyScan(char ch);
-            [DllImport("user32.dll")]
-            public static extern int MapVirtualKey(int Ucode, uint uMapType);
 
-            public const int WM_SHOWWINDOW = 0x0018;
-            public const int WM_SYSCOMMAND = 0x0112;
-            public const int SC_MINIMIZE = 0xF020;
-            public const int SC_RESTORE = 0xF120;
-            public const int WM_LBUTTONDOWN = 513; // 鼠标左键按下 
-            public const int WM_LBUTTONUP = 514; // 鼠标左键抬起 
-            public const int WM_RBUTTONDOWN = 516; // 鼠标右键按下 
-            public const int WM_RBUTTONUP = 517; // 鼠标右键抬起 
-            public const int WM_MBUTTONDOWN = 519; // 鼠标中键按下 
-            public const int WM_MBUTTONUP = 520; // 鼠标中键抬起 
-            public const int MOUSEEVENTF_MOVE = 0x0001; // 移动鼠标   
-            public const int MOUSEEVENTF_LEFTDOWN = 0x0002; // 鼠标左键按下  
-            public const int MOUSEEVENTF_LEFTUP = 0x0004; // 鼠标左键抬起  
-            public const int MOUSEEVENTF_RIGHTDOWN = 0x0008; // 鼠标右键按下  
-            public const int MOUSEEVENTF_RIGHTUP = 0x0010; // 鼠标右键抬起   
-            public const int MOUSEEVENTF_MIDDLEDOWN = 0x0020; // 鼠标中键按下 
-            public const int MOUSEEVENTF_MIDDLEUP = 0x0040; // 鼠标中键抬起   
-            public const int MOUSEEVENTF_ABSOLUTE = 0x8000; // 绝对坐标 
-            public const int WM_KEYDOWN = 0x100;
-            public const int WM_KEYUP = 0x101;
-            public const int WM_CHAR = 0x0102;
 
-            public static void pressKey(IntPtr hWnd,Keys key)
-            {
 
-                int lParam = 1;
-                lParam += MapVirtualKey(key.GetHashCode(), 0) << 16;
-                //2883585
-                SendMessage(hWnd, WM_KEYDOWN, key.GetHashCode(), lParam);//Thread.Sleep(100);
-                lParam += 1 << 30;
-                lParam += 1 << 31;
-                SendMessage(hWnd, WM_KEYUP, key.GetHashCode(), lParam);//up
-            }
-            public static void LeftClick(IntPtr hWnd,int x, int y)
-            {
-                send_message(hWnd, MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 2, x, y);
-            }
-            public static void RightClick(IntPtr hWnd, int x, int y)
-            {
-                send_message(hWnd, MOUSEEVENTF_RIGHTUP | MOUSEEVENTF_RIGHTDOWN, 1, x, y);
-            }
-            public   static void send_message(IntPtr hWnd, int dwFlags, int cButtons, int x, int y)
-            {
-                if ((dwFlags | MOUSEEVENTF_LEFTDOWN) == dwFlags)
-                    SendMessage(hWnd, WM_LBUTTONDOWN, cButtons, MakeDWord(x, y));
-                if ((dwFlags | MOUSEEVENTF_LEFTUP) == dwFlags)
-                    SendMessage(hWnd, WM_LBUTTONUP, cButtons, MakeDWord(x, y));
-                if ((dwFlags | MOUSEEVENTF_RIGHTDOWN) == dwFlags)
-                    SendMessage(hWnd, WM_RBUTTONDOWN, cButtons, MakeDWord(x, y));
-                if ((dwFlags | MOUSEEVENTF_RIGHTUP) == dwFlags)
-                    SendMessage(hWnd, WM_RBUTTONUP, cButtons, MakeDWord(x, y));
-                if ((dwFlags | MOUSEEVENTF_MIDDLEDOWN) == dwFlags)
-                    SendMessage(hWnd, WM_MBUTTONDOWN, cButtons, MakeDWord(x, y));
-                if ((dwFlags | MOUSEEVENTF_MIDDLEUP) == dwFlags)
-                    SendMessage(hWnd, WM_MBUTTONUP, cButtons, MakeDWord(x, y));
-            }
-            static int MakeDWord(int low, int high)
-            {
-                return low + (high * Abs(~ushort.MaxValue));
-            }
-            static int Abs(int value)
-            {
-                return ((value >> 31) ^ value) - (value >> 31);
-            }
         }
 
+        //Console.WriteLine("{3}>>life:{0} tec:{1} power:{2}", cLife.ToString(), ctec.ToString(), cPower.ToString(), pos);
     }
+    class MouseEvent
+    {
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int SendMessage(IntPtr hWnd, int uMsg, int wParam, int lParam);
+        [DllImport("user32.dll")]
+        public static extern Keys VkKeyScan(char ch);
+        [DllImport("user32.dll")]
+        public static extern int MapVirtualKey(int Ucode, uint uMapType);
+
+        public const int WM_SHOWWINDOW = 0x0018;
+        public const int WM_SYSCOMMAND = 0x0112;
+        public const int SC_MINIMIZE = 0xF020;
+        public const int SC_RESTORE = 0xF120;
+        public const int WM_LBUTTONDOWN = 513; // 鼠标左键按下 
+        public const int WM_LBUTTONUP = 514; // 鼠标左键抬起 
+        public const int WM_RBUTTONDOWN = 516; // 鼠标右键按下 
+        public const int WM_RBUTTONUP = 517; // 鼠标右键抬起 
+        public const int WM_MBUTTONDOWN = 519; // 鼠标中键按下 
+        public const int WM_MBUTTONUP = 520; // 鼠标中键抬起 
+        public const int MOUSEEVENTF_MOVE = 0x0001; // 移动鼠标   
+        public const int MOUSEEVENTF_LEFTDOWN = 0x0002; // 鼠标左键按下  
+        public const int MOUSEEVENTF_LEFTUP = 0x0004; // 鼠标左键抬起  
+        public const int MOUSEEVENTF_RIGHTDOWN = 0x0008; // 鼠标右键按下  
+        public const int MOUSEEVENTF_RIGHTUP = 0x0010; // 鼠标右键抬起   
+        public const int MOUSEEVENTF_MIDDLEDOWN = 0x0020; // 鼠标中键按下 
+        public const int MOUSEEVENTF_MIDDLEUP = 0x0040; // 鼠标中键抬起   
+        public const int MOUSEEVENTF_ABSOLUTE = 0x8000; // 绝对坐标 
+        public const int WM_KEYDOWN = 0x100;
+        public const int WM_KEYUP = 0x101;
+        public const int WM_CHAR = 0x0102;
+
+        public static void pressKey(IntPtr hWnd, Keys key)
+        {
+
+            int lParam = 1;
+            lParam += MapVirtualKey(key.GetHashCode(), 0) << 16;
+            //2883585
+            SendMessage(hWnd, WM_KEYDOWN, key.GetHashCode(), lParam);//Thread.Sleep(100);
+            lParam += 1 << 30;
+            lParam += 1 << 31;
+            SendMessage(hWnd, WM_KEYUP, key.GetHashCode(), lParam);//up
+        }
+        public static void LeftClick(IntPtr hWnd, int x, int y)
+        {
+            send_message(hWnd, MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 2, x, y);
+        }
+        public static void RightClick(IntPtr hWnd, int x, int y)
+        {
+            send_message(hWnd, MOUSEEVENTF_RIGHTUP | MOUSEEVENTF_RIGHTDOWN, 1, x, y);
+        }
+        public static void send_message(IntPtr hWnd, int dwFlags, int cButtons, int x, int y)
+        {
+            if ((dwFlags | MOUSEEVENTF_LEFTDOWN) == dwFlags)
+                SendMessage(hWnd, WM_LBUTTONDOWN, cButtons, MakeDWord(x, y));
+            if ((dwFlags | MOUSEEVENTF_LEFTUP) == dwFlags)
+                SendMessage(hWnd, WM_LBUTTONUP, cButtons, MakeDWord(x, y));
+            if ((dwFlags | MOUSEEVENTF_RIGHTDOWN) == dwFlags)
+                SendMessage(hWnd, WM_RBUTTONDOWN, cButtons, MakeDWord(x, y));
+            if ((dwFlags | MOUSEEVENTF_RIGHTUP) == dwFlags)
+                SendMessage(hWnd, WM_RBUTTONUP, cButtons, MakeDWord(x, y));
+            if ((dwFlags | MOUSEEVENTF_MIDDLEDOWN) == dwFlags)
+                SendMessage(hWnd, WM_MBUTTONDOWN, cButtons, MakeDWord(x, y));
+            if ((dwFlags | MOUSEEVENTF_MIDDLEUP) == dwFlags)
+                SendMessage(hWnd, WM_MBUTTONUP, cButtons, MakeDWord(x, y));
+        }
+        static int MakeDWord(int low, int high)
+        {
+            return low + (high * Abs(~ushort.MaxValue));
+        }
+        static int Abs(int value)
+        {
+            return ((value >> 31) ^ value) - (value >> 31);
+        }
+    }
+
 }

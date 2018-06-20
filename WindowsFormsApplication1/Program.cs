@@ -13,11 +13,14 @@ namespace WindowsFormsApplication1
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[]args)
         {
-       //     EnumReportApp era = new EnumReportApp();
-        //    era.doMain();
-           // return;
+            if (args.Length > 0)
+            {
+                NativeMethods.AllocConsole();
+                Console.WriteLine("kaishi....");
+            }
+            GolbalSetting.GetInstance().LoadConfig();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

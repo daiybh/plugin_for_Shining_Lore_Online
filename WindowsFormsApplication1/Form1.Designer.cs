@@ -108,7 +108,6 @@
             // 
             this.trackBar_H.Location = new System.Drawing.Point(83, 295);
             this.trackBar_H.Maximum = 100;
-            this.trackBar_H.Minimum = 1;
             this.trackBar_H.Name = "trackBar_H";
             this.trackBar_H.Size = new System.Drawing.Size(230, 45);
             this.trackBar_H.TabIndex = 4;
@@ -146,7 +145,6 @@
             // 
             this.trackBar1_W.Location = new System.Drawing.Point(83, 346);
             this.trackBar1_W.Maximum = 100;
-            this.trackBar1_W.Minimum = 1;
             this.trackBar1_W.Name = "trackBar1_W";
             this.trackBar1_W.Size = new System.Drawing.Size(230, 45);
             this.trackBar1_W.TabIndex = 7;
@@ -167,14 +165,9 @@
             // 
             // userControl_NP
             // 
+            
             this.userControl_NP.Location = new System.Drawing.Point(10, 102);
-            this.userControl_NP.m_value = 1000;
             this.userControl_NP.Name = "userControl_NP";
-            this.userControl_NP.pressKey1 = false;
-            this.userControl_NP.pressKey2 = false;
-            this.userControl_NP.pressKey3 = false;
-            this.userControl_NP.pressKey4 = false;
-            this.userControl_NP.pressKey5 = false;
             this.userControl_NP.Size = new System.Drawing.Size(289, 28);
             this.userControl_NP.TabIndex = 2;
             this.userControl_NP.Title = "NP";
@@ -182,27 +175,18 @@
             // userControl_SP
             // 
             this.userControl_SP.Location = new System.Drawing.Point(10, 61);
-            this.userControl_SP.m_value = 1000;
             this.userControl_SP.Name = "userControl_SP";
-            this.userControl_SP.pressKey1 = false;
-            this.userControl_SP.pressKey2 = false;
-            this.userControl_SP.pressKey3 = false;
-            this.userControl_SP.pressKey4 = false;
-            this.userControl_SP.pressKey5 = false;
             this.userControl_SP.Size = new System.Drawing.Size(289, 28);
             this.userControl_SP.TabIndex = 1;
             this.userControl_SP.Title = "SP";
             // 
             // userControl_HP
             // 
+            
             this.userControl_HP.Location = new System.Drawing.Point(10, 20);
-            this.userControl_HP.m_value = 1000;
+            
             this.userControl_HP.Name = "userControl_HP";
-            this.userControl_HP.pressKey1 = false;
-            this.userControl_HP.pressKey2 = false;
-            this.userControl_HP.pressKey3 = false;
-            this.userControl_HP.pressKey4 = false;
-            this.userControl_HP.pressKey5 = false;
+            
             this.userControl_HP.Size = new System.Drawing.Size(289, 28);
             this.userControl_HP.TabIndex = 0;
             this.userControl_HP.Title = "HP";

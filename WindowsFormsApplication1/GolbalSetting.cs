@@ -25,8 +25,11 @@ namespace WindowsFormsApplication1
         public int step_W;
         public int step_H;
         public  bool [] keyPress_NP = new bool[6];
+        public int NPPercent = 6;
         public  bool [] keyPress_SP = new bool[6];
+        public int SPPercent = 6;
         public  bool [] keyPress_HP = new bool[6];
+        public int HPPercent = 6;
 
         public void LoadConfig()
         {
@@ -42,13 +45,20 @@ namespace WindowsFormsApplication1
             try
             {
                 step_W = Int32.Parse(getConfig("trackBar_W"));
+                if (step_W < 1 || step_W > 100)
+                    step_W = 17;
                 step_H = Int32.Parse(getConfig("trackBar_H"));
+                if (step_H < 1 || step_H > 100)
+                    step_H = 29;
                 for (int i = 0; i < 6; i++)
                 {
                     keyPress_NP[i] = Boolean.Parse(getConfig("keyPress_NP" + i.ToString()));
                     keyPress_SP[i] = Boolean.Parse(getConfig("keyPress_SP" + i.ToString()));
                     keyPress_HP[i] = Boolean.Parse(getConfig("keyPress_HP" + i.ToString()));
                 }
+                HPPercent = Int32.Parse(getConfig("HPPercent"));
+                SPPercent = Int32.Parse(getConfig("SPPercent"));
+                NPPercent = Int32.Parse(getConfig("NPPercent"));
             }
             catch (System.FormatException)
             {
@@ -71,6 +81,10 @@ namespace WindowsFormsApplication1
                 gw1("keyPress_SP" + i.ToString(), keyPress_SP[i].ToString());
                 gw1("keyPress_HP" + i.ToString(), keyPress_HP[i].ToString());
             }
+
+            gw1(("HPPercent"), HPPercent.ToString() );
+            gw1(("SPPercent"), SPPercent.ToString());
+            gw1(("NPPercent"), NPPercent.ToString());
             cfa.Save();
         }
 
