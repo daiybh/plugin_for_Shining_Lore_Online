@@ -71,12 +71,22 @@ namespace WindowsFormsApplication1
             bPause = !bPause;
         }
 
-
+        public void RightAttack(int x, int y)
+        {
+            for (int h = y-10; h < y+10; h++)
+            {
+                for (int w = x-10; w < x+10; w++)
+                {
+                    MouseEvent.RightClick(this.hWnd,w,h);
+                }
+            }
+        }
         public void attack(int x, int y)
         {
+            //  RightAttack(x, y);
+            MouseEvent.RightClick(this.hWnd, x, y);
             MouseEvent.LeftClick(this.hWnd, x, y);
 
-            MouseEvent.RightClick(this.hWnd, x, y);
             Thread.Sleep(10);
         }
 
@@ -90,6 +100,7 @@ namespace WindowsFormsApplication1
             //发送键盘按键 +
             for (int i = 0; i < 10; i++)
             {
+                MouseEvent.moveMouse(hWnd, center_X+i*10,center_y+i*10);
                 MouseEvent.pressKey(hWnd, Keys.Add);
                 Thread.Sleep(1000);
             }
@@ -145,20 +156,26 @@ namespace WindowsFormsApplication1
             bool success = PrintWindow(this.hWnd, dc, 0);
             memoryGraphics.ReleaseHdc(dc);
             // bmp now contains the screenshot
-            bmp.Save("c:\\jpeg\\ccccc.jpg");
+           // bmp.Save("c:\\jpeg\\ccccc.jpg");
             float a = 0.6F;
 
             int hh = 763 - 701;
-            int pos = Convert.ToInt32(hh * (1 - a) + 701);
+
 
             //14,701 33,763
             //52,701 63,763
             //81,701 92,763
-            Color cLife = bmp.GetPixel(22, pos); //判断 Color.B 是否为0 
-            Color ctec = bmp.GetPixel(60, pos); //判断 Color.G 是否为0 
-            Color cPower = bmp.GetPixel(88, pos); //判断 Color.B 是否为0
+            a = (10 - (GolbalSetting.GetInstance().HPPercent + 1))/10.0F;
+            Color colorHP = bmp.GetPixel(22, Convert.ToInt32(hh * a + 701)); //判断 Color.B 是否为0 
 
-            if (cLife.B != 0)
+            a = (10 - (GolbalSetting.GetInstance().SPPercent + 1)) / 10.0F;
+            Color colorSP = bmp.GetPixel(60, Convert.ToInt32(hh * a + 701)); //判断 Color.G 是否为0 
+            
+
+            a = (10 - (GolbalSetting.GetInstance().NPPercent + 1)) / 10.0F;
+            Color colorNP = bmp.GetPixel(88, Convert.ToInt32(hh * a + 701)); //判断 Color.B 是否为0
+
+            if (colorHP.B != 0)
             {
                 //喝血
                 if (GolbalSetting.GetInstance().keyPress_HP[0])
@@ -173,10 +190,10 @@ namespace WindowsFormsApplication1
                     }
                 }
 
-                Console.WriteLine("{0}>>life:{1} ", pos, cLife.ToString());
+                Console.WriteLine("{0}>>life:{1} ", a, colorHP.ToString());
             }
 
-            if (ctec.G != 0)
+            if (colorSP.G != 0)
             {
                 //喝血
                 // MouseEvent.pressKey(hWnd, Keys.D0);
@@ -192,10 +209,10 @@ namespace WindowsFormsApplication1
                     }
                 }
 
-                Console.WriteLine("{0}>>tec:{1} ", pos, ctec.ToString());
+                Console.WriteLine("{0}>>tec:{1} ", a, colorSP.ToString());
             }
 
-            if (cPower.B != 0)
+            if (colorNP.B != 0)
             {
                 //喝血
                 //   MouseEvent.pressKey(hWnd, Keys.D0);
@@ -210,14 +227,14 @@ namespace WindowsFormsApplication1
                         }
                     }
                 }
-                Console.WriteLine("{0}>>cPower:{1} ", pos, cPower.ToString());
+                Console.WriteLine("{0}>>cPower:{1} ", a, colorNP.ToString());
             }
 
 
-
+          //  Console.WriteLine("{3}>>colorHP:{0} colorSP:{1} colorNP:{2}", colorHP.ToString(), colorSP.ToString(), colorNP.ToString(), a);
         }
 
-        //Console.WriteLine("{3}>>life:{0} tec:{1} power:{2}", cLife.ToString(), ctec.ToString(), cPower.ToString(), pos);
+      
     }
     class MouseEvent
     {
@@ -250,6 +267,10 @@ namespace WindowsFormsApplication1
         public const int WM_KEYUP = 0x101;
         public const int WM_CHAR = 0x0102;
 
+        public static void moveMouse(IntPtr hWnd, int x, int y)
+        {
+            SendMessage(hWnd, MOUSEEVENTF_MOVE, 0, MakeDWord(x, y));
+        }
         public static void pressKey(IntPtr hWnd, Keys key)
         {
 

@@ -17,6 +17,7 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
+            this.Text = "guagua  1.0.0.5";
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
             
@@ -63,7 +64,7 @@ namespace WindowsFormsApplication1
         private void button3_Click(object sender, EventArgs e)
         {
             m_objInfo[listBox1.SelectedIndex].pauseWork();
-            button1.Text = (button1.Text == "暂停") ? "继续运行" : "暂停";
+            button3.Text = (button3.Text == "暂停") ? "继续运行" : "暂停";
         }
        
         private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
