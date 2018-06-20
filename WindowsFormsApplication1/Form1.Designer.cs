@@ -63,7 +63,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(83, 64);
+            this.button1.Location = new System.Drawing.Point(83, 107);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -73,7 +73,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(164, 64);
+            this.button3.Location = new System.Drawing.Point(164, 107);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 2;
@@ -87,9 +87,9 @@
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader2,
             this.columnHeader3});
-            this.listView1.Location = new System.Drawing.Point(83, 25);
+            this.listView1.Location = new System.Drawing.Point(69, 25);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(253, 33);
+            this.listView1.Size = new System.Drawing.Size(253, 76);
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -165,7 +165,6 @@
             // 
             // userControl_NP
             // 
-            
             this.userControl_NP.Location = new System.Drawing.Point(10, 102);
             this.userControl_NP.Name = "userControl_NP";
             this.userControl_NP.Size = new System.Drawing.Size(289, 28);
@@ -182,11 +181,8 @@
             // 
             // userControl_HP
             // 
-            
             this.userControl_HP.Location = new System.Drawing.Point(10, 20);
-            
             this.userControl_HP.Name = "userControl_HP";
-            
             this.userControl_HP.Size = new System.Drawing.Size(289, 28);
             this.userControl_HP.TabIndex = 0;
             this.userControl_HP.Title = "HP";

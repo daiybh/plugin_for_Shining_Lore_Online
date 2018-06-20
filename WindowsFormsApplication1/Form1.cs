@@ -22,40 +22,103 @@ namespace WindowsFormsApplication1
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
             
         }
+        private Thread t1 = null;
+        private bool bExit = false;
+
+        ManualResetEvent autoEvent = new ManualResetEvent(true);
+        public void doWorkThread()
+        {
+            int X = 0;
+            int Y = 0;
+
+            //发送键盘按键 +
+            for (int i = 0; i < 10; i++)
+            {
+                foreach (var oi in m_objInfo)
+                {
+                    MouseEvent.moveMouse(oi.hWnd, oi.center_X + i * 10, oi.center_y + i * 10);
+                    MouseEvent.pressKey(oi.hWnd, Keys.Add);
+                }
+                Thread.Sleep(1000);
+            }
+            Thread.Sleep(100);
+            while (!bExit)
+            {
+                foreach (var oi in m_objInfo)
+                {
+                    if(oi.enableWork)
+                        MouseEvent.pressKey(oi.hWnd, Keys.Z);
+                }
+                //RightAttack(center_X, center_y);
+                for (int h =ObjectInfo.Object_H * -1; h < 10; h += GolbalSetting.GetInstance().step_H)
+                {
+                    for (int w = -45; w < 30; w += GolbalSetting.GetInstance().step_W)
+                    {
+                        foreach (var oi in m_objInfo)
+                        {
+                            if(!oi.enableWork)continue;
+                            X = oi.center_X + w;
+                            Y = oi.center_y + h;
+
+                            oi.attack(X, Y);
+                            oi.screenshotting();
+
+                        }
+                        autoEvent.WaitOne();
+                    }
+                }
+
+            }
+        }
+
+        
+        public void startWork()
+        {
+            t1 = new Thread(new ThreadStart(doWorkThread));
+            t1.IsBackground = true;
+            t1.Start();
+        }
+
+        public void stopWork()
+        {
+            bExit = true;
+            if (t1 != null && t1.IsAlive)
+                t1.Abort();
+        }
 
         private List<ObjectInfo> m_objInfo=new List<ObjectInfo>();
 
         void findCB(ObjectInfo objectInfo)
         {
             objectInfo.g = this.CreateGraphics();
+            objectInfo.enableWork = true;
             m_objInfo.Add(objectInfo);
             Console.WriteLine(objectInfo.ToString());
             listBox1.Items.Add(objectInfo.userName);
             listView1.Items.Add(objectInfo.userName);
+
         }
-        void findAngle()
-        {
-            MyFindWindow fw = new MyFindWindow(findCB);
-        }
+        
 
         private bool bInited = false;
         private void Form1_Load(object sender, EventArgs e)
         {
-           findAngle();
+            MyFindWindow fw = new MyFindWindow(findCB);
             listBox1.SelectedIndex = 0;
             bInited = true;
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            // m_objInfo[listBox1.SelectedIndex].attack(540,768/2);
             if (button1.Text == "开始")
             {
-                m_objInfo[listBox1.SelectedIndex].startWork();
+               startWork();
+                // m_objInfo[listBox1.SelectedIndex].startWork();
                 button1.Text = "停止";
             }
             else
             {
-                m_objInfo[listBox1.SelectedIndex].stopWork();
+                stopWork();
+                //m_objInfo[listBox1.SelectedIndex].stopWork();
                 button1.Text = "开始";
             }
             // createTextBitmap(m_objInfo[listBox1.SelectedIndex].userName);
@@ -63,14 +126,20 @@ namespace WindowsFormsApplication1
         }
         private void button3_Click(object sender, EventArgs e)
         {
-            m_objInfo[listBox1.SelectedIndex].pauseWork();
+            if (button3.Text == "暂停")
+            {
+                autoEvent.Reset();
+            }
+            else
+            {
+                autoEvent.Set();
+            }
             button3.Text = (button3.Text == "暂停") ? "继续运行" : "暂停";
         }
-       
         private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             if (!bInited) return;
-           m_objInfo[e.Item.Index].showWindow(e.Item.Checked);
+           m_objInfo[e.Item.Index].enableWork=(e.Item.Checked);
         }
        
       
