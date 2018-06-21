@@ -20,6 +20,11 @@ namespace WindowsFormsApplication1
             this.rt = rt;
             center_X = (rt.Right - rt.Left) / 2;
             center_y = (rt.Bottom - rt.Top) / 2;
+            if (rt.Height() < 700)
+            {
+                Object_H = 163;
+                Object_W = 50;
+            }
 
         }
 
@@ -35,7 +40,8 @@ namespace WindowsFormsApplication1
         public string userName { get; set; }
         public int center_X = 0;
         public int center_y = 0;
-        public static int Object_H = 247;
+        public int Object_H = 247;
+        public int Object_W = 76;
         public MyFindWindow.RECT rt;
         public bool enableWork { get; set; }
 
@@ -66,11 +72,19 @@ namespace WindowsFormsApplication1
             Thread.Sleep(10);
         }
 
-       
 
+        private bool bPressAdd = false;
         public void pressAdd()
         {
-            MouseEvent.pressKey(hWnd,Keys.Add);
+            if (bPressAdd) return;
+            bPressAdd = true;
+            //发送键盘按键 +
+            for (int i = 0; i < 10; i++)
+            {
+                MouseEvent.moveMouse(hWnd, center_X + i * 10, center_y + i * 10);
+                MouseEvent.pressKey(hWnd, Keys.Add);
+                Thread.Sleep(1000);
+            }
         }
         public void pressZ()
         {
@@ -104,17 +118,17 @@ namespace WindowsFormsApplication1
             bool success = PrintWindow(this.hWnd, dc, 0);
             memoryGraphics.ReleaseHdc(dc);
             // bmp now contains the screenshot
-           // bmp.Save("c:\\jpeg\\ccccc.jpg");
+            bmp.Save("c:\\jpeg\\ccccc.jpg");
             float a = 0.6F;
 
-            int hh = 763 - 701;
-
+            int hh = 63;
+            int firstLine = this.rt.Height()-96;
 
             //14,701 33,763
             //52,701 63,763
             //81,701 92,763
             a = (10 - (GolbalSetting.GetInstance().HPPercent + 1))/10.0F;
-            Color colorHP = bmp.GetPixel(22, Convert.ToInt32(hh * a + 701)); //判断 Color.B 是否为0 
+            Color colorHP = bmp.GetPixel(22, Convert.ToInt32(hh * a + firstLine)); //判断 Color.B 是否为0 
 
 
             if (colorHP.B != 0)
@@ -136,7 +150,7 @@ namespace WindowsFormsApplication1
             }
 
             a = (10 - (GolbalSetting.GetInstance().SPPercent + 1)) / 10.0F;
-            Color colorSP = bmp.GetPixel(60, Convert.ToInt32(hh * a + 701)); //判断 Color.G 是否为0 
+            Color colorSP = bmp.GetPixel(60, Convert.ToInt32(hh * a + firstLine)); //判断 Color.G 是否为0 
 
 
             if (colorSP.G != 0)
@@ -159,7 +173,7 @@ namespace WindowsFormsApplication1
             }
 
             a = (10 - (GolbalSetting.GetInstance().NPPercent + 1)) / 10.0F;
-            Color colorNP = bmp.GetPixel(88, Convert.ToInt32(hh * a + 701)); //判断 Color.B 是否为0
+            Color colorNP = bmp.GetPixel(88, Convert.ToInt32(hh * a + firstLine)); //判断 Color.B 是否为0
             if (colorNP.B != 0)
             {
                 //喝血

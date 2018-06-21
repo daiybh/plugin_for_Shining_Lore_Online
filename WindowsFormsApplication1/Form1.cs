@@ -17,86 +17,24 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
-            this.Text = "guagua  1.0.0.5";
+            this.Text = "guagua  1.0.0.6";
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
-            
         }
-        private Thread t1 = null;
-        private bool bExit = false;
-
-        ManualResetEvent autoEvent = new ManualResetEvent(true);
-        public void doWorkThread()
-        {
-            int X = 0;
-            int Y = 0;
-
-            //发送键盘按键 +
-            for (int i = 0; i < 10; i++)
-            {
-                foreach (var oi in m_objInfo)
-                {
-                    MouseEvent.moveMouse(oi.hWnd, oi.center_X + i * 10, oi.center_y + i * 10);
-                    MouseEvent.pressKey(oi.hWnd, Keys.Add);
-                }
-                Thread.Sleep(1000);
-            }
-            Thread.Sleep(100);
-            while (!bExit)
-            {
-                foreach (var oi in m_objInfo)
-                {
-                    if(oi.enableWork)
-                        MouseEvent.pressKey(oi.hWnd, Keys.Z);
-                }
-                //RightAttack(center_X, center_y);
-                for (int h =ObjectInfo.Object_H * -1; h < 10; h += GolbalSetting.GetInstance().step_H)
-                {
-                    for (int w = -45; w < 30; w += GolbalSetting.GetInstance().step_W)
-                    {
-                        foreach (var oi in m_objInfo)
-                        {
-                            if(!oi.enableWork)continue;
-                            X = oi.center_X + w;
-                            Y = oi.center_y + h;
-
-                            oi.attack(X, Y);
-                            oi.screenshotting();
-
-                        }
-                        autoEvent.WaitOne();
-                    }
-                }
-
-            }
-        }
-
-        
-        public void startWork()
-        {
-            t1 = new Thread(new ThreadStart(doWorkThread));
-            t1.IsBackground = true;
-            t1.Start();
-        }
-
-        public void stopWork()
-        {
-            bExit = true;
-            if (t1 != null && t1.IsAlive)
-                t1.Abort();
-        }
+       
 
         private List<ObjectInfo> m_objInfo=new List<ObjectInfo>();
-
+        private List<ObjectInfoWorker> m_objInfoWorker = new List<ObjectInfoWorker>();
         void findCB(ObjectInfo objectInfo)
         {
             objectInfo.g = this.CreateGraphics();
             objectInfo.enableWork = true;
             m_objInfo.Add(objectInfo);
             Console.WriteLine(objectInfo.ToString());
-            listBox1.Items.Add(objectInfo.userName);
+            
             listView1.Items.Add(objectInfo.userName);
 
+            m_objInfoWorker.Add(new ObjectInfoWorker(objectInfo,autoEvent));
         }
         
 
@@ -104,26 +42,36 @@ namespace WindowsFormsApplication1
         private void Form1_Load(object sender, EventArgs e)
         {
             MyFindWindow fw = new MyFindWindow(findCB);
-            listBox1.SelectedIndex = 0;
+            
             bInited = true;
+          //  listView1.datas = new ControlBindingsCollection();
         }
         private void button1_Click(object sender, EventArgs e)
         {
             if (button1.Text == "开始")
             {
-               startWork();
+                foreach (var worker in m_objInfoWorker)
+                {
+                    worker.startWork();
+                }
                 // m_objInfo[listBox1.SelectedIndex].startWork();
                 button1.Text = "停止";
             }
             else
             {
-                stopWork();
+
+                foreach (var worker in m_objInfoWorker)
+                {
+                    worker.stopWork();
+                }
                 //m_objInfo[listBox1.SelectedIndex].stopWork();
                 button1.Text = "开始";
             }
             // createTextBitmap(m_objInfo[listBox1.SelectedIndex].userName);
 
         }
+
+        ManualResetEvent autoEvent = new ManualResetEvent(true);
         private void button3_Click(object sender, EventArgs e)
         {
             if (button3.Text == "暂停")
@@ -179,6 +127,11 @@ namespace WindowsFormsApplication1
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             GolbalSetting.GetInstance().savetoConfig();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
