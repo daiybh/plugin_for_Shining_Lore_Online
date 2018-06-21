@@ -18,6 +18,7 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
             this.Text = "guagua  1.0.0.6";
+            this.notifyIcon1.Text = this.Text;
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
         }
@@ -126,6 +127,10 @@ namespace WindowsFormsApplication1
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            foreach (var oi in m_objInfo)
+            {
+                MouseEvent.showWindow(oi.hWnd, true);
+            }
             GolbalSetting.GetInstance().savetoConfig();
         }
 
@@ -147,7 +152,7 @@ namespace WindowsFormsApplication1
         }
         private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Form1_FormClosed(sender,null);
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -162,6 +167,25 @@ namespace WindowsFormsApplication1
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             showThisWindow();
+        }
+
+        private void 隐藏窗口_Click(object sender, EventArgs e)
+        {
+            bool bShow = false;
+            if (button4.Text == "隐藏窗口")
+            {
+                button4.Text = "显示窗口";
+            }
+            else
+            {
+                button4.Text = "隐藏窗口";
+                bShow = true;
+            }
+
+            foreach (var oi in m_objInfo)
+            {
+                MouseEvent.showWindow(oi.hWnd,bShow);
+            }
         }
     }
 }

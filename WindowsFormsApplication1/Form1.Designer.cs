@@ -41,21 +41,22 @@
             this.trackBar1_W = new System.Windows.Forms.TrackBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.显示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.userControl_NP = new WindowsFormsApplication1.UserControl1();
             this.userControl_SP = new WindowsFormsApplication1.UserControl1();
             this.userControl_HP = new WindowsFormsApplication1.UserControl1();
             this.objectInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.objectInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.显示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_H)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1_W)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectInfoBindingSource1)).BeginInit();
-            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -154,13 +155,43 @@
             // button2
             // 
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(76, 148);
+            this.button2.Location = new System.Drawing.Point(4, 148);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(109, 23);
             this.button2.TabIndex = 10;
             this.button2.Text = "刷新游戏人物";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.显示ToolStripMenuItem,
+            this.退出ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 48);
+            // 
+            // 显示ToolStripMenuItem
+            // 
+            this.显示ToolStripMenuItem.Name = "显示ToolStripMenuItem";
+            this.显示ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.显示ToolStripMenuItem.Text = "显示";
+            this.显示ToolStripMenuItem.Click += new System.EventHandler(this.显示ToolStripMenuItem_Click);
+            // 
+            // 退出ToolStripMenuItem
+            // 
+            this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.退出ToolStripMenuItem.Text = "退出";
+            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
             // userControl_NP
             // 
@@ -194,41 +225,22 @@
             // 
             this.objectInfoBindingSource1.DataSource = typeof(WindowsFormsApplication1.ObjectInfo);
             // 
-            // notifyIcon1
+            // button4
             // 
-            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
-            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
-            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.显示ToolStripMenuItem,
-            this.退出ToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 48);
-            // 
-            // 显示ToolStripMenuItem
-            // 
-            this.显示ToolStripMenuItem.Name = "显示ToolStripMenuItem";
-            this.显示ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-            this.显示ToolStripMenuItem.Text = "显示";
-            this.显示ToolStripMenuItem.Click += new System.EventHandler(this.显示ToolStripMenuItem_Click);
-            // 
-            // 退出ToolStripMenuItem
-            // 
-            this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
-            this.退出ToolStripMenuItem.Text = "退出";
-            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
+            this.button4.Location = new System.Drawing.Point(117, 150);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(74, 20);
+            this.button4.TabIndex = 12;
+            this.button4.Text = "隐藏窗口";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.隐藏窗口_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(329, 409);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
@@ -247,9 +259,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_H)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1_W)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.objectInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.objectInfoBindingSource1)).EndInit();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,6 +288,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 显示ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;
+        private System.Windows.Forms.Button button4;
     }
 }
 

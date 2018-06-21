@@ -207,8 +207,12 @@ namespace WindowsFormsApplication1
         [DllImport("user32.dll")]
         public static extern int MapVirtualKey(int Ucode, uint uMapType);
 
+        [DllImport("user32.dll")]
+        public static extern int ShowWindow(IntPtr hWnd, int nCmdShow);
+
         public const int WM_SHOWWINDOW = 0x0018;
         public const int WM_SYSCOMMAND = 0x0112;
+        
         public const int SC_MINIMIZE = 0xF020;
         public const int SC_RESTORE = 0xF120;
         public const int WM_LBUTTONDOWN = 513; // 鼠标左键按下 
@@ -230,6 +234,11 @@ namespace WindowsFormsApplication1
         public const int WM_KEYUP = 0x101;
         public const int WM_CHAR = 0x0102;
 
+        public static void showWindow(IntPtr hWnd, bool bShow)
+        {
+            //   SendMessage(hWnd, WM_SHOWWINDOW, bShow?1:0,0);
+            ShowWindow(hWnd, bShow ? 1 : 0);
+        }
         public static void moveMouse(IntPtr hWnd, int x, int y)
         {
             SendMessage(hWnd, WM_MOUSEMOVE, 0, MakeDWord(x, y));
