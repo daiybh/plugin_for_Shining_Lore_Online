@@ -28,7 +28,7 @@ namespace WindowsFormsApplication1
         void findCB(ObjectInfo objectInfo)
         {
             objectInfo.g = this.CreateGraphics();
-            objectInfo.enableWork = true;
+            objectInfo.enableWork = false;
             m_objInfo.Add(objectInfo);
             Console.WriteLine(objectInfo.ToString());
             
@@ -132,6 +132,36 @@ namespace WindowsFormsApplication1
         private void button2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void 显示ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showThisWindow();
+        }
+
+        void showThisWindow()
+        {
+            this.Visible = true;
+            this.WindowState = FormWindowState.Normal;
+            this.Show();
+        }
+        private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.Visible = false;
+                this.notifyIcon1.Visible = true;
+            }
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            showThisWindow();
         }
     }
 }
