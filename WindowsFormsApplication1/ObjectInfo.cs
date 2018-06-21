@@ -43,7 +43,7 @@ namespace WindowsFormsApplication1
         public int Object_H = 247;
         public int Object_W = 76;
         public MyFindWindow.RECT rt;
-        public bool enableWork { get; set; }
+        public bool enableWork { get; set; } = false;
 
         public void showWindow(bool isShow)
         {
@@ -118,7 +118,7 @@ namespace WindowsFormsApplication1
             bool success = PrintWindow(this.hWnd, dc, 0);
             memoryGraphics.ReleaseHdc(dc);
             // bmp now contains the screenshot
-            bmp.Save("c:\\jpeg\\ccccc.jpg");
+          //  bmp.Save("c:\\jpeg\\ccccc.jpg");
             float a = 0.6F;
 
             int hh = 63;

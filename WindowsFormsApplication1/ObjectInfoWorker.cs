@@ -38,9 +38,11 @@ namespace WindowsFormsApplication1
                         if (!oi.enableWork) continue;
                         X = oi.center_X + w;
                         Y = oi.center_y + h;
-
-                        oi.attack(X, Y);
-                        oi.screenshotting();
+                        if (oi.enableWork)
+                        {
+                            oi.attack(X, Y);
+                            oi.screenshotting();
+                        }
                         autoEvent.WaitOne();
                     }
                 }
