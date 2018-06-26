@@ -45,12 +45,12 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.显示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button4 = new System.Windows.Forms.Button();
             this.userControl_NP = new WindowsFormsApplication1.UserControl1();
             this.userControl_SP = new WindowsFormsApplication1.UserControl1();
             this.userControl_HP = new WindowsFormsApplication1.UserControl1();
             this.objectInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.objectInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_H)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1_W)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -193,6 +193,16 @@
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(117, 150);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(74, 20);
+            this.button4.TabIndex = 12;
+            this.button4.Text = "隐藏窗口";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.隐藏窗口_Click);
+            // 
             // userControl_NP
             // 
             this.userControl_NP.Location = new System.Drawing.Point(10, 104);
@@ -225,16 +235,6 @@
             // 
             this.objectInfoBindingSource1.DataSource = typeof(WindowsFormsApplication1.ObjectInfo);
             // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(117, 150);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(74, 20);
-            this.button4.TabIndex = 12;
-            this.button4.Text = "隐藏窗口";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.隐藏窗口_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -251,7 +251,6 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
-            this.ShowInTaskbar = false;
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);

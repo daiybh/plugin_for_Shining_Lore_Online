@@ -63,13 +63,29 @@ namespace WindowsFormsApplication1
                 }
             }
         }
+
+        public void rAttack()
+        {
+            int X = center_X;
+            int Y = center_y;
+            MouseEvent.moveMouse(hWnd, X,Y);
+            MouseEvent.RightClick(this.hWnd, X, Y);
+        }
+
+        private int offsetX = -100;
         public void attack(int x, int y)
         {
             //  RightAttack(x, y);
-            MouseEvent.RightClick(this.hWnd, center_X+30, center_y+30);
+            MouseEvent.RightClick(this.hWnd, x-150, y);
             MouseEvent.LeftClick(this.hWnd, x, y);
+            MouseEvent.RightClick(this.hWnd, x + 150, y);
 
             Thread.Sleep(10);
+        }
+
+        public void moveTo(int x,int y)
+        {
+            MouseEvent.LeftClick(this.hWnd, x,y);
         }
 
 

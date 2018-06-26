@@ -23,17 +23,25 @@ namespace WindowsFormsApplication1
         {
             int X = 0;
             int Y = 0;
+            int leftMove = 100;
+            int leftmoveCnt = 0;
+            int[] narrX = new[] { +1, 0, -1, 0, +1, 0, -1, 0, +1, 0 };
+            int[] narrY = new[] {  0, +1, 0, -1, 0, +1, 0, -1, 0,+1 };
             while (!bExit)
             {
-                if (oi.enableWork)
+                
+                  if (oi.enableWork)
+                 
                 {
                     oi.pressAdd();
                     MouseEvent.pressKey(oi.hWnd, Keys.Z);
                 }
+
                 //RightAttack(center_X, center_y);
+                
                 for (int h = oi.Object_H * -1; h < 10; h += GolbalSetting.GetInstance().step_H)
                 {
-                    for (int w = oi.Object_W/2*-1; w < oi.Object_W / 2; w += GolbalSetting.GetInstance().step_W)
+                    for (int w = oi.Object_W / 2 * -1; w < oi.Object_W / 2; w += GolbalSetting.GetInstance().step_W)
                     {
                         if (!oi.enableWork) continue;
                         X = oi.center_X + w;
@@ -43,11 +51,23 @@ namespace WindowsFormsApplication1
                             oi.attack(X, Y);
                             oi.screenshotting();
                         }
+
                         autoEvent.WaitOne();
                     }
-                }
+                }/**/
+
+//                 int nOffsite = leftMove;
+//                 int npos = leftmoveCnt % 10;
+// 
+//                 nOffsite = leftMove * narrX[npos];
+// 
+//                 oi.moveTo(oi.center_X + leftMove * narrX[npos], oi.center_y+ leftMove * narrY[npos]);
+//                 Thread.Sleep(100);
+//                 autoEvent.WaitOne();
+//                 leftmoveCnt++;
             }
         }
+
 
 
         public void startWork()
