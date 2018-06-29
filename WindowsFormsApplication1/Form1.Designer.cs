@@ -37,9 +37,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.trackBar1_W = new System.Windows.Forms.TrackBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.userControl_NP = new WindowsFormsApplication1.UserControl1();
-            this.userControl_SP = new WindowsFormsApplication1.UserControl1();
-            this.userControl_HP = new WindowsFormsApplication1.UserControl1();
             this.button2 = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -47,8 +44,16 @@
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button4 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.userControl_NP = new WindowsFormsApplication1.UserControl1();
+            this.userControl_SP = new WindowsFormsApplication1.UserControl1();
+            this.userControl_HP = new WindowsFormsApplication1.UserControl1();
             this.objectInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.objectInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_H)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1_W)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -128,30 +133,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "吃药设置";
             // 
-            // userControl_NP
-            // 
-            this.userControl_NP.Location = new System.Drawing.Point(10, 104);
-            this.userControl_NP.Name = "userControl_NP";
-            this.userControl_NP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_NP.TabIndex = 2;
-            this.userControl_NP.Title = "NP";
-            // 
-            // userControl_SP
-            // 
-            this.userControl_SP.Location = new System.Drawing.Point(10, 63);
-            this.userControl_SP.Name = "userControl_SP";
-            this.userControl_SP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_SP.TabIndex = 1;
-            this.userControl_SP.Title = "SP";
-            // 
-            // userControl_HP
-            // 
-            this.userControl_HP.Location = new System.Drawing.Point(10, 22);
-            this.userControl_HP.Name = "userControl_HP";
-            this.userControl_HP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_HP.TabIndex = 0;
-            this.userControl_HP.Title = "HP";
-            // 
             // button2
             // 
             this.button2.Enabled = false;
@@ -208,11 +189,41 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.Column2,
+            this.Column3,
+            this.Column4,
+            this.Column5});
             this.dataGridView1.Location = new System.Drawing.Point(4, 5);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(483, 134);
             this.dataGridView1.TabIndex = 13;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // userControl_NP
+            // 
+            this.userControl_NP.Location = new System.Drawing.Point(10, 104);
+            this.userControl_NP.Name = "userControl_NP";
+            this.userControl_NP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_NP.TabIndex = 2;
+            this.userControl_NP.Title = "NP";
+            // 
+            // userControl_SP
+            // 
+            this.userControl_SP.Location = new System.Drawing.Point(10, 63);
+            this.userControl_SP.Name = "userControl_SP";
+            this.userControl_SP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_SP.TabIndex = 1;
+            this.userControl_SP.Title = "SP";
+            // 
+            // userControl_HP
+            // 
+            this.userControl_HP.Location = new System.Drawing.Point(10, 22);
+            this.userControl_HP.Name = "userControl_HP";
+            this.userControl_HP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_HP.TabIndex = 0;
+            this.userControl_HP.Title = "HP";
             // 
             // objectInfoBindingSource
             // 
@@ -221,6 +232,54 @@
             // objectInfoBindingSource1
             // 
             this.objectInfoBindingSource1.DataSource = typeof(WindowsFormsApplication1.ObjectInfo);
+            // 
+            // Column1
+            // 
+            this.Column1.DataPropertyName = "userName";
+            this.Column1.FillWeight = 80F;
+            this.Column1.HeaderText = "名字";
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 80;
+            // 
+            // Column2
+            // 
+            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column2.DataPropertyName = "enableWork";
+            this.Column2.FillWeight = 62.13198F;
+            this.Column2.HeaderText = "是否加挂";
+            this.Column2.Name = "Column2";
+            this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Column3
+            // 
+            this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column3.DataPropertyName = "bAttack";
+            this.Column3.FillWeight = 46.59899F;
+            this.Column3.HeaderText = "攻击";
+            this.Column3.Name = "Column3";
+            this.Column3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Column4
+            // 
+            this.Column4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column4.DataPropertyName = "bPickUP";
+            this.Column4.FillWeight = 46.59899F;
+            this.Column4.HeaderText = "捡东西";
+            this.Column4.Name = "Column4";
+            this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Column5
+            // 
+            this.Column5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column5.DataPropertyName = "bShowWindow";
+            this.Column5.FillWeight = 46.59899F;
+            this.Column5.HeaderText = "隐藏窗体";
+            this.Column5.Name = "Column5";
+            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // Form1
             // 
@@ -274,6 +333,11 @@
         private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column5;
     }
 }
 

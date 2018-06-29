@@ -47,7 +47,7 @@ namespace WindowsFormsApplication1
             bInited = true;
             //  listView1.datas = new ControlBindingsCollection();
             dataGridView1.DataSource = m_objInfo;
-            dataGridView1.AutoGenerateColumns = true;
+          ///  dataGridView1.AutoGenerateColumns = true;
         }
         private void button1_Click(object sender, EventArgs e)
         {
