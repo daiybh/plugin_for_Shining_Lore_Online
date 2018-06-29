@@ -25,7 +25,12 @@ namespace WindowsFormsApplication1
                 typeof(bool), true,
                 ConfigurationPropertyOptions.IsRequired);
 
-		
+        private static readonly ConfigurationProperty _userName =
+            new ConfigurationProperty("userName",
+                typeof(string), "null",
+                ConfigurationPropertyOptions.IsRequired);
+
+
         public CustomSection()
         {
             _Properties =
@@ -34,6 +39,7 @@ namespace WindowsFormsApplication1
             _Properties.Add(_EnableWork);
             _Properties.Add(_Attack);
             _Properties.Add(_PickUP);
+            _Properties.Add(_userName);
         }
         // This is a key customization. 
         // It returns the initialized property bag.
@@ -61,7 +67,15 @@ namespace WindowsFormsApplication1
                 throw new ConfigurationErrorsException(
                     "The property " + propertyName + " is read only.");
         }
-		
+
+        public string userName
+        {
+            get { return (string)this["userName"]; }
+            set
+            {
+                this["userName"] = value;
+            }
+        }
         public bool enableWork
         {
             get { return (bool)this["enableWork"]; }

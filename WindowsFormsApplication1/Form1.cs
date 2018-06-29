@@ -17,7 +17,7 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
-            this.Text = "guagua  1.0.0.6";
+            this.Text = "guagua  1.0.0.7";
             this.notifyIcon1.Text = this.Text;
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;

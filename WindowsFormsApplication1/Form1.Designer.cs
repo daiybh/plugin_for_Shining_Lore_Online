@@ -37,6 +37,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.trackBar1_W = new System.Windows.Forms.TrackBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.userControl_NP = new WindowsFormsApplication1.UserControl1();
+            this.userControl_SP = new WindowsFormsApplication1.UserControl1();
+            this.userControl_HP = new WindowsFormsApplication1.UserControl1();
             this.button2 = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -44,9 +47,6 @@
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button4 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.userControl_NP = new WindowsFormsApplication1.UserControl1();
-            this.userControl_SP = new WindowsFormsApplication1.UserControl1();
-            this.userControl_HP = new WindowsFormsApplication1.UserControl1();
             this.objectInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.objectInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_H)).BeginInit();
@@ -83,7 +83,7 @@
             this.trackBar_H.Location = new System.Drawing.Point(83, 324);
             this.trackBar_H.Maximum = 100;
             this.trackBar_H.Name = "trackBar_H";
-            this.trackBar_H.Size = new System.Drawing.Size(230, 45);
+            this.trackBar_H.Size = new System.Drawing.Size(386, 45);
             this.trackBar_H.TabIndex = 4;
             this.trackBar_H.Value = 3;
             this.trackBar_H.ValueChanged += new System.EventHandler(this.trackBar_H_ValueChanged);
@@ -111,7 +111,7 @@
             this.trackBar1_W.Location = new System.Drawing.Point(83, 375);
             this.trackBar1_W.Maximum = 100;
             this.trackBar1_W.Name = "trackBar1_W";
-            this.trackBar1_W.Size = new System.Drawing.Size(230, 45);
+            this.trackBar1_W.Size = new System.Drawing.Size(386, 45);
             this.trackBar1_W.TabIndex = 7;
             this.trackBar1_W.Value = 3;
             this.trackBar1_W.ValueChanged += new System.EventHandler(this.trackBar1_W_ValueChanged);
@@ -123,10 +123,34 @@
             this.groupBox1.Controls.Add(this.userControl_HP);
             this.groupBox1.Location = new System.Drawing.Point(3, 176);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(316, 137);
+            this.groupBox1.Size = new System.Drawing.Size(466, 137);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "吃药设置";
+            // 
+            // userControl_NP
+            // 
+            this.userControl_NP.Location = new System.Drawing.Point(10, 104);
+            this.userControl_NP.Name = "userControl_NP";
+            this.userControl_NP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_NP.TabIndex = 2;
+            this.userControl_NP.Title = "NP";
+            // 
+            // userControl_SP
+            // 
+            this.userControl_SP.Location = new System.Drawing.Point(10, 63);
+            this.userControl_SP.Name = "userControl_SP";
+            this.userControl_SP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_SP.TabIndex = 1;
+            this.userControl_SP.Title = "SP";
+            // 
+            // userControl_HP
+            // 
+            this.userControl_HP.Location = new System.Drawing.Point(10, 22);
+            this.userControl_HP.Name = "userControl_HP";
+            this.userControl_HP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_HP.TabIndex = 0;
+            this.userControl_HP.Title = "HP";
             // 
             // button2
             // 
@@ -186,33 +210,9 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(4, 5);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(314, 134);
+            this.dataGridView1.Size = new System.Drawing.Size(483, 134);
             this.dataGridView1.TabIndex = 13;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // userControl_NP
-            // 
-            this.userControl_NP.Location = new System.Drawing.Point(10, 104);
-            this.userControl_NP.Name = "userControl_NP";
-            this.userControl_NP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_NP.TabIndex = 2;
-            this.userControl_NP.Title = "NP";
-            // 
-            // userControl_SP
-            // 
-            this.userControl_SP.Location = new System.Drawing.Point(10, 63);
-            this.userControl_SP.Name = "userControl_SP";
-            this.userControl_SP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_SP.TabIndex = 1;
-            this.userControl_SP.Title = "SP";
-            // 
-            // userControl_HP
-            // 
-            this.userControl_HP.Location = new System.Drawing.Point(10, 22);
-            this.userControl_HP.Name = "userControl_HP";
-            this.userControl_HP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_HP.TabIndex = 0;
-            this.userControl_HP.Title = "HP";
             // 
             // objectInfoBindingSource
             // 
@@ -226,7 +226,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 409);
+            this.ClientSize = new System.Drawing.Size(498, 409);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button2);

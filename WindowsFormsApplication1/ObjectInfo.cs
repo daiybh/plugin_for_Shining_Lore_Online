@@ -138,7 +138,7 @@ namespace WindowsFormsApplication1
             bool success = PrintWindow(this.hWnd, dc, 0);
             memoryGraphics.ReleaseHdc(dc);
             // bmp now contains the screenshot
-          bmp.Save("c:\\jpeg\\ccccc.jpg");
+            //  bmp.Save("c:\\jpeg\\ccccc.jpg");
             float a = 0.6F;
 
             int hh = 63;
