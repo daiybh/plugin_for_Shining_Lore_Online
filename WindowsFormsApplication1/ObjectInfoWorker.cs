@@ -34,7 +34,7 @@ namespace WindowsFormsApplication1
                  
                 {
                     oi.pressAdd();
-                    MouseEvent.pressKey(oi.hWnd, Keys.Z);
+                    oi.pressZ();
                 }
 
                 //RightAttack(center_X, center_y);

@@ -16,6 +16,7 @@ namespace WindowsFormsApplication1
         {
             this.hWnd = _hwnd;
             this.title = title;
+            this.enableWork = true;
             this.userName = title.Substring(filterLength);
             this.rt = rt;
             center_X = (rt.Right - rt.Left) / 2;
@@ -32,62 +33,65 @@ namespace WindowsFormsApplication1
         {
             return string.Format("hWnd:{0} title:{1}", this.hWnd, this.title);
         }
-        
 
-        public Graphics g { get; set; }
-        public IntPtr hWnd { get; set; }
-        public string title { get; set; }
+        public void setGraphics(Graphics _g)
+        {
+            g = _g;
+        }
         public string userName { get; set; }
+        public bool enableWork
+        {
+            get { return _enableWork; }
+            set
+            {
+                _enableWork = value;
+            }
+        }
+        
+        public bool bAttack { get; set; } = true;
+        public bool bPickUP { get; set; } = true;
+        private bool _bshowWindow = true;
+
+        public bool bShowWindow
+        {
+            get { return _bshowWindow;}
+            set
+            {
+                _bshowWindow = value;
+                showWindow(value);
+            }
+        }
+
+        private Graphics g;
+        private IntPtr hWnd;
+        private string title;
         public int center_X = 0;
         public int center_y = 0;
         public int Object_H = 247;
         public int Object_W = 76;
         public MyFindWindow.RECT rt;
-        public bool enableWork { get; set; } = false;
+        private bool _enableWork = false;
+       
 
         public void showWindow(bool isShow)
         {
-            MouseEvent.SendMessage(hWnd, MouseEvent.WM_SYSCOMMAND,
-                isShow ? MouseEvent.SC_MINIMIZE : MouseEvent.SC_RESTORE, 0);
+            _bshowWindow = isShow;
+         MouseEvent.showWindow(this.hWnd,isShow);
         }
-
-      
-
-        public void RightAttack(int x, int y)
-        {
-            for (int h = y-20; h < y+20; h++)
-            {
-                for (int w = x-20; w < x+20; w++)
-                {
-                    MouseEvent.RightClick(this.hWnd,w,h);
-                }
-            }
-        }
-
-        public void rAttack()
-        {
-            int X = center_X;
-            int Y = center_y;
-            MouseEvent.moveMouse(hWnd, X,Y);
-            MouseEvent.RightClick(this.hWnd, X, Y);
-        }
-
+        
         private int offsetX = -100;
         public void attack(int x, int y)
         {
             //  RightAttack(x, y);
-            MouseEvent.RightClick(this.hWnd, x-150, y);
-            MouseEvent.LeftClick(this.hWnd, x, y);
-            MouseEvent.RightClick(this.hWnd, x + 150, y);
+            if(bAttack)
+                MouseEvent.RightClick(this.hWnd, x-150, y);
+            if(bPickUP)
+                MouseEvent.LeftClick(this.hWnd, x, y);
+            if (bAttack)
+                MouseEvent.RightClick(this.hWnd, x + 150, y);
 
             Thread.Sleep(10);
         }
-
-        public void moveTo(int x,int y)
-        {
-            MouseEvent.LeftClick(this.hWnd, x,y);
-        }
-
 
         private bool bPressAdd = false;
         public void pressAdd()
@@ -134,7 +138,7 @@ namespace WindowsFormsApplication1
             bool success = PrintWindow(this.hWnd, dc, 0);
             memoryGraphics.ReleaseHdc(dc);
             // bmp now contains the screenshot
-          //  bmp.Save("c:\\jpeg\\ccccc.jpg");
+          bmp.Save("c:\\jpeg\\ccccc.jpg");
             float a = 0.6F;
 
             int hh = 63;
@@ -209,7 +213,7 @@ namespace WindowsFormsApplication1
             }
 
 
-          //  Console.WriteLine("{3}>>colorHP:{0} colorSP:{1} colorNP:{2}", colorHP.ToString(), colorSP.ToString(), colorNP.ToString(), a);
+            Console.WriteLine("{3}>>colorHP:{0} colorSP:{1} colorNP:{2}", colorHP.ToString(), colorSP.ToString(), colorNP.ToString(), a);
         }
 
       

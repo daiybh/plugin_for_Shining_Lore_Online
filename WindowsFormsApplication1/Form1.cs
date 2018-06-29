@@ -21,6 +21,7 @@ namespace WindowsFormsApplication1
             this.notifyIcon1.Text = this.Text;
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
+            
         }
        
 
@@ -28,24 +29,25 @@ namespace WindowsFormsApplication1
         private List<ObjectInfoWorker> m_objInfoWorker = new List<ObjectInfoWorker>();
         void findCB(ObjectInfo objectInfo)
         {
-            objectInfo.g = this.CreateGraphics();
-            objectInfo.enableWork = false;
+            objectInfo.setGraphics( this.CreateGraphics());
             m_objInfo.Add(objectInfo);
             Console.WriteLine(objectInfo.ToString());
             
-            listView1.Items.Add(objectInfo.userName);
+            //listView1.Items.Add(objectInfo.userName);
 
             m_objInfoWorker.Add(new ObjectInfoWorker(objectInfo,autoEvent));
         }
-        
-
+      
         private bool bInited = false;
         private void Form1_Load(object sender, EventArgs e)
         {
             MyFindWindow fw = new MyFindWindow(findCB);
             
             bInited = true;
-          //  listView1.datas = new ControlBindingsCollection();
+            //  listView1.datas = new ControlBindingsCollection();
+            dataGridView1.DataSource = m_objInfo;
+            dataGridView1.AutoGenerateColumns = true;
+            
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -129,7 +131,8 @@ namespace WindowsFormsApplication1
         {
             foreach (var oi in m_objInfo)
             {
-                MouseEvent.showWindow(oi.hWnd, true);
+                oi.showWindow(true);
+                
             }
             GolbalSetting.GetInstance().savetoConfig();
         }
@@ -184,8 +187,13 @@ namespace WindowsFormsApplication1
 
             foreach (var oi in m_objInfo)
             {
-                MouseEvent.showWindow(oi.hWnd,bShow);
+                oi.showWindow(bShow);
             }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
     }
 }
