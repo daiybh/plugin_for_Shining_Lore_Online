@@ -25,11 +25,12 @@ namespace WindowsFormsApplication1
         }
        
 
-        private List<ObjectInfo> m_objInfo=new List<ObjectInfo>();
+        private IList<ObjectInfo> m_objInfo=new List<ObjectInfo>();
         private List<ObjectInfoWorker> m_objInfoWorker = new List<ObjectInfoWorker>();
         void findCB(ObjectInfo objectInfo)
         {
             objectInfo.setGraphics( this.CreateGraphics());
+            GolbalSetting.GetInstance().updateConfig(ref objectInfo);
             m_objInfo.Add(objectInfo);
             Console.WriteLine(objectInfo.ToString());
             
@@ -47,7 +48,6 @@ namespace WindowsFormsApplication1
             //  listView1.datas = new ControlBindingsCollection();
             dataGridView1.DataSource = m_objInfo;
             dataGridView1.AutoGenerateColumns = true;
-            
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -134,7 +134,7 @@ namespace WindowsFormsApplication1
                 oi.showWindow(true);
                 
             }
-            GolbalSetting.GetInstance().savetoConfig();
+            GolbalSetting.GetInstance().savetoConfig(m_objInfo);
         }
 
         private void button2_Click(object sender, EventArgs e)

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
@@ -64,10 +65,32 @@ namespace WindowsFormsApplication1
             {
             }
         }
+        public void updateConfig(ref ObjectInfo oi)
+        {
+            CustomSection cs = ConfigurationManager.GetSection(oi.userName) as CustomSection;
+            if (cs == null) return;
+            oi.bAttack = cs.bAttack;
+            oi.bPickUP = cs.bPickUP;
+            oi.enableWork = cs.enableWork;
 
-        public  void savetoConfig()
+        }
+
+
+        public  void savetoConfig(IList<ObjectInfo> objlist)
         {
             Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+
+            foreach (ObjectInfo oi in objlist)
+            {
+                CustomSection cs = new CustomSection();
+                cs.enableWork = oi.enableWork;
+                cs.bAttack = oi.bAttack;
+                cs.bPickUP = oi.bPickUP;
+                cfa.Sections.Remove(oi.userName);
+                cfa.Sections.Add(oi.userName, cs);
+            }
+
             Func<string,string,bool> gw1 = (key, value) =>{
                 cfa.AppSettings.Settings.Remove(key);
                 cfa.AppSettings.Settings.Add(key,value);
@@ -85,6 +108,12 @@ namespace WindowsFormsApplication1
             gw1(("HPPercent"), HPPercent.ToString() );
             gw1(("SPPercent"), SPPercent.ToString());
             gw1(("NPPercent"), NPPercent.ToString());
+
+            foreach (var obj in objlist)
+            {
+                
+                //cfa.AppSettings.Settings.Add(obj.userName,);
+            }
             cfa.Save();
         }
 
