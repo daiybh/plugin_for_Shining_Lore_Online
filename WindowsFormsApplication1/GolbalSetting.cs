@@ -24,9 +24,9 @@ namespace Guagua
             return _gSettingInstance;
         }
 
-        public int step_W;
-        public int step_H;
-        public  bool [] keyPress_NP = new bool[6];
+        public int step_W=17;
+        public int step_H=29;
+        public  bool [] keyPress_NP = new bool[6] { true, false, false, false, false, true };
         public int NPPercent = 6;
         public  bool [] keyPress_SP = new bool[6];
         public int SPPercent = 6;
@@ -47,11 +47,9 @@ namespace Guagua
             try
             {
                 step_W = Int32.Parse(getConfig("trackBar_W"));
-                if (step_W < 1 || step_W > 100)
-                    step_W = 17;
+           
                 step_H = Int32.Parse(getConfig("trackBar_H"));
-                if (step_H < 1 || step_H > 100)
-                    step_H = 29;
+           
                 for (int i = 0; i < 6; i++)
                 {
                     keyPress_NP[i] = Boolean.Parse(getConfig("keyPress_NP" + i.ToString()));
