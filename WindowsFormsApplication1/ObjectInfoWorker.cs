@@ -35,6 +35,7 @@ namespace WindowsFormsApplication1
                 {
                     oi.pressAdd();
                     oi.pressZ();
+                    oi.refeshObjInfo();
                 }
 
                 //RightAttack(center_X, center_y);
@@ -49,7 +50,7 @@ namespace WindowsFormsApplication1
                         if (oi.enableWork)
                         {
                             oi.attack(X, Y);
-                            oi.screenshotting();
+                           // oi.screenshotting();
                         }
 
                         autoEvent.WaitOne();

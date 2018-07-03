@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
+   
     static class Program
     {
         /// <summary>
@@ -19,6 +22,17 @@ namespace WindowsFormsApplication1
             {
                 NativeMethods.AllocConsole();
                 Console.WriteLine("kaishi....");
+
+             /*   ObjecInfo_HP_SP_NP objMem1 = new ObjecInfo_HP_SP_NP(0x8f68);
+                ObjecInfo_HP_SP_NP objMem2 = new ObjecInfo_HP_SP_NP(32752);
+
+                while (true)
+                {
+                    objMem1.doRead();
+                    objMem2.doRead();
+                    Thread.Sleep(500);
+                }/**/
+
             }
             GolbalSetting.GetInstance().LoadConfig();
             Application.EnableVisualStyles();
@@ -27,3 +41,4 @@ namespace WindowsFormsApplication1
         }
     }
 }
+

@@ -14,8 +14,6 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
-    delegate bool EnumWindowProc(IntPtr hWnd, IntPtr parameter);
-    delegate void findObjectCB(ObjectInfo _objectInfo);
     class MyFindWindow
     {
         [DllImport("user32")]
@@ -24,8 +22,9 @@ namespace WindowsFormsApplication1
         private static extern bool EnumChildWindows(IntPtr window, EnumWindowProc callback, IntPtr i);
 
         //the callback function for the EnumChildWindows
-     
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
         [DllImport("User32.dll")]
         public static extern int GetWindowText(IntPtr WinHandle, StringBuilder Title, int size);
@@ -94,7 +93,9 @@ namespace WindowsFormsApplication1
              
                 RECT rt = new RECT();
                 bool locationLookupSucceeded = GetWindowRect(handle,ref rt);
-                m_findObjectCB(new ObjectInfo(handle, title.ToString(), rt));
+                int processid = 0;
+                GetWindowThreadProcessId(handle,out processid);
+                m_findObjectCB(new ObjectInfo(handle, title.ToString(), rt,processid));
                 //m_objInfo.Add(new ObjectInfo(handle, title.ToString(), rt));
             }
             return true;

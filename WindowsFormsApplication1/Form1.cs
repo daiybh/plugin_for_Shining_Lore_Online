@@ -22,6 +22,8 @@ namespace WindowsFormsApplication1
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
             
+
+
         }
        
 
@@ -42,15 +44,24 @@ namespace WindowsFormsApplication1
         private bool bInited = false;
         private void Form1_Load(object sender, EventArgs e)
         {
+            splitContainer1.Panel1Collapsed = true;
             MyFindWindow fw = new MyFindWindow(findCB);
             
             bInited = true;
             //  listView1.datas = new ControlBindingsCollection();
             dataGridView1.DataSource = m_objInfo;
+
           ///  dataGridView1.AutoGenerateColumns = true;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            splitContainer1.Panel1Collapsed = !splitContainer1.Panel1Collapsed;
+            button5.Text = (splitContainer1.Panel1Collapsed) ? "^设置^" : "V设置V";
         }
         private void button1_Click(object sender, EventArgs e)
         {
+            //splitContainer1.Panel1.Visible = !splitContainer1.Panel1.Visible;
             if (button1.Text == "开始")
             {
                 foreach (var worker in m_objInfoWorker)
@@ -195,5 +206,11 @@ namespace WindowsFormsApplication1
         {
             dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            this.dataGridView1.Refresh();
+        }
+        
     }
 }

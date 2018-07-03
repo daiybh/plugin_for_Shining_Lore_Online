@@ -51,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumReportApp.cs" />
+    <Compile Include="EnumWindowProc.cs" />
+    <Compile Include="findObjectCB.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -58,9 +60,14 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GolbalSetting.cs" />
+    <Compile Include="MouseEvent.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="ReadData_from_Mem.cs" />
+    <Compile Include="ObjecInfo_HP_SP_NP.cs" />
     <Compile Include="ObjectInfo.cs" />
     <Compile Include="ObjectInfoWorker.cs" />
+    <Compile Include="ProcessMemoryReader.cs" />
+    <Compile Include="ProcessMemoryReaderApi.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MyFindWindow.cs" />
