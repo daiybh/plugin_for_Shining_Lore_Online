@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace Guagua
 {
     class ReadData_from_Mem
     {

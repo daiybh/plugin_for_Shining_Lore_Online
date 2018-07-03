@@ -10,14 +10,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
-namespace WindowsFormsApplication1
+namespace Guagua
 {
     public partial class Form1 : Form
     {
         public Form1()
         {
             InitializeComponent();
-            this.Text = "guagua  1.0.0.7";
+            this.Text = "guagua  1.0.0.8";
             this.notifyIcon1.Text = this.Text;
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WindowsFormsApplication1
+namespace Guagua
 {
     abstract class ObjectInfoFromMem_base
     {

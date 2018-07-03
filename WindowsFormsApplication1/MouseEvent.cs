@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace WindowsFormsApplication1
+namespace Guagua
 {
     class MouseEvent
     {

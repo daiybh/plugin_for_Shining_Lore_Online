@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace Guagua
 {
     partial class UserControl1
     {

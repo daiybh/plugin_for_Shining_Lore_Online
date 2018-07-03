@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace Guagua
 {
     delegate void findObjectCB(ObjectInfo _objectInfo);
 }

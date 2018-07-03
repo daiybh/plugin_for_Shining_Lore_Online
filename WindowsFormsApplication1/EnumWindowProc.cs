@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WindowsFormsApplication1
+namespace Guagua
 {
     delegate bool EnumWindowProc(IntPtr hWnd, IntPtr parameter);
 }

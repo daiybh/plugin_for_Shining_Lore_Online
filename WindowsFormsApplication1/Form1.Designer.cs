@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace Guagua
 {
     partial class Form1
     {
@@ -56,9 +56,9 @@
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.userControl_NP = new WindowsFormsApplication1.UserControl1();
-            this.userControl_SP = new WindowsFormsApplication1.UserControl1();
-            this.userControl_HP = new WindowsFormsApplication1.UserControl1();
+            this.userControl_NP = new Guagua.UserControl1();
+            this.userControl_SP = new Guagua.UserControl1();
+            this.userControl_HP = new Guagua.UserControl1();
             this.objectInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.objectInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.contextMenuStrip1.SuspendLayout();
@@ -369,11 +369,11 @@
             // 
             // objectInfoBindingSource
             // 
-            this.objectInfoBindingSource.DataSource = typeof(WindowsFormsApplication1.ObjectInfo);
+            this.objectInfoBindingSource.DataSource = typeof(Guagua.ObjectInfo);
             // 
             // objectInfoBindingSource1
             // 
-            this.objectInfoBindingSource1.DataSource = typeof(WindowsFormsApplication1.ObjectInfo);
+            this.objectInfoBindingSource1.DataSource = typeof(Guagua.ObjectInfo);
             // 
             // Form1
             // 

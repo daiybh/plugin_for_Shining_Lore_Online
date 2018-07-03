@@ -2,7 +2,7 @@
 using System;
 using System.Configuration;
 
-namespace WindowsFormsApplication1
+namespace Guagua
 {
     public class CustomSection : ConfigurationSection
     {
