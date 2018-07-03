@@ -59,6 +59,7 @@ namespace Guagua
     {
         public int money;
         public int JingyanMax;
+
         public ObjectInfo_Money(uint nProcessID) : base(nProcessID, 0x0099C134, new[] { 0x358, 0x8, 0x168 })
         {
         }
