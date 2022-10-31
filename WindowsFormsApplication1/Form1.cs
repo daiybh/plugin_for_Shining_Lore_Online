@@ -21,8 +21,7 @@ namespace Guagua
             this.notifyIcon1.Text = this.Text;
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
-            
-
+          
 
         }
        
@@ -50,8 +49,14 @@ namespace Guagua
             bInited = true;
             //  listView1.datas = new ControlBindingsCollection();
             dataGridView1.DataSource = m_objInfo;
+            for(int i=0;i<20;i++)
+            {
+                threadSleep.Items.Add(i);
+            }
+            // threadSleep.SelectedIndex = 5;
+            threadSleep.Text = GolbalSetting.GetInstance().threadSleep.ToString();
 
-          ///  dataGridView1.AutoGenerateColumns = true;
+            ///  dataGridView1.AutoGenerateColumns = true;
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -211,6 +216,16 @@ namespace Guagua
         {
             this.dataGridView1.Refresh();
         }
-        
+
+        private void threadSleep_TextUpdate(object sender, EventArgs e)
+        {
+            Console.WriteLine($"threadSleep_TextUpdate  {threadSleep.Text}");
+            try { 
+            GolbalSetting.GetInstance().threadSleep = Int32.Parse(threadSleep.Text);
+            }catch(Exception ex)
+            {
+
+            }
+        }
     }
 }

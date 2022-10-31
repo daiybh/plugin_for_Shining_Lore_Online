@@ -23,49 +23,53 @@ namespace Guagua
         {
             int X = 0;
             int Y = 0;
-            int leftMove = 100;
-            int leftmoveCnt = 0;
-            int[] narrX = new[] { +1, 0, -1, 0, +1, 0, -1, 0, +1, 0 };
-            int[] narrY = new[] {  0, +1, 0, -1, 0, +1, 0, -1, 0,+1 };
             while (!bExit)
             {
-                
-                  if (oi.enableWork)
-                 
+                Thread.Sleep(GolbalSetting.GetInstance().threadSleep);
+                if (oi.enableWork)
                 {
-                    oi.pressAdd();
-                    oi.pressZ();
+                    // 先来一次右键, 如果 sp 减少 说明 魔法发送了.
+                    //就一直持续发送魔法,
+                    //直到魔法不变
+                    //捡东西
                     oi.refeshObjInfo();
-                }
 
-                //RightAttack(center_X, center_y);
-                
-                for (int h = oi.Object_H * -1; h < 10; h += GolbalSetting.GetInstance().step_H)
-                {
-                    for (int w = oi.Object_W / 2 * -1; w < oi.Object_W / 2; w += GolbalSetting.GetInstance().step_W)
+                    bool bHadAttack = false;
+                    if (oi.bAttack)
                     {
-                        if (!oi.enableWork) continue;
-                        X = oi.center_X + w;
-                        Y = oi.center_y + h;
-                        if (oi.enableWork)
+
+                        oi.attack_begin();
+                        for (int i = 0; oi.isSPDecrease(); i++)
                         {
-                            oi.attack(X, Y);
-                           // oi.screenshotting();
+                            if (i % 10 == 0)
+
+                                oi.attack_begin();
+                            Thread.Sleep(10);
+                            bHadAttack = true;
                         }
-
-                        autoEvent.WaitOne();
+                        oi.attack_end();
                     }
-                }/**/
-
-//                 int nOffsite = leftMove;
-//                 int npos = leftmoveCnt % 10;
-// 
-//                 nOffsite = leftMove * narrX[npos];
-// 
-//                 oi.moveTo(oi.center_X + leftMove * narrX[npos], oi.center_y+ leftMove * narrY[npos]);
-//                 Thread.Sleep(100);
-//                 autoEvent.WaitOne();
-//                 leftmoveCnt++;
+                    if (oi.bPickUP && bHadAttack)
+                    {
+                        oi.pressAdd();
+                        oi.pressZ();
+                        for (int h = oi.Object_H * -1; h < 10; h += GolbalSetting.GetInstance().step_H)
+                        {
+                            for (int w = oi.Object_W / 2 * -1; w < oi.Object_W / 2; w += GolbalSetting.GetInstance().step_W)
+                            {
+                                if (!oi.enableWork) continue;
+                                X = oi.center_X + w;
+                                Y = oi.center_y + h;
+                                if (oi.enableWork)
+                                {
+                                    // oi.attack(X, Y);
+                                    // oi.screenshotting();
+                                    oi.pickUP(X, Y);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 

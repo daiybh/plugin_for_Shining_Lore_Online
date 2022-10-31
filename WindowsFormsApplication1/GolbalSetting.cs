@@ -23,7 +23,7 @@ namespace Guagua
                 _gSettingInstance = new GolbalSetting();
             return _gSettingInstance;
         }
-
+        public int threadSleep = 5 * 1000;
         public int step_W=17;
         public int step_H=29;
         public  bool [] keyPress_NP = new bool[6] { true, false, false, false, false, true };
@@ -59,6 +59,7 @@ namespace Guagua
                 HPPercent = Int32.Parse(getConfig("HPPercent"));
                 SPPercent = Int32.Parse(getConfig("SPPercent"));
                 NPPercent = Int32.Parse(getConfig("NPPercent"));
+                threadSleep = Int32.Parse(getConfig("threadSleep"));
             }
             catch (System.FormatException)
             {
@@ -130,6 +131,7 @@ namespace Guagua
             gw1(("HPPercent"), HPPercent.ToString() );
             gw1(("SPPercent"), SPPercent.ToString());
             gw1(("NPPercent"), NPPercent.ToString());
+            gw1(("threadSleep"), threadSleep.ToString());
 
             foreach (var obj in objlist)
             {

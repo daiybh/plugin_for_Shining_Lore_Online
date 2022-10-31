@@ -39,14 +39,6 @@
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button4 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.trackBar_H = new System.Windows.Forms.TrackBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.trackBar1_W = new System.Windows.Forms.TrackBar();
-            this.label3 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.button5 = new System.Windows.Forms.Button();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -56,6 +48,16 @@
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.trackBar_H = new System.Windows.Forms.TrackBar();
+            this.label2 = new System.Windows.Forms.Label();
+            this.trackBar1_W = new System.Windows.Forms.TrackBar();
+            this.label3 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.button5 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.threadSleep = new System.Windows.Forms.ComboBox();
             this.userControl_NP = new Guagua.UserControl1();
             this.userControl_SP = new Guagua.UserControl1();
             this.userControl_HP = new Guagua.UserControl1();
@@ -167,103 +169,6 @@
             this.dataGridView1.TabIndex = 13;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 500;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // trackBar_H
-            // 
-            this.trackBar_H.Location = new System.Drawing.Point(420, 10);
-            this.trackBar_H.Maximum = 30;
-            this.trackBar_H.Name = "trackBar_H";
-            this.trackBar_H.Size = new System.Drawing.Size(231, 45);
-            this.trackBar_H.TabIndex = 4;
-            this.trackBar_H.Value = 3;
-            this.trackBar_H.ValueChanged += new System.EventHandler(this.trackBar_H_ValueChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(344, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "高度步进值:";
-            // 
-            // trackBar1_W
-            // 
-            this.trackBar1_W.Location = new System.Drawing.Point(420, 53);
-            this.trackBar1_W.Maximum = 30;
-            this.trackBar1_W.Name = "trackBar1_W";
-            this.trackBar1_W.Size = new System.Drawing.Size(231, 45);
-            this.trackBar1_W.TabIndex = 7;
-            this.trackBar1_W.Value = 3;
-            this.trackBar1_W.ValueChanged += new System.EventHandler(this.trackBar1_W_ValueChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(344, 53);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "宽度步进值:";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.userControl_NP);
-            this.groupBox1.Controls.Add(this.userControl_SP);
-            this.groupBox1.Controls.Add(this.userControl_HP);
-            this.groupBox1.Location = new System.Drawing.Point(12, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(326, 98);
-            this.groupBox1.TabIndex = 9;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "吃药设置";
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.AutoScroll = true;
-            this.splitContainer1.Panel1.Controls.Add(this.label3);
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
-            this.splitContainer1.Panel1.Controls.Add(this.trackBar1_W);
-            this.splitContainer1.Panel1.Controls.Add(this.label2);
-            this.splitContainer1.Panel1.Controls.Add(this.trackBar_H);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.AutoScroll = true;
-            this.splitContainer1.Panel2.Controls.Add(this.button5);
-            this.splitContainer1.Panel2.Controls.Add(this.dataGridView1);
-            this.splitContainer1.Panel2.Controls.Add(this.button2);
-            this.splitContainer1.Panel2.Controls.Add(this.button1);
-            this.splitContainer1.Panel2.Controls.Add(this.button4);
-            this.splitContainer1.Panel2.Controls.Add(this.button3);
-            this.splitContainer1.Size = new System.Drawing.Size(812, 412);
-            this.splitContainer1.SplitterDistance = 102;
-            this.splitContainer1.TabIndex = 15;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(356, 11);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(54, 23);
-            this.button5.TabIndex = 14;
-            this.button5.Text = "^设置^";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
             // Column1
             // 
             this.Column1.DataPropertyName = "userName";
@@ -342,6 +247,123 @@
             this.Column9.DataPropertyName = "CurrentMoney";
             this.Column9.HeaderText = "CurrentMoney";
             this.Column9.Name = "Column9";
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 500;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // trackBar_H
+            // 
+            this.trackBar_H.Location = new System.Drawing.Point(420, 10);
+            this.trackBar_H.Maximum = 30;
+            this.trackBar_H.Name = "trackBar_H";
+            this.trackBar_H.Size = new System.Drawing.Size(231, 45);
+            this.trackBar_H.TabIndex = 4;
+            this.trackBar_H.Value = 3;
+            this.trackBar_H.ValueChanged += new System.EventHandler(this.trackBar_H_ValueChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(344, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(70, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "高度步进值:";
+            // 
+            // trackBar1_W
+            // 
+            this.trackBar1_W.Location = new System.Drawing.Point(420, 53);
+            this.trackBar1_W.Maximum = 30;
+            this.trackBar1_W.Name = "trackBar1_W";
+            this.trackBar1_W.Size = new System.Drawing.Size(231, 45);
+            this.trackBar1_W.TabIndex = 7;
+            this.trackBar1_W.Value = 3;
+            this.trackBar1_W.ValueChanged += new System.EventHandler(this.trackBar1_W_ValueChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(344, 53);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(70, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "宽度步进值:";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.userControl_NP);
+            this.groupBox1.Controls.Add(this.userControl_SP);
+            this.groupBox1.Controls.Add(this.userControl_HP);
+            this.groupBox1.Location = new System.Drawing.Point(12, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(326, 98);
+            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "吃药设置";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.IsSplitterFixed = true;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.AutoScroll = true;
+            this.splitContainer1.Panel1.Controls.Add(this.threadSleep);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.label3);
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
+            this.splitContainer1.Panel1.Controls.Add(this.trackBar1_W);
+            this.splitContainer1.Panel1.Controls.Add(this.label2);
+            this.splitContainer1.Panel1.Controls.Add(this.trackBar_H);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.AutoScroll = true;
+            this.splitContainer1.Panel2.Controls.Add(this.button5);
+            this.splitContainer1.Panel2.Controls.Add(this.dataGridView1);
+            this.splitContainer1.Panel2.Controls.Add(this.button2);
+            this.splitContainer1.Panel2.Controls.Add(this.button1);
+            this.splitContainer1.Panel2.Controls.Add(this.button4);
+            this.splitContainer1.Panel2.Controls.Add(this.button3);
+            this.splitContainer1.Size = new System.Drawing.Size(812, 412);
+            this.splitContainer1.SplitterDistance = 102;
+            this.splitContainer1.TabIndex = 15;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(356, 11);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(54, 23);
+            this.button5.TabIndex = 14;
+            this.button5.Text = "^设置^";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(657, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(79, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "每次执行间隔";
+            // 
+            // threadSleep
+            // 
+            this.threadSleep.FormattingEnabled = true;
+            this.threadSleep.Location = new System.Drawing.Point(674, 34);
+            this.threadSleep.Name = "threadSleep";
+            this.threadSleep.Size = new System.Drawing.Size(90, 21);
+            this.threadSleep.TabIndex = 12;
+            this.threadSleep.TextUpdate += new System.EventHandler(this.threadSleep_TextUpdate);
             // 
             // userControl_NP
             // 
@@ -434,6 +456,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
+        private System.Windows.Forms.ComboBox threadSleep;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -21,7 +21,7 @@ namespace Guagua
             this.processID = _processID;
             this.title = title;
             this.enableWork = true;
-            this.userName = title.Substring(filterLength);
+            this.userName = title;// title.Substring(filterLength);
             this.rt = rt;
             center_X = (rt.Right - rt.Left) / 2;
             center_y = (rt.Bottom - rt.Top) / 2;
@@ -106,17 +106,38 @@ namespace Guagua
         }
         
         private int offsetX = -100;
+        public void attack_begin()
+        {
+            int x = this.center_X+10;
+            int y = this.center_y - 100;
+            MouseEvent.Right_down(this.hWnd,x,y);
+            Console.WriteLine($"{this.userName} attack_begin>>{x} {y} ");
+        }
+        public void attack_end()
+        {
+            int x = this.center_X+10;
+            int y = this.center_y - 100;
+
+            MouseEvent.Right_up(this.hWnd, x, y);
+            Console.WriteLine($"{this.userName} attack_end>>{x} {y} ");
+        }
         public void attack(int x, int y)
         {
             //  RightAttack(x, y);
-            if(bAttack)
-                MouseEvent.RightClick(this.hWnd, x-150, y);
-            if(bPickUP)
-                MouseEvent.LeftClick(this.hWnd, x, y);
-            if (bAttack)
-                MouseEvent.RightClick(this.hWnd, x + 150, y);
+            if (!bAttack)
+                return;
+            MouseEvent.RightClick(this.hWnd, x, y);
+            
+                MouseEvent.RightClick(this.hWnd, x, y);
 
+            Console.WriteLine($"{this.userName} attack>>{x} {y} ");
             Thread.Sleep(10);
+        }
+        public void pickUP(int x,int y)
+        {
+            if (bPickUP)
+                MouseEvent.LeftClick(this.hWnd, x, y);
+            Console.WriteLine($"{this.userName} pickUP>>{x} {y} ");
         }
 
         private bool bPressAdd = false;
@@ -146,6 +167,33 @@ namespace Guagua
         Graphics memoryGraphics = null;
         private IntPtr dc;
         private int lastUpdateTime = 0;
+        int lastSP = 0;
+        int lastAttackTime = 0;
+        public bool isSPDecrease()
+        {
+            objeMem_HP_SP_NP.doRead();
+
+            bool b =  lastSP > objeMem_HP_SP_NP.sp;
+            if (objeMem_HP_SP_NP.sp == objeMem_HP_SP_NP.spMax) b = false;
+
+            b = objeMem_HP_SP_NP.sp != objeMem_HP_SP_NP.spMax;
+            Console.WriteLine($"{this.userName} isSPDecrease>>{b} {lastSP} {objeMem_HP_SP_NP.sp} {objeMem_HP_SP_NP.spMax} ");
+
+            lastSP = objeMem_HP_SP_NP.sp;
+            if(b)
+                lastAttackTime = System.Environment.TickCount & Int32.MaxValue;
+
+            return b;
+        }
+        public bool canPickUP()
+        {
+            if (!bPickUP) return false;
+            if (isSPDecrease()) return false;
+            int curTime = System.Environment.TickCount & Int32.MaxValue;
+            if (lastAttackTime!=0 && curTime - lastAttackTime > 2000) return false;
+            return true;
+
+        }
 
         public void refeshObjInfo()
         {

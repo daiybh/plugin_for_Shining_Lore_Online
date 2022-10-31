@@ -13,3 +13,5 @@
 /QMPlugin/Debug
 /WindowsFormsApplication1/bin/Release
 /WindowsFormsApplication2/bin/Debug
+/.vs/guagua
+obj/

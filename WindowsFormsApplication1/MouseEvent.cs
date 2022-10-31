@@ -64,6 +64,14 @@ namespace Guagua
         {
             send_message(hWnd, MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 2, x, y);
         }
+        public static void Right_down(IntPtr hWnd, int x, int y)
+        {
+            send_message(hWnd,  MOUSEEVENTF_RIGHTDOWN, 1, x, y);
+        }
+        public static void Right_up(IntPtr hWnd, int x, int y)
+        {
+            send_message(hWnd, MOUSEEVENTF_RIGHTUP , 1, x, y);
+        }
         public static void RightClick(IntPtr hWnd, int x, int y)
         {
             send_message(hWnd, MOUSEEVENTF_RIGHTUP | MOUSEEVENTF_RIGHTDOWN, 1, x, y);

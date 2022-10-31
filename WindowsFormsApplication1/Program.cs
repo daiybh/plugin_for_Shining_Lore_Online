@@ -20,8 +20,8 @@ namespace Guagua
         {
             if (args.Length > 0)
             {
-                NativeMethods.AllocConsole();
-                Console.WriteLine("kaishi....");
+              //  NativeMethods.AllocConsole();
+             //   Console.WriteLine("kaishi....");
 
              /*   ObjecInfo_HP_SP_NP objMem1 = new ObjecInfo_HP_SP_NP(0x8f68);
                 ObjecInfo_HP_SP_NP objMem2 = new ObjecInfo_HP_SP_NP(32752);

@@ -80,15 +80,15 @@ namespace Guagua
         {
             loopCnt++;
             StringBuilder title = new StringBuilder();
-            //StringBuilder type = new StringBuilder();
+            StringBuilder type = new StringBuilder();
             title.Length = 100;
-            //type.Length = 100;
+            type.Length = 100;
 
             GetWindowText(handle, title, 100);//取标题
-                                              //GetClassName(handle, type, 100);//取类型
+            GetClassName(handle, type, 100);//取类型
 
 
-            if (m_findObjectCB != null && title.ToString().Contains(m_caption))
+            if (m_findObjectCB != null && type.ToString()== "SlOnline")// title.ToString().Contains(m_caption))
             {
              
                 RECT rt = new RECT();
