@@ -54,13 +54,13 @@
             this.trackBar1_W = new System.Windows.Forms.TrackBar();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.button5 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.threadSleep = new System.Windows.Forms.ComboBox();
             this.userControl_NP = new Guagua.UserControl1();
             this.userControl_SP = new Guagua.UserControl1();
             this.userControl_HP = new Guagua.UserControl1();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.threadSleep = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.button5 = new System.Windows.Forms.Button();
             this.objectInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.objectInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.contextMenuStrip1.SuspendLayout();
@@ -98,7 +98,6 @@
             // 
             // button2
             // 
-            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(36, 11);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(109, 23);
@@ -304,6 +303,30 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "吃药设置";
             // 
+            // userControl_NP
+            // 
+            this.userControl_NP.Location = new System.Drawing.Point(24, 66);
+            this.userControl_NP.Name = "userControl_NP";
+            this.userControl_NP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_NP.TabIndex = 2;
+            this.userControl_NP.Title = "NP";
+            // 
+            // userControl_SP
+            // 
+            this.userControl_SP.Location = new System.Drawing.Point(24, 40);
+            this.userControl_SP.Name = "userControl_SP";
+            this.userControl_SP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_SP.TabIndex = 1;
+            this.userControl_SP.Title = "SP";
+            // 
+            // userControl_HP
+            // 
+            this.userControl_HP.Location = new System.Drawing.Point(24, 17);
+            this.userControl_HP.Name = "userControl_HP";
+            this.userControl_HP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_HP.TabIndex = 0;
+            this.userControl_HP.Title = "HP";
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -337,15 +360,14 @@
             this.splitContainer1.SplitterDistance = 102;
             this.splitContainer1.TabIndex = 15;
             // 
-            // button5
+            // threadSleep
             // 
-            this.button5.Location = new System.Drawing.Point(356, 11);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(54, 23);
-            this.button5.TabIndex = 14;
-            this.button5.Text = "^设置^";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.threadSleep.FormattingEnabled = true;
+            this.threadSleep.Location = new System.Drawing.Point(674, 34);
+            this.threadSleep.Name = "threadSleep";
+            this.threadSleep.Size = new System.Drawing.Size(90, 21);
+            this.threadSleep.TabIndex = 12;
+            this.threadSleep.TextUpdate += new System.EventHandler(this.threadSleep_TextUpdate);
             // 
             // label1
             // 
@@ -356,38 +378,15 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "每次执行间隔";
             // 
-            // threadSleep
+            // button5
             // 
-            this.threadSleep.FormattingEnabled = true;
-            this.threadSleep.Location = new System.Drawing.Point(674, 34);
-            this.threadSleep.Name = "threadSleep";
-            this.threadSleep.Size = new System.Drawing.Size(90, 21);
-            this.threadSleep.TabIndex = 12;
-            this.threadSleep.TextUpdate += new System.EventHandler(this.threadSleep_TextUpdate);
-            // 
-            // userControl_NP
-            // 
-            this.userControl_NP.Location = new System.Drawing.Point(24, 66);
-            this.userControl_NP.Name = "userControl_NP";
-            this.userControl_NP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_NP.TabIndex = 2;
-            this.userControl_NP.Title = "NP";
-            // 
-            // userControl_SP
-            // 
-            this.userControl_SP.Location = new System.Drawing.Point(24, 40);
-            this.userControl_SP.Name = "userControl_SP";
-            this.userControl_SP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_SP.TabIndex = 1;
-            this.userControl_SP.Title = "SP";
-            // 
-            // userControl_HP
-            // 
-            this.userControl_HP.Location = new System.Drawing.Point(24, 17);
-            this.userControl_HP.Name = "userControl_HP";
-            this.userControl_HP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_HP.TabIndex = 0;
-            this.userControl_HP.Title = "HP";
+            this.button5.Location = new System.Drawing.Point(356, 11);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(54, 23);
+            this.button5.TabIndex = 14;
+            this.button5.Text = "^设置^";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // objectInfoBindingSource
             // 

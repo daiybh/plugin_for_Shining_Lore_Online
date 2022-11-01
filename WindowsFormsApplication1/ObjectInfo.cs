@@ -14,7 +14,7 @@ namespace Guagua
         private ObjectInfo_Money objectInfoMoney = null;
         public static string filterName = " 永恒天使 - ";
         public static int filterLength = filterName.Length;
-        private int processID = 0;
+        public int processID = 0;
         public ObjectInfo(IntPtr _hwnd, string title, MyFindWindow.RECT rt,int _processID)
         {
             this.hWnd = _hwnd;

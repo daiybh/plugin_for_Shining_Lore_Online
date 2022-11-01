@@ -20,18 +20,26 @@ namespace Guagua
             this.Text = "guagua  1.0.0.9";
             this.notifyIcon1.Text = this.Text;
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
-            trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
-          
-
+            trackBar1_W.Value = GolbalSetting.GetInstance().step_W;            
         }
-       
 
+        ///updatecomplete:8888 /gwip:39.103.187.181  /win /qwllioerjkca8912z9x /login:ainits※52651373
         private IList<ObjectInfo> m_objInfo=new List<ObjectInfo>();
 
         private List<ObjectInfoWorker> m_objInfoWorker = new List<ObjectInfoWorker>();
         void findCB(ObjectInfo objectInfo)
         {
-            
+           var b =  m_objInfo.FirstOrDefault(v => v.userName == objectInfo.userName);
+            if (b != null)
+            {
+                return; 
+            }
+            var a = m_objInfo.FirstOrDefault(v => v.processID == objectInfo.processID);
+            if (a != null)
+            {
+                a.userName = objectInfo.userName; ;
+                return;
+            }
             objectInfo.setGraphics( this.CreateGraphics());
             GolbalSetting.GetInstance().updateConfig(ref objectInfo);
             m_objInfo.Add(objectInfo);
@@ -157,7 +165,7 @@ namespace Guagua
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            MyFindWindow fw = new MyFindWindow(findCB);
         }
 
         private void 显示ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -220,11 +228,12 @@ namespace Guagua
         }
 
         private void threadSleep_TextUpdate(object sender, EventArgs e)
-        {
-            Console.WriteLine($"threadSleep_TextUpdate  {threadSleep.Text}");
-            try { 
-            GolbalSetting.GetInstance().threadSleep = Int32.Parse(threadSleep.Text);
-            }catch(Exception ex)
+        {         
+            try
+            {
+                GolbalSetting.GetInstance().threadSleep = Int32.Parse(threadSleep.Text);
+            }
+            catch (Exception ex)
             {
 
             }
