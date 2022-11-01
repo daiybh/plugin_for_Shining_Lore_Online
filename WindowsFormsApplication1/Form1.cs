@@ -27,9 +27,11 @@ namespace Guagua
        
 
         private IList<ObjectInfo> m_objInfo=new List<ObjectInfo>();
+
         private List<ObjectInfoWorker> m_objInfoWorker = new List<ObjectInfoWorker>();
         void findCB(ObjectInfo objectInfo)
         {
+            
             objectInfo.setGraphics( this.CreateGraphics());
             GolbalSetting.GetInstance().updateConfig(ref objectInfo);
             m_objInfo.Add(objectInfo);

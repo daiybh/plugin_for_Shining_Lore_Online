@@ -106,17 +106,53 @@ namespace Guagua
         }
         
         private int offsetX = -100;
-        public void attack_begin()
+        public Tuple<bool,int,int> testAttack()
         {
-            int x = this.center_X+10;
-            int y = this.center_y - 100;
+            objeMem_HP_SP_NP.doRead();
+            int beginSP = objeMem_HP_SP_NP.sp;
+            for (int h = this.Object_H * -1; h < 20; h += GolbalSetting.GetInstance().step_H)
+            {
+                for (int w = this.Object_W / 2 * -1; w < this.Object_W *2; w += GolbalSetting.GetInstance().step_W)
+                {
+                    if (!this.enableWork) continue;
+                    int X = this.center_X + w;
+                    int Y = this.center_y + h;
+                    if (this.enableWork)
+                    {
+                        // oi.attack(X, Y);
+                        // oi.screenshotting();
+                        this.attack(X, Y);
+
+                        objeMem_HP_SP_NP.doRead();
+                        int curSP = objeMem_HP_SP_NP.sp;
+                        Console.WriteLine($"{this.userName} testAttack>>{h} {w} {X} {Y} {beginSP} {curSP}");
+                        if (beginSP!=curSP)
+                        {
+                            return new Tuple<bool, int, int>( true,X,Y);
+                        }
+                    }
+                }
+            }
+
+            return new Tuple<bool, int, int>(false,0,0);
+        }
+        public void attack_begin(int x=0,int y=0)
+        {
+            if (x == 0 && y == 0)
+            {
+                x = this.center_X + 10;
+                y = this.center_y - 100;
+            }
             MouseEvent.Right_down(this.hWnd,x,y);
             Console.WriteLine($"{this.userName} attack_begin>>{x} {y} ");
         }
-        public void attack_end()
+        public void attack_end(int x = 0, int y = 0)
         {
-            int x = this.center_X+10;
-            int y = this.center_y - 100;
+            if (x == 0 && y == 0)
+            {
+                x = this.center_X + 10;
+                y = this.center_y - 100;
+            }
 
             MouseEvent.Right_up(this.hWnd, x, y);
             Console.WriteLine($"{this.userName} attack_end>>{x} {y} ");
@@ -127,11 +163,11 @@ namespace Guagua
             if (!bAttack)
                 return;
             MouseEvent.RightClick(this.hWnd, x, y);
-            
-                MouseEvent.RightClick(this.hWnd, x, y);
 
-            Console.WriteLine($"{this.userName} attack>>{x} {y} ");
-            Thread.Sleep(10);
+            MouseEvent.RightClick(this.hWnd, x, y);
+
+            // Console.WriteLine($"{this.userName} attack>>{x} {y} ");
+            //  Thread.Sleep(10);
         }
         public void pickUP(int x,int y)
         {

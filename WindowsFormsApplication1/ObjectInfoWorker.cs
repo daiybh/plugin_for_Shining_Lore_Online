@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Guagua
 {
@@ -25,34 +26,38 @@ namespace Guagua
             int Y = 0;
             while (!bExit)
             {
-                Thread.Sleep(GolbalSetting.GetInstance().threadSleep);
+              //
                 if (oi.enableWork)
                 {
                     // 先来一次右键, 如果 sp 减少 说明 魔法发送了.
                     //就一直持续发送魔法,
                     //直到魔法不变
                     //捡东西
+
+                    oi.pressAdd();
+                    oi.pressZ();
                     oi.refeshObjInfo();
 
                     bool bHadAttack = false;
                     if (oi.bAttack)
                     {
-
-                        oi.attack_begin();
-                        for (int i = 0; oi.isSPDecrease(); i++)
+                        var (b1,X1,Y1)= oi.testAttack();
+                        if (b1)
                         {
-                            if (i % 10 == 0)
+                            oi.attack_begin(X1, Y1);
+                            for (int i = 0; oi.isSPDecrease(); i++)
+                            {
+                                if (i % 10 == 0)
 
-                                oi.attack_begin();
-                            Thread.Sleep(10);
-                            bHadAttack = true;
+                                    oi.attack_begin(X1, Y1);
+                                Thread.Sleep(10);
+                                bHadAttack = true;
+                            }
+                            oi.attack_end(X1, Y1);
                         }
-                        oi.attack_end();
                     }
                     if (oi.bPickUP && bHadAttack)
                     {
-                        oi.pressAdd();
-                        oi.pressZ();
                         for (int h = oi.Object_H * -1; h < 10; h += GolbalSetting.GetInstance().step_H)
                         {
                             for (int w = oi.Object_W / 2 * -1; w < oi.Object_W / 2; w += GolbalSetting.GetInstance().step_W)
@@ -70,6 +75,7 @@ namespace Guagua
                         }
                     }
                 }
+                Thread.Sleep(GolbalSetting.GetInstance().threadSleep);
             }
         }
 
@@ -79,6 +85,7 @@ namespace Guagua
         {
             t1 = new Thread(new ThreadStart(doWorkThread));
             t1.IsBackground = true;
+            bExit = false;
             t1.Start();
         }
 
