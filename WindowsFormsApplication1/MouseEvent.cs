@@ -49,6 +49,24 @@ namespace Guagua
         {
             SendMessage(hWnd, WM_MOUSEMOVE, 0, MakeDWord(x, y));
         }
+        public static void Key_down(IntPtr hWnd, Keys key)
+        {
+            int lParam = 1;
+            lParam += MapVirtualKey(key.GetHashCode(), 0) << 16;
+            //2883585
+            SendMessage(hWnd, WM_KEYDOWN, key.GetHashCode(), lParam);//Thread.Sleep(100);
+            
+        }
+        public static void key_up(IntPtr hWnd, Keys key)
+        {
+            int lParam = 1;
+            lParam += MapVirtualKey(key.GetHashCode(), 0) << 16;
+            //2883585
+            //SendMessage(hWnd, WM_KEYDOWN, key.GetHashCode(), lParam);//Thread.Sleep(100);
+            lParam += 1 << 30;
+            lParam += 1 << 31;
+            SendMessage(hWnd, WM_KEYUP, key.GetHashCode(), lParam);//up
+        }
         public static void pressKey(IntPtr hWnd, Keys key)
         {
 

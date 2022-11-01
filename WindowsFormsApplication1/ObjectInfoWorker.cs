@@ -36,8 +36,8 @@ namespace Guagua
 
                     if (!oi.bFiexdAttack)
                     {
-                        oi.pressAdd();
-                        oi.pressZ();
+                      //  oi.pressAdd();
+                      //  oi.pressZ();
                     }
                     oi.refeshObjInfo();
 
@@ -58,7 +58,7 @@ namespace Guagua
                             oi.attack_end(X1, Y1);
                         }
                     }
-                    oi.testPickUp();
+                    oi.testPickUp2();
                    
                 }
                 Thread.Sleep(GolbalSetting.GetInstance().threadSleep);

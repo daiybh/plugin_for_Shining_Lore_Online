@@ -132,18 +132,54 @@ namespace Guagua
         }
         
         private int offsetX = -100;
+        public void testPickUp2()
+        {
+
+            //move up 10                    //move down 10
+            //move left 10                    //move right 10
+            //move down 10                    //move up 10
+            //move right 10                    //move left 10
+            for (int i = 0; i < 1000; i++)
+            {
+                MouseEvent.moveMouse(hWnd, center_X, center_y);
+                int offset = 60;
+                {
+                    int X = this.center_X - offset;
+                    int Y = this.center_y;// - offset;
+                    MouseEvent.moveMouse(hWnd, X, Y);
+                    MouseEvent.Key_down(hWnd, Keys.Alt);
+                    pickUP(X, Y);
+
+                    MouseEvent.key_up(hWnd, Keys.Alt);
+                }
+                {
+                    MouseEvent.moveMouse(hWnd, center_X, center_y);
+                    int X = this.center_X + offset;;
+                    int Y = this.center_y;// + offset/3 ;
+
+                    MouseEvent.moveMouse(hWnd, X, Y);
+                    MouseEvent.Key_down(hWnd, Keys.Alt);
+                    pickUP(X, Y);
+
+                    MouseEvent.key_up(hWnd, Keys.Alt);
+                }
+            }
+
+        }
         public void testPickUp()
         {
             for (int i = 0; i < 4; i++)
             {
                 if (!bPickUP) return;
-                pressZ();
+               // pressZ();
+
+                MouseEvent.Key_down(hWnd, Keys.Alt);
                 for (int h = this.Object_H * -1; h < 20; h += GolbalSetting.GetInstance().step_H)
                 {
-                    if (!bPickUP) return;
+                    if (!bPickUP) break;
                     for (int w = this.Object_W / 2 * -1; w < this.Object_W ; w += GolbalSetting.GetInstance().step_W)
                     {
-                        if (!bPickUP) return;
+                        if (!bPickUP) break;
                         int X = this.center_X + w;
                         int Y = this.center_y + h;
 
@@ -151,6 +187,7 @@ namespace Guagua
 
                     }
                 }
+                MouseEvent.key_up(hWnd, Keys.Alt);
             }
         }
         public Tuple<bool,int,int> testAttack()
@@ -161,11 +198,11 @@ namespace Guagua
             {
                 int X = center_X;
                 int Y = center_y-50;
-                this.attack(X,Y);
-
+                this.attack_begin(X,Y);
+                Thread.Sleep(100);
                 objeMem_HP_SP_NP.doRead();
                 int curSP = objeMem_HP_SP_NP.sp;
-
+                this.attack_end(X, Y);
                 return new Tuple<bool, int, int>(beginSP != curSP, X, Y);
 
             }
@@ -180,9 +217,10 @@ namespace Guagua
                     {
                         // oi.attack(X, Y);
                         // oi.screenshotting();
-                        this.attack(X, Y);
-
+                        this.attack_begin(X, Y);
+                        Thread.Sleep(10);
                         objeMem_HP_SP_NP.doRead();
+                        this.attack_end(X, Y);
                         int curSP = objeMem_HP_SP_NP.sp;
                         Console.WriteLine($"{this.userName} testAttack>>{h} {w} {X} {Y} {beginSP} {curSP}");
                         if (beginSP!=curSP)
