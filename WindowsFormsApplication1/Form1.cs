@@ -17,7 +17,7 @@ namespace Guagua
         public Form1()
         {
             InitializeComponent();
-            this.Text = "guagua  1.0.0.8";
+            this.Text = "guagua  1.0.0.9";
             this.notifyIcon1.Text = this.Text;
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;
