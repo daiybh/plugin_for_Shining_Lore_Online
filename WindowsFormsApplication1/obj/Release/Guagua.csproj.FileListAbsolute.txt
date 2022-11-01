@@ -1,9 +1,0 @@
-C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Guagua.csproj.GenerateResource.Cache
-C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\Guagua.exe.config
-C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\Guagua.exe
-C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Release\Guagua.pdb
-C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Guagua.Properties.Resources.resources
-C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Guagua.exe
-C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Guagua.pdb
-C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Guagua.Form1.resources
-C:\Users\Daili-nuc\Documents\Visual Studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Release\Guagua.UserControl1.resources
