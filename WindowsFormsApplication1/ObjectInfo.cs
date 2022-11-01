@@ -56,7 +56,34 @@ namespace Guagua
                 _enableWork = value;
             }
         }
+        private bool _fixedAttack=false;
+        public bool bFiexdAttack
+        {
+            get { return _fixedAttack; }
+            set
+            {
+                _fixedAttack = value;
+                if (_fixedAttack)
+                    bAttack = true;
+            }
+        }
 
+        private bool _bAttack = false;
+        public bool bAttack
+        {
+            get
+            {
+                return _bAttack;
+            }
+            set
+            {
+                _bAttack = value;
+                if (!_bAttack)
+                {
+                    _fixedAttack = false;
+                }
+            }
+        }
         public string currentHP
         {
             get { return string.Format("{0}/{1}", objeMem_HP_SP_NP.HP, objeMem_HP_SP_NP.HPMax); }
@@ -74,7 +101,6 @@ namespace Guagua
         {
             get { return string.Format("钱:{0},经验:{1}/{2}",objectInfoMoney.money,objJingYan.Jingyan,objJingYan.JingyanMax); }
         }
-        public bool bAttack { get; set; } = true;
         public bool bPickUP { get; set; } = true;
         private bool _bshowWindow = true;
 
@@ -106,10 +132,43 @@ namespace Guagua
         }
         
         private int offsetX = -100;
+        public void testPickUp()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (!bPickUP) return;
+                pressZ();
+                for (int h = this.Object_H * -1; h < 20; h += GolbalSetting.GetInstance().step_H)
+                {
+                    if (!bPickUP) return;
+                    for (int w = this.Object_W / 2 * -1; w < this.Object_W ; w += GolbalSetting.GetInstance().step_W)
+                    {
+                        if (!bPickUP) return;
+                        int X = this.center_X + w;
+                        int Y = this.center_y + h;
+
+                        pickUP(X, Y);
+
+                    }
+                }
+            }
+        }
         public Tuple<bool,int,int> testAttack()
         {
             objeMem_HP_SP_NP.doRead();
             int beginSP = objeMem_HP_SP_NP.sp;
+            if(_fixedAttack)
+            {
+                int X = center_X;
+                int Y = center_y-50;
+                this.attack(X,Y);
+
+                objeMem_HP_SP_NP.doRead();
+                int curSP = objeMem_HP_SP_NP.sp;
+
+                return new Tuple<bool, int, int>(beginSP != curSP, X, Y);
+
+            }
             for (int h = this.Object_H * -1; h < 20; h += GolbalSetting.GetInstance().step_H)
             {
                 for (int w = this.Object_W / 2 * -1; w < this.Object_W *2; w += GolbalSetting.GetInstance().step_W)

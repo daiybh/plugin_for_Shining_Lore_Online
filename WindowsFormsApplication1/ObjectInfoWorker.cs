@@ -34,8 +34,11 @@ namespace Guagua
                     //直到魔法不变
                     //捡东西
 
-                    oi.pressAdd();
-                    oi.pressZ();
+                    if (!oi.bFiexdAttack)
+                    {
+                        oi.pressAdd();
+                        oi.pressZ();
+                    }
                     oi.refeshObjInfo();
 
                     bool bHadAttack = false;
@@ -48,7 +51,6 @@ namespace Guagua
                             for (int i = 0; oi.isSPDecrease(); i++)
                             {
                                 if (i % 10 == 0)
-
                                     oi.attack_begin(X1, Y1);
                                 Thread.Sleep(10);
                                 bHadAttack = true;
@@ -56,24 +58,8 @@ namespace Guagua
                             oi.attack_end(X1, Y1);
                         }
                     }
-                    if (oi.bPickUP && bHadAttack)
-                    {
-                        for (int h = oi.Object_H * -1; h < 10; h += GolbalSetting.GetInstance().step_H)
-                        {
-                            for (int w = oi.Object_W / 2 * -1; w < oi.Object_W / 2; w += GolbalSetting.GetInstance().step_W)
-                            {
-                                if (!oi.enableWork) continue;
-                                X = oi.center_X + w;
-                                Y = oi.center_y + h;
-                                if (oi.enableWork)
-                                {
-                                    // oi.attack(X, Y);
-                                    // oi.screenshotting();
-                                    oi.pickUP(X, Y);
-                                }
-                            }
-                        }
-                    }
+                    oi.testPickUp();
+                   
                 }
                 Thread.Sleep(GolbalSetting.GetInstance().threadSleep);
             }

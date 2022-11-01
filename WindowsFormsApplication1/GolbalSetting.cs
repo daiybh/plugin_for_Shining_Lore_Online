@@ -73,6 +73,7 @@ namespace Guagua
             oi.bAttack = cs.bAttack;
             oi.bPickUP = cs.bPickUP;
             oi.enableWork = cs.enableWork;
+            oi.bFiexdAttack = cs.bFixedAttack;
 
         }
 
@@ -109,6 +110,7 @@ namespace Guagua
                 cs.bAttack = oi.bAttack;
                 cs.bPickUP = oi.bPickUP;
                 cs.userName = oi.userName;
+                cs.bFixedAttack = oi.bFiexdAttack;
                 string uN = escape(oi.userName);
                 cfa.Sections.Remove(uN);
                 cfa.Sections.Add(uN, cs);

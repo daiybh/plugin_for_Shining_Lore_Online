@@ -39,30 +39,31 @@
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button4 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.trackBar_H = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.trackBar1_W = new System.Windows.Forms.TrackBar();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.userControl_NP = new Guagua.UserControl1();
-            this.userControl_SP = new Guagua.UserControl1();
-            this.userControl_HP = new Guagua.UserControl1();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.threadSleep = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
+            this.userControl_NP = new Guagua.UserControl1();
+            this.userControl_SP = new Guagua.UserControl1();
+            this.userControl_HP = new Guagua.UserControl1();
             this.objectInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.objectInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.column_fiexdAttack = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar_H)).BeginInit();
@@ -155,6 +156,7 @@
             this.Column1,
             this.Column2,
             this.Column3,
+            this.column_fiexdAttack,
             this.Column4,
             this.Column5,
             this.Column6,
@@ -167,85 +169,6 @@
             this.dataGridView1.Size = new System.Drawing.Size(812, 257);
             this.dataGridView1.TabIndex = 13;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // Column1
-            // 
-            this.Column1.DataPropertyName = "userName";
-            this.Column1.FillWeight = 80F;
-            this.Column1.HeaderText = "名字";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 56;
-            // 
-            // Column2
-            // 
-            this.Column2.DataPropertyName = "enableWork";
-            this.Column2.FillWeight = 62.13198F;
-            this.Column2.HeaderText = "是否加挂";
-            this.Column2.Name = "Column2";
-            this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column2.Width = 80;
-            // 
-            // Column3
-            // 
-            this.Column3.DataPropertyName = "bAttack";
-            this.Column3.FillWeight = 46.59899F;
-            this.Column3.HeaderText = "攻击";
-            this.Column3.Name = "Column3";
-            this.Column3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column3.Width = 56;
-            // 
-            // Column4
-            // 
-            this.Column4.DataPropertyName = "bPickUP";
-            this.Column4.FillWeight = 46.59899F;
-            this.Column4.HeaderText = "捡东西";
-            this.Column4.Name = "Column4";
-            this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column4.Width = 68;
-            // 
-            // Column5
-            // 
-            this.Column5.DataPropertyName = "bShowWindow";
-            this.Column5.FillWeight = 46.59899F;
-            this.Column5.HeaderText = "隐藏窗体";
-            this.Column5.Name = "Column5";
-            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column5.Width = 80;
-            // 
-            // Column6
-            // 
-            this.Column6.DataPropertyName = "currentHP";
-            this.Column6.FillWeight = 80F;
-            this.Column6.HeaderText = "HP";
-            this.Column6.Name = "Column6";
-            this.Column6.Width = 47;
-            // 
-            // Column7
-            // 
-            this.Column7.DataPropertyName = "currentSP";
-            this.Column7.FillWeight = 80F;
-            this.Column7.HeaderText = "SP";
-            this.Column7.Name = "Column7";
-            this.Column7.Width = 46;
-            // 
-            // Column8
-            // 
-            this.Column8.DataPropertyName = "currentNP";
-            this.Column8.FillWeight = 80F;
-            this.Column8.HeaderText = "NP";
-            this.Column8.Name = "Column8";
-            this.Column8.Width = 47;
-            // 
-            // Column9
-            // 
-            this.Column9.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Column9.DataPropertyName = "CurrentMoney";
-            this.Column9.HeaderText = "CurrentMoney";
-            this.Column9.Name = "Column9";
             // 
             // timer1
             // 
@@ -302,30 +225,6 @@
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "吃药设置";
-            // 
-            // userControl_NP
-            // 
-            this.userControl_NP.Location = new System.Drawing.Point(24, 66);
-            this.userControl_NP.Name = "userControl_NP";
-            this.userControl_NP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_NP.TabIndex = 2;
-            this.userControl_NP.Title = "NP";
-            // 
-            // userControl_SP
-            // 
-            this.userControl_SP.Location = new System.Drawing.Point(24, 40);
-            this.userControl_SP.Name = "userControl_SP";
-            this.userControl_SP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_SP.TabIndex = 1;
-            this.userControl_SP.Title = "SP";
-            // 
-            // userControl_HP
-            // 
-            this.userControl_HP.Location = new System.Drawing.Point(24, 17);
-            this.userControl_HP.Name = "userControl_HP";
-            this.userControl_HP.Size = new System.Drawing.Size(289, 28);
-            this.userControl_HP.TabIndex = 0;
-            this.userControl_HP.Title = "HP";
             // 
             // splitContainer1
             // 
@@ -388,6 +287,30 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // userControl_NP
+            // 
+            this.userControl_NP.Location = new System.Drawing.Point(24, 66);
+            this.userControl_NP.Name = "userControl_NP";
+            this.userControl_NP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_NP.TabIndex = 2;
+            this.userControl_NP.Title = "NP";
+            // 
+            // userControl_SP
+            // 
+            this.userControl_SP.Location = new System.Drawing.Point(24, 40);
+            this.userControl_SP.Name = "userControl_SP";
+            this.userControl_SP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_SP.TabIndex = 1;
+            this.userControl_SP.Title = "SP";
+            // 
+            // userControl_HP
+            // 
+            this.userControl_HP.Location = new System.Drawing.Point(24, 17);
+            this.userControl_HP.Name = "userControl_HP";
+            this.userControl_HP.Size = new System.Drawing.Size(289, 28);
+            this.userControl_HP.TabIndex = 0;
+            this.userControl_HP.Title = "HP";
+            // 
             // objectInfoBindingSource
             // 
             this.objectInfoBindingSource.DataSource = typeof(Guagua.ObjectInfo);
@@ -395,6 +318,94 @@
             // objectInfoBindingSource1
             // 
             this.objectInfoBindingSource1.DataSource = typeof(Guagua.ObjectInfo);
+            // 
+            // Column1
+            // 
+            this.Column1.DataPropertyName = "userName";
+            this.Column1.FillWeight = 80F;
+            this.Column1.HeaderText = "名字";
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 56;
+            // 
+            // Column2
+            // 
+            this.Column2.DataPropertyName = "enableWork";
+            this.Column2.FillWeight = 62.13198F;
+            this.Column2.HeaderText = "是否加挂";
+            this.Column2.Name = "Column2";
+            this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column2.Width = 80;
+            // 
+            // Column3
+            // 
+            this.Column3.DataPropertyName = "bAttack";
+            this.Column3.FillWeight = 46.59899F;
+            this.Column3.HeaderText = "攻击";
+            this.Column3.Name = "Column3";
+            this.Column3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column3.Width = 56;
+            // 
+            // column_fiexdAttack
+            // 
+            this.column_fiexdAttack.DataPropertyName = "bFiexdAttack";
+            this.column_fiexdAttack.FillWeight = 46.59899F;
+            this.column_fiexdAttack.HeaderText = "固定点攻击";
+            this.column_fiexdAttack.Name = "column_fiexdAttack";
+            this.column_fiexdAttack.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.column_fiexdAttack.Width = 92;
+            // 
+            // Column4
+            // 
+            this.Column4.DataPropertyName = "bPickUP";
+            this.Column4.FillWeight = 46.59899F;
+            this.Column4.HeaderText = "捡东西";
+            this.Column4.Name = "Column4";
+            this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column4.Width = 68;
+            // 
+            // Column5
+            // 
+            this.Column5.DataPropertyName = "bShowWindow";
+            this.Column5.FillWeight = 46.59899F;
+            this.Column5.HeaderText = "隐藏窗体";
+            this.Column5.Name = "Column5";
+            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column5.Width = 80;
+            // 
+            // Column6
+            // 
+            this.Column6.DataPropertyName = "currentHP";
+            this.Column6.FillWeight = 80F;
+            this.Column6.HeaderText = "HP";
+            this.Column6.Name = "Column6";
+            this.Column6.Width = 47;
+            // 
+            // Column7
+            // 
+            this.Column7.DataPropertyName = "currentSP";
+            this.Column7.FillWeight = 80F;
+            this.Column7.HeaderText = "SP";
+            this.Column7.Name = "Column7";
+            this.Column7.Width = 46;
+            // 
+            // Column8
+            // 
+            this.Column8.DataPropertyName = "currentNP";
+            this.Column8.FillWeight = 80F;
+            this.Column8.HeaderText = "NP";
+            this.Column8.Name = "Column8";
+            this.Column8.Width = 47;
+            // 
+            // Column9
+            // 
+            this.Column9.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Column9.DataPropertyName = "CurrentMoney";
+            this.Column9.HeaderText = "CurrentMoney";
+            this.Column9.Name = "Column9";
             // 
             // Form1
             // 
@@ -446,17 +457,18 @@
         private UserControl1 userControl_HP;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.ComboBox threadSleep;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column2;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn column_fiexdAttack;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column4;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
-        private System.Windows.Forms.ComboBox threadSleep;
-        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -29,6 +29,10 @@ namespace Guagua
             new ConfigurationProperty("userName",
                 typeof(string), "null",
                 ConfigurationPropertyOptions.IsRequired);
+        private static readonly ConfigurationProperty _fixedAttack =
+           new ConfigurationProperty("fixedAttack",
+              typeof(bool), false,
+               ConfigurationPropertyOptions.IsRequired);
 
 
         public CustomSection()
@@ -40,6 +44,7 @@ namespace Guagua
             _Properties.Add(_Attack);
             _Properties.Add(_PickUP);
             _Properties.Add(_userName);
+            _Properties.Add(_fixedAttack);
         }
         // This is a key customization. 
         // It returns the initialized property bag.
@@ -90,6 +95,14 @@ namespace Guagua
             set
             {
                 this["attack"] = value;
+            }
+        }
+        public bool bFixedAttack
+        {
+            get { return (bool)this["fixedAttack"]; }
+            set
+            {
+                this["fixedAttack"] = value;
             }
         }
         public bool bPickUP

@@ -17,7 +17,7 @@ namespace Guagua
         public Form1()
         {
             InitializeComponent();
-            this.Text = "guagua  1.0.0.9";
+            this.Text = "guagua  1.0.0.10";
             this.notifyIcon1.Text = this.Text;
             trackBar_H.Value = GolbalSetting.GetInstance().step_H;
             trackBar1_W.Value = GolbalSetting.GetInstance().step_W;            
@@ -113,11 +113,7 @@ namespace Guagua
             }
             button3.Text = (button3.Text == "暂停") ? "继续运行" : "暂停";
         }
-        private void listView1_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            if (!bInited) return;
-           m_objInfo[e.Item.Index].enableWork=(e.Item.Checked);
-        }
+       
        
       
         void createTextBitmap(string text)
