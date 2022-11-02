@@ -70,10 +70,10 @@ namespace Guagua
             string uN = escape(oi.userName);
             CustomSection cs = ConfigurationManager.GetSection(uN) as CustomSection;
             if (cs == null) return;
+            oi.bFiexdAttack = cs.bFixedAttack;
             oi.bAttack = cs.bAttack;
             oi.bPickUP = cs.bPickUP;
             oi.enableWork = cs.enableWork;
-            oi.bFiexdAttack = cs.bFixedAttack;
 
         }
 
@@ -107,10 +107,10 @@ namespace Guagua
             {
                 CustomSection cs = new CustomSection();
                 cs.enableWork = oi.enableWork;
+                cs.bFixedAttack = oi.bFiexdAttack;
                 cs.bAttack = oi.bAttack;
                 cs.bPickUP = oi.bPickUP;
                 cs.userName = oi.userName;
-                cs.bFixedAttack = oi.bFiexdAttack;
                 string uN = escape(oi.userName);
                 cfa.Sections.Remove(uN);
                 cfa.Sections.Add(uN, cs);

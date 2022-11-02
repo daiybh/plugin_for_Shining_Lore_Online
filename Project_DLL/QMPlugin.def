@@ -1,9 +1,0 @@
-; QMPlugin.def : Declares the module parameters for the DLL.
-
-LIBRARY      "QMPlugin"
-DESCRIPTION  'QMPlugin Windows Dynamic Link Library'
-
-EXPORTS
-	DllCanUnloadNow PRIVATE
-	DllGetClassObject PRIVATE
-	DllRegisterServer PRIVATE
