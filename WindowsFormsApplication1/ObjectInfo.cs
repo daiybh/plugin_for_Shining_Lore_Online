@@ -96,6 +96,10 @@ namespace Guagua
         {
             get { return string.Format("{0}/{1}", objeMem_HP_SP_NP.np, objeMem_HP_SP_NP.npMax); }
         }
+        public int NP
+        {
+            get { return objeMem_HP_SP_NP.np; }
+        }
 
         public string CurrentMoney
         {
@@ -124,7 +128,7 @@ namespace Guagua
         public MyFindWindow.RECT rt;
         private bool _enableWork = false;
        
-
+        
         public void showWindow(bool isShow)
         {
             _bshowWindow = isShow;
@@ -132,6 +136,79 @@ namespace Guagua
         }
         
         private int offsetX = -100;
+        int move_one_offset = 50;
+        void move(IntPtr hWnd,int x,int y)
+        {
+            MouseEvent.moveMouse(hWnd, x, y);
+            MouseEvent.Key_down(hWnd, Keys.Alt);
+            MouseEvent.LeftClick(hWnd, x,y);
+            MouseEvent.LeftClick(hWnd, x,y);
+            MouseEvent.LeftClick(hWnd, x,y);
+            MouseEvent.key_up(hWnd, Keys.Alt);
+        }
+        public void move_left_top_one()
+        {
+            int X = this.center_X - move_one_offset;
+            int Y = this.center_y - move_one_offset;
+            move(this.hWnd, X, Y);
+        }
+
+        public void move_left_down_one()
+        {
+            int X = this.center_X - move_one_offset;
+            int Y = this.center_y + move_one_offset;
+            move(this.hWnd, X, Y);
+        }
+        public void move_left_one()
+        {
+            int X = this.center_X - move_one_offset;
+            int Y = this.center_y;
+            move(this.hWnd, X, Y);
+        }
+        public void move_right_down_one()
+        {
+            int X = this.center_X + move_one_offset;
+            int Y = this.center_y + move_one_offset;
+            move(this.hWnd, X, Y);
+        }
+        public void move_right_top_one()
+        {
+            int X = this.center_X + move_one_offset;
+            int Y = this.center_y - move_one_offset;
+            move(this.hWnd, X, Y);
+        }
+       
+        public void move_right_one()
+        {
+            int X = this.center_X + move_one_offset;
+            int Y = this.center_y ;
+            move(this.hWnd, X, Y);
+        }
+
+
+        public void move_top_one()
+        {
+            int X = this.center_X ;
+            int Y = this.center_y -move_one_offset*3;
+            move(this.hWnd, X, Y);
+        }
+
+
+        public void move_down_one()
+        {
+            int X = this.center_X ;
+            int Y = this.center_y + move_one_offset;
+            move(this.hWnd, X, Y);
+        }
+        public void attackCenter()
+        {
+            MouseEvent.RightClick(this.hWnd, center_X, center_y);
+
+            MouseEvent.RightClick(this.hWnd, center_X, center_y);
+
+            // Console.WriteLine($"{this.userName} attack>>{x} {y} ");
+            //  Thread.Sleep(10);
+        }
         public void testPickUp2()
         {
 

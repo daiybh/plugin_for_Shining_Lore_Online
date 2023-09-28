@@ -19,6 +19,15 @@ namespace Guagua
             autoEvent = _autoEvent;
             this.oi = _oi;
         }
+        public ObjectInfoWorker(ManualResetEvent _autoEvent)
+        {
+            autoEvent = _autoEvent;
+            
+        }
+        public void setObject(ObjectInfo _oi)
+        {
+            this.oi = _oi;
+        }
         ManualResetEvent autoEvent = null;
         public void doWorkThread()
         {
@@ -27,7 +36,7 @@ namespace Guagua
             while (!bExit)
             {
               //
-                if (oi.enableWork)
+                if (oi!=null && oi.enableWork)
                 {
                     // 先来一次右键, 如果 sp 减少 说明 魔法发送了.
                     //就一直持续发送魔法,
@@ -58,8 +67,7 @@ namespace Guagua
                             oi.attack_end(X1, Y1);
                         }
                     }
-                    oi.testPickUp2();
-                   
+                    oi.testPickUp2();                   
                 }
                 Thread.Sleep(GolbalSetting.GetInstance().threadSleep);
             }

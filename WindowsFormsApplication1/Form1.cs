@@ -54,7 +54,7 @@ namespace Guagua
         private void Form1_Load(object sender, EventArgs e)
         {
             splitContainer1.Panel1Collapsed = true;
-            MyFindWindow fw = new MyFindWindow(findCB);
+            FindObjectInfo findObjectInfo = new FindObjectInfo(findCB);
             
             bInited = true;
             //  listView1.datas = new ControlBindingsCollection();
@@ -161,7 +161,7 @@ namespace Guagua
 
         private void button2_Click(object sender, EventArgs e)
         {
-            MyFindWindow fw = new MyFindWindow(findCB);
+            FindObjectInfo findObjectInfo = new FindObjectInfo(findCB);
         }
 
         private void 显示ToolStripMenuItem_Click(object sender, EventArgs e)
