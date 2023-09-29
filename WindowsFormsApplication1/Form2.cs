@@ -10,7 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Guagua.MyFindWindow;
-
+using System.Text.Json;
+using System.Text.Json.Serialization;
 namespace Guagua
 {
     public partial class Form2 : Form
@@ -24,13 +25,26 @@ namespace Guagua
             loadConfig();
 
         }
+        public class WeatherForecast
+        {
+            public DateTimeOffset Date { get; set; }
+            public int TemperatureCelsius { get; set; }
+            public string Summary { get; set; }
+        }
         void loadConfig()
         {
             try
             {
-                Configuration appConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);   //打开 vshost.exe.config
+                var weatherForecast = new WeatherForecast
+                {
+                    Date = DateTime.Parse("2019-08-01"),
+                    TemperatureCelsius = 25,
+                    Summary = "Hot"
+                };
 
-                //buttonGPSValue.Text = appConfig.AppSettings.Settings["centerXY"].Value;
+                string jsonString = JsonSerializer.Serialize(weatherForecast);
+
+                Console.WriteLine(jsonString);
             }
             catch (Exception ex)
             {

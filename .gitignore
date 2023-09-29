@@ -15,3 +15,6 @@
 /WindowsFormsApplication2/bin/Debug
 /.vs/guagua
 obj/
+/GuaGua2/x64/Debug
+/packages
+/x64/Debug
