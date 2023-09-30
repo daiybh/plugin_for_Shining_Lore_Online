@@ -87,6 +87,8 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_ATTACK, &CGuaGua2Dlg::OnBnClickedButtonAttack)
 	ON_CBN_SELCHANGE(IDC_COMBO_GAMEUSER, &CGuaGua2Dlg::OnCbnSelchangeComboGameuser)
 	ON_BN_CLICKED(IDCANCEL, &CGuaGua2Dlg::OnBnClickedCancel)
+	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CGuaGua2Dlg::OnBnClickedButtonRefresh)
+	ON_BN_CLICKED(IDC_BUTTON_START, &CGuaGua2Dlg::OnBnClickedButtonStart)
 END_MESSAGE_MAP()
 
 
@@ -141,23 +143,7 @@ BOOL CGuaGua2Dlg::OnInitDialog()
 		4.  点”选中GPS 后点这里设置中心“\n ");
 
 	SetDlgItemText(IDC_EDIT_INFO, info);
-
-	ProcessFind::getInstance()->findObj();
-
-	for (int i = 0; i < ProcessFind::getInstance()->gameUserObjs.size(); i++)
-	{
-		auto gameUser = ProcessFind::getInstance()->gameUserObjs[i];
-		int ips = m_gameUser.AddString(gameUser.titlename);
-		m_gameUser.SetItemData(ips, i);
-	}
-	for (int i = 0; i < ProcessFind::getInstance()->gpsObjs.size(); i++)
-	{
-		auto gps = ProcessFind::getInstance()->gpsObjs[i];
-		CString title;
-		title.Format(_T("%d %s"), gps.pid, gps.titlename);
-		int ips = m_ComboGps.AddString(title);
-		m_ComboGps.SetItemData(ips, i);
-	}
+	OnBnClickedButtonRefresh();
 	m_posOffset.SetRange(0, 100);
 	m_posOffset.SetPos(40);
 	m_posOffset2.SetRange(0, 1000);
@@ -336,6 +322,7 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		SetDlgItemInt(IDC_EDIT_TIME_F5, item.f5Time);
 
 		m_posOffset.SetPos(item.areaOffset);
+		m_posOffset2.SetPos(item.stepOffset);
 		CheckDlgButton(IDC_CHECK_NP, item.NP);
 		CheckDlgButton(IDC_CHECK_ATTACK, item.attack);
 		CheckDlgButton(IDC_CHECK_PICKUP, item.pickup);
@@ -344,6 +331,7 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 }
 #include <thread>
 std::thread g_thread;
+CEvent g_event(false);
 bool bExit = false;
 uint64_t loopcount = 0;
 void CGuaGua2Dlg::OnBnClickedOk()
@@ -374,82 +362,105 @@ void CGuaGua2Dlg::OnBnClickedOk()
 
 	g_item = item;
 
-	g_thread = std::thread([&]()
-		{
-			loopcount = 0;
-			bExit = false;
-			bool bSetRange = false;
-			while (!bExit)
-			{
-				Sleep(1000);
-				int user = m_gameUser.GetCurSel();
-				if (user != -1)
-				{
-					GameObj& gameUser = ProcessFind::getInstance()->gameUserObjs[user];
-					if (!bSetRange)
-					{
-						m_posOffset2.SetRange(0, (gameUser.rect.bottom - gameUser.rect.top) / 2);
-						bSetRange = true;
-					}
-					item.stepOffset = m_posOffset2.GetPos();
-
-					gameUser.move_one_offset = item.stepOffset;
-
-					gameUser.ALT_Down();
-					uint64_t dNow = GetTickCount();
-					if (item.pickup)
-					{
-						if (dNow - g_item.last_PickupTime > g_item.pickupTime * 1000)
-						{
-							g_item.cout_pickup++; gameUser.pickup(); g_item.last_PickupTime = dNow;
-						}
-					}
-					if (item.attack)
-					{
-						if (dNow - g_item.last_f1Time > g_item.f1Time * 1000)
-						{
-							g_item.cout_f1++; gameUser.F1(); g_item.last_f1Time = dNow; gameUser.attackCenter();
-						}
-						if (dNow - g_item.last_f2Time > g_item.f2Time * 1000)
-						{
-							g_item.cout_f2++; gameUser.F2(); g_item.last_f2Time = dNow; gameUser.F1(); gameUser.attackCenter();
-						}
-						if (dNow - g_item.last_f3Time > g_item.f3Time * 1000)
-						{
-							g_item.cout_f3++; gameUser.F3(); g_item.last_f3Time = dNow; gameUser.F1(); gameUser.attackCenter();
-						}
-						if (dNow - g_item.last_f4Time > g_item.f4Time * 1000)
-						{
-							g_item.cout_f4++; gameUser.F4(); g_item.last_f4Time = dNow; gameUser.F1(); gameUser.attackCenter();
-						}
-						if (dNow - g_item.last_f5Time > g_item.f5Time * 1000)
-						{
-							g_item.cout_f5++; gameUser.F5(); g_item.last_f5Time = dNow; gameUser.F1(); gameUser.attackCenter();
-						}
-					}
-					switch (loopcount % 4)
-					{
-					case 0:	gameUser.move_top_one(); break;
-					case 1: gameUser.move_right_one(); break;
-					case 2: gameUser.move_down_one(); break;
-					case 3: gameUser.move_left_one(); break;
-					}
-
-					//gameUser.ALT_Up();
-				}
-
-				loopcount++;
-			}
-			loopcount = 9999999999999999999;
-		});
 }
+
+
+void CGuaGua2Dlg::OnBnClickedButtonStart()
+{
+	CString rtext;
+	GetDlgItemText(IDC_BUTTON_START, rtext);
+	if (rtext == "开始 ") {
+		rtext = "停止";
+		g_thread = std::thread([&]()
+			{
+				loopcount = 0;
+				bExit = false;
+				bool bSetRange = false;
+				while (!bExit)
+				{
+					DWORD dt = WaitForSingleObject(g_event, 1000);
+					if (dt == WAIT_OBJECT_0)break;
+
+					int user = m_gameUser.GetCurSel();
+					if (user != -1)
+					{
+						GameObj& gameUser = ProcessFind::getInstance()->gameUserObjs[user];
+						if (!bSetRange)
+						{
+							m_posOffset2.SetRange(0, (gameUser.rect.bottom - gameUser.rect.top) / 2);
+							bSetRange = true;
+						}
+						g_item.stepOffset = m_posOffset2.GetPos();
+
+						gameUser.move_one_offset = g_item.stepOffset;
+
+						gameUser.ALT_Down();
+						uint64_t dNow = GetTickCount();
+						if (g_item.pickup)
+						{
+							if (dNow - g_item.last_PickupTime > g_item.pickupTime * 1000)
+							{
+								g_item.cout_pickup++; gameUser.pickup(); g_item.last_PickupTime = dNow;
+							}
+						}
+						if (g_item.attack)
+						{
+							if (dNow - g_item.last_f1Time > g_item.f1Time * 1000)
+							{
+								g_item.cout_f1++; gameUser.F1(); g_item.last_f1Time = dNow; gameUser.attackCenter();
+							}
+							if (dNow - g_item.last_f2Time > g_item.f2Time * 1000)
+							{
+								g_item.cout_f2++; gameUser.F2(); g_item.last_f2Time = dNow; gameUser.F1(); gameUser.attackCenter();
+							}
+							if (dNow - g_item.last_f3Time > g_item.f3Time * 1000)
+							{
+								g_item.cout_f3++; gameUser.F3(); g_item.last_f3Time = dNow; gameUser.F1(); gameUser.attackCenter();
+							}
+							if (dNow - g_item.last_f4Time > g_item.f4Time * 1000)
+							{
+								g_item.cout_f4++; gameUser.F4(); g_item.last_f4Time = dNow; gameUser.F1(); gameUser.attackCenter();
+							}
+							if (dNow - g_item.last_f5Time > g_item.f5Time * 1000)
+							{
+								g_item.cout_f5++; gameUser.F5(); g_item.last_f5Time = dNow; gameUser.F1(); gameUser.attackCenter();
+							}
+						}
+						switch (loopcount % 4)
+						{
+						case 0:	gameUser.move_top_one(); break;
+						case 1: gameUser.move_right_one(); break;
+						case 2: gameUser.move_down_one(); break;
+						case 3: gameUser.move_left_one(); break;
+						}
+
+						//gameUser.ALT_Up();
+					}
+
+					loopcount++;
+				}
+				loopcount = 9999999999999999999;
+			});
+
+	}
+	else {
+		rtext = "开始";
+		bExit = true;
+		g_event.SetEvent();
+		if (g_thread.joinable())
+			g_thread.join();
+	}
+	SetDlgItemText(IDC_BUTTON_START, rtext);
+}
+
 
 void CGuaGua2Dlg::OnBnClickedCancel()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	bExit = true;
+	g_event.SetEvent();
 	if (g_thread.joinable())
 		g_thread.join();
+	OnCancel();
 }
 
 void CGuaGua2Dlg::OnTimer(UINT_PTR nIDEvent)
@@ -569,3 +580,28 @@ void CGuaGua2Dlg::OnBnClickedButtonAttack()
 }
 
 
+
+
+void CGuaGua2Dlg::OnBnClickedButtonRefresh()
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	m_gameUser.ResetContent();
+	m_ComboGps.ResetContent();
+	ProcessFind::getInstance()->findObj();
+
+	for (int i = 0; i < ProcessFind::getInstance()->gameUserObjs.size(); i++)
+	{
+		auto gameUser = ProcessFind::getInstance()->gameUserObjs[i];
+		int ips = m_gameUser.AddString(gameUser.titlename);
+		m_gameUser.SetItemData(ips, i);
+	}
+	for (int i = 0; i < ProcessFind::getInstance()->gpsObjs.size(); i++)
+	{
+		auto gps = ProcessFind::getInstance()->gpsObjs[i];
+		CString title;
+		title.Format(_T("%d %s"), gps.pid, gps.titlename);
+		int ips = m_ComboGps.AddString(title);
+		m_ComboGps.SetItemData(ips, i);
+	}
+}

@@ -24,7 +24,8 @@ public:
 	int move_one_offset = 100;
 	void ALT_Down()
 	{
-		Key_down(VK_CONTROL);
+		//Key_down(VK_MENU); 
+			::SendMessage(hWnd, WM_SYSKEYDOWN, VK_MENU, 0);
 		//::SendMessage(hWnd, WM_KEYDOWN, VK_MENU, 0);
 	}
 	void ALT_Up()
@@ -232,6 +233,8 @@ public:
 	}
 	void findObj()
 	{
+		gpsObjs.clear();
+		gameUserObjs.clear();
 		TCHAR windowTitle[256];
 		{
 			HWND hWnd = NULL;
