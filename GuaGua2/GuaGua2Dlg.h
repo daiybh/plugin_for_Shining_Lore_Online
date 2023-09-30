@@ -50,4 +50,6 @@ public:
 	afx_msg void OnBnClickedButtonDown();
 	afx_msg void OnBnClickedButtonDownRight();
 	afx_msg void OnBnClickedButtonAttack();
+	CSliderCtrl m_posOffset;
+	afx_msg void OnCbnSelchangeComboGameuser();
 };

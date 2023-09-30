@@ -61,6 +61,7 @@ void CGuaGua2Dlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO_GAMEUSER, m_gameUser);
 	DDX_Control(pDX, IDC_COMBO_GPS, m_ComboGps);
+	DDX_Control(pDX, IDC_SLIDER_POSOFFSET, m_posOffset);
 }
 
 BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
@@ -83,6 +84,7 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_DOWN, &CGuaGua2Dlg::OnBnClickedButtonDown)
 	ON_BN_CLICKED(IDC_BUTTON_DOWN_RIGHT, &CGuaGua2Dlg::OnBnClickedButtonDownRight)
 	ON_BN_CLICKED(IDC_BUTTON_ATTACK, &CGuaGua2Dlg::OnBnClickedButtonAttack)
+	ON_CBN_SELCHANGE(IDC_COMBO_GAMEUSER, &CGuaGua2Dlg::OnCbnSelchangeComboGameuser)
 END_MESSAGE_MAP()
 
 
@@ -144,7 +146,10 @@ BOOL CGuaGua2Dlg::OnInitDialog()
 		int ips = m_ComboGps.AddString(title);
 		m_ComboGps.SetItemData(ips, i);
 	}
+	m_posOffset.SetRange(0, 100);
+	m_posOffset.SetPos(40);
 
+	
 	SetTimer(1, 1000, NULL);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -237,24 +242,115 @@ void CGuaGua2Dlg::OnBnClickedCheckAttack()
 	// TODO: 在此添加控件通知处理程序代码
 }
 
+static std::string ConvertCStringToUTF8(CString strValue)
+{
+	std::wstring wbuffer;
+#ifdef _UNICODE
+	wbuffer.assign(strValue.GetString(), strValue.GetLength());
+#else
+	/*
+	 * 转换ANSI到UNICODE
+	 * 获取转换后长度
+	 */
+	int length = ::MultiByteToWideChar(CP_ACP, MB_ERR_INVALID_CHARS, (LPCTSTR)strValue, -1, NULL, 0);
+	wbuffer.resize(length);
+	/* 转换 */
+	MultiByteToWideChar(CP_ACP, 0, (LPCTSTR)strValue, -1, (LPWSTR)(wbuffer.data()), wbuffer.length());
+#endif
+
+	/* 获取转换后长度 */
+	int length = WideCharToMultiByte(CP_UTF8, 0, wbuffer.data(), wbuffer.size(), NULL, 0, NULL, NULL);
+	/* 获取转换后内容 */
+	std::string buffer;
+	buffer.resize(length);
+
+	WideCharToMultiByte(CP_UTF8, 0, strValue, -1, (LPSTR)(buffer.data()), length, NULL, NULL);
+	return(buffer);
+}
+
+
+static CString ConvertUTF8ToCString(std::string utf8str)
+{
+	/* 预转换，得到所需空间的大小 */
+	int nLen = ::MultiByteToWideChar(CP_UTF8, NULL,
+		utf8str.data(), utf8str.size(), NULL, 0);
+	/* 转换为Unicode */
+	std::wstring wbuffer;
+	wbuffer.resize(nLen);
+	::MultiByteToWideChar(CP_UTF8, NULL, utf8str.data(), utf8str.size(),
+		(LPWSTR)(wbuffer.data()), wbuffer.length());
+
+#ifdef UNICODE
+	return(CString(wbuffer.data(), wbuffer.length()));
+#else
+	/*
+	 * 转换为ANSI
+	 * 得到转换后长度
+	 */
+	nLen = WideCharToMultiByte(CP_ACP, 0,
+		wbuffer.data(), wbuffer.length(), NULL, 0, NULL, NULL);
+
+	std::string ansistr;
+	ansistr.resize(nLen);
+
+	/* 把unicode转成ansi */
+	WideCharToMultiByte(CP_ACP, 0, (LPWSTR)(wbuffer.data()), wbuffer.length(),
+		(LPSTR)(ansistr.data()), ansistr.size(), NULL, NULL);
+	return(CString(ansistr.data(), ansistr.length()));
+#endif
+}
+
+void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
+{
+	{
+		m_gameUser.GetCurSel();
+		CString curUserName;
+		m_gameUser.GetWindowText(curUserName);
+		if (curUserName == "")return;
+		ConfigItem item;
+		std::string sz2 = CT2A(curUserName.GetBuffer()); //转化为非unicode.
+		item.name = sz2;
+
+		Config c;
+		c.load(item);
+
+		SetDlgItemInt(IDC_EDIT_TIME_PICKUP, item.pickupTime);
+		SetDlgItemInt(IDC_EDIT_TIME_F1, item.f1Time);
+		SetDlgItemInt(IDC_EDIT_TIME_F2, item.f2Time);
+		SetDlgItemInt(IDC_EDIT_TIME_F3, item.f3Time);
+		SetDlgItemInt(IDC_EDIT_TIME_F4, item.f4Time);
+		SetDlgItemInt(IDC_EDIT_TIME_F5, item.f5Time);
+
+		m_posOffset.SetPos(item.areaOffset);
+		CheckDlgButton(IDC_CHECK_NP, item.NP);
+		CheckDlgButton(IDC_CHECK_ATTACK, item.attack);
+		CheckDlgButton(IDC_CHECK_PICKUP, item.pickup);
+	}
+}
 
 void CGuaGua2Dlg::OnBnClickedOk()
 {
-	// TODO: 在此添加控件通知处理程序代码
-	
+	// TODO: 在此添加控件通知处理程序代码	
 	m_gameUser.GetCurSel();
-	CString curText;
-	m_gameUser.GetWindowText(curText);
-	//m_gameUser.GetLBText(this->m_gameUser.GetCurSel(), curText); //获取选中的数据
+	CString curUserName;
+	m_gameUser.GetWindowText(curUserName);
+	if (curUserName == "")return;
+	ConfigItem item;	
+	std::string sz2 = CT2A(curUserName.GetBuffer()); //转化为非unicode.
+	item.name = sz2;
+	item.areaOffset = m_posOffset.GetPos();
+	item.NP = IsDlgButtonChecked(IDC_CHECK_NP);
+	item.pickup = IsDlgButtonChecked(IDC_CHECK_PICKUP);
+	item.attack = IsDlgButtonChecked(IDC_CHECK_ATTACK);
+	item.pickupTime = GetDlgItemInt(IDC_EDIT_TIME_PICKUP);
+	item.f1Time = GetDlgItemInt(IDC_EDIT_TIME_F1);
+	item.f2Time = GetDlgItemInt(IDC_EDIT_TIME_F2);
+	item.f3Time = GetDlgItemInt(IDC_EDIT_TIME_F3);
+	item.f4Time = GetDlgItemInt(IDC_EDIT_TIME_F4);
+	item.f5Time = GetDlgItemInt(IDC_EDIT_TIME_F5);
+
 	Config c;
-
-	
-	ConfigItem item;
-	//item.name = curText.GetBuffer();
-
-	c.objs.items.emplace_back(item);
-	
-	c.save();
+	c.save(item);
 }
 
 
@@ -366,3 +462,4 @@ void CGuaGua2Dlg::OnBnClickedButtonAttack()
 
 	ProcessFind::getInstance()->gameUserObjs[user].attackCenter();
 }
+

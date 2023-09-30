@@ -4,7 +4,7 @@
 class GameObj {
 
 public:
-	GameObj(HWND h,DWORD pid,CString name) {
+	GameObj(HWND h, DWORD pid, CString name) {
 		this->hWnd = h;
 		this->pid = pid;
 		this->titlename = name;
@@ -27,10 +27,10 @@ public:
 	{
 		SendMessage(hWnd, WM_MOUSEMOVE, 0, MAKELONG(x, y));
 		Key_down(0x40000);
-		LeftClick( x, y);
-		LeftClick( x, y);
-		LeftClick( x, y);
-		key_up( 0x40000);
+		LeftClick(x, y);
+		LeftClick(x, y);
+		LeftClick(x, y);
+		key_up(0x40000);
 	}
 	void LeftClick(int x, int y)
 	{
@@ -48,68 +48,64 @@ public:
 	{
 		send_message(MOUSEEVENTF_RIGHTUP | MOUSEEVENTF_RIGHTDOWN, 1, x, y);
 	}
-	 void move_left_top_one()
+	void move_left_top_one()
 	{
 		int X = center_X - move_one_offset;
 		int Y = center_y - move_one_offset;
-		move( X, Y);
+		move(X, Y);
 	}
 
-	 void move_left_down_one()
+	void move_left_down_one()
 	{
 		int X = center_X - move_one_offset;
 		int Y = center_y + move_one_offset;
-		move( X, Y);
+		move(X, Y);
 	}
-	 void move_left_one()
+	void move_left_one()
 	{
 		int X = center_X - move_one_offset;
 		int Y = center_y;
-		move( X, Y);
+		move(X, Y);
 	}
-	 void move_right_down_one()
+	void move_right_down_one()
 	{
 		int X = center_X + move_one_offset;
 		int Y = center_y + move_one_offset;
-		move( X, Y);
+		move(X, Y);
 	}
-	 void move_right_top_one()
+	void move_right_top_one()
 	{
 		int X = center_X + move_one_offset;
 		int Y = center_y - move_one_offset;
-		move( X, Y);
+		move(X, Y);
 	}
 
-	 void move_right_one()
+	void move_right_one()
 	{
 		int X = center_X + move_one_offset;
 		int Y = center_y;
-		move( X, Y);
+		move(X, Y);
 	}
 
 
-	 void move_top_one()
+	void move_top_one()
 	{
 		int X = center_X;
 		int Y = center_y - move_one_offset * 3;
-		move( X, Y);
+		move(X, Y);
 	}
 
 
-	 void move_down_one()
+	void move_down_one()
 	{
 		int X = center_X;
 		int Y = center_y + move_one_offset;
-		move( X, Y);
+		move(X, Y);
 	}
-	 void attackCenter()
+	void attackCenter()
 	{
-		RightClick( center_X, center_y);
-
-		RightClick( center_X, center_y);
-
-		// Console.WriteLine($"{userName} attack>>{x} {y} ");
-		//  Thread.Sleep(10);
+		RightClick(center_X, center_y);
+		RightClick(center_X, center_y);
 	}
 private:
 
@@ -133,47 +129,47 @@ private:
 	{
 		return  MAKELONG(low, high);
 	}
-	 void Key_down(BYTE  key)
+	void Key_down(BYTE  key)
 	{
-		 return VK_SendKeyDownMsg(key);
+		return VK_SendKeyDownMsg(key);
 		int lParam = 1;
 		lParam += MapVirtualKey(key, 0) << 16;
 		//2883585
 		SendMessage(hWnd, WM_KEYDOWN, key, lParam);//Thread.Sleep(100);
 
 	}
-	 void VK_SendKeyDownMsg(BYTE key) {
-		 DWORD dwVKFkeyData;
-		 WORD dwScanCode = MapVirtualKey(key, 0);
-		 dwVKFkeyData = 1;
-		 dwVKFkeyData |= dwScanCode << 16;
-		 dwVKFkeyData |= 0 << 24;
-		 dwVKFkeyData |= 0 << 29;
-		 ::SendMessage(hWnd, WM_KEYDOWN, key, dwVKFkeyData);
-	 }
-	 void key_up(BYTE  key)
-	 {
-		 return VK_SendKeyUpMsg(key);
-		 int lParam = 1;
-		 lParam += MapVirtualKey(key, 0) << 16;
-		 //2883585
-		 //SendMessage(hWnd, WM_KEYDOWN, key.GetHashCode(), lParam);//Thread.Sleep(100);
-		 lParam += 1 << 30;
-		 lParam += 1 << 31;
-		 SendMessage(hWnd, WM_KEYUP, key, lParam);//up
-	 }
-	 void		 VK_SendKeyUpMsg(BYTE key) {
-		 DWORD dwVKFkeyData;
-		 WORD dwScanCode = MapVirtualKey(key, 0);
-		 dwVKFkeyData = 1;
-		 dwVKFkeyData |= dwScanCode << 16;
-		 dwVKFkeyData |= 0 << 24;
-		 dwVKFkeyData |= 0 << 29;
+	void VK_SendKeyDownMsg(BYTE key) {
+		DWORD dwVKFkeyData;
+		WORD dwScanCode = MapVirtualKey(key, 0);
+		dwVKFkeyData = 1;
+		dwVKFkeyData |= dwScanCode << 16;
+		dwVKFkeyData |= 0 << 24;
+		dwVKFkeyData |= 0 << 29;
+		::SendMessage(hWnd, WM_KEYDOWN, key, dwVKFkeyData);
+	}
+	void key_up(BYTE  key)
+	{
+		return VK_SendKeyUpMsg(key);
+		int lParam = 1;
+		lParam += MapVirtualKey(key, 0) << 16;
+		//2883585
+		//SendMessage(hWnd, WM_KEYDOWN, key.GetHashCode(), lParam);//Thread.Sleep(100);
+		lParam += 1 << 30;
+		lParam += 1 << 31;
+		SendMessage(hWnd, WM_KEYUP, key, lParam);//up
+	}
+	void		 VK_SendKeyUpMsg(BYTE key) {
+		DWORD dwVKFkeyData;
+		WORD dwScanCode = MapVirtualKey(key, 0);
+		dwVKFkeyData = 1;
+		dwVKFkeyData |= dwScanCode << 16;
+		dwVKFkeyData |= 0 << 24;
+		dwVKFkeyData |= 0 << 29;
 
-		 dwVKFkeyData |= 3 << 30;
-		 ::SendMessage(hWnd, WM_KEYUP, key, dwVKFkeyData);
+		dwVKFkeyData |= 3 << 30;
+		::SendMessage(hWnd, WM_KEYUP, key, dwVKFkeyData);
 
-	 }
+	}
 };
 class ProcessFind
 {
@@ -210,7 +206,7 @@ public:
 			DWORD pid = 0;
 			while (true)
 			{
-				hWnd = FindWindowEx(NULL, hWnd,   L"WTWindow", NULL);
+				hWnd = FindWindowEx(NULL, hWnd, L"WTWindow", NULL);
 				if (hWnd == NULL)break;
 				GetWindowText(hWnd, windowTitle, sizeof(windowTitle));
 				CString wt = windowTitle;
@@ -238,14 +234,14 @@ public:
 			DWORD pid = 0;
 			while (true)
 			{
-				hWnd = FindWindowEx(hWnd, NULL,  L"SlOnline", NULL);
+				hWnd = FindWindowEx(hWnd, NULL, L"SlOnline", NULL);
 				if (hWnd == NULL)break;
 
 				GetWindowText(hWnd, windowTitle, sizeof(windowTitle));
 				CString xt = windowTitle;
 
 				GetWindowThreadProcessId(hWnd, &pid);
-				gameUserObjs.emplace_back(GameObj(hWnd, pid ,xt ));
+				gameUserObjs.emplace_back(GameObj(hWnd, pid, xt));
 			}
 		}
 	}
