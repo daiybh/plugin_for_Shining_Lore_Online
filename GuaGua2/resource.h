@@ -34,8 +34,14 @@
 #define IDC_BUTTON_LEFT                 1024
 #define IDC_BUTTON_RIGHT                1025
 #define IDC_EDIT_INFO                   1026
-#define IDC_BUTTON_DOWN2                1029
+#define IDC_STATIC_F1                   1027
+#define IDC_STATIC_F2                   1028
 #define IDC_BUTTON_ATTACK               1029
+#define IDC_STATIC_F3                   1030
+#define IDC_STATIC_F4                   1031
+#define IDC_STATIC_F5                   1032
+#define IDC_STATIC_PICKUP               1033
+#define IDC_SLIDER_POSOFFSET2           1034
 
 // Next default values for new objects
 // 
@@ -43,7 +49,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

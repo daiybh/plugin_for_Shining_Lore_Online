@@ -6,15 +6,31 @@
 struct ConfigItem {
 	std::string name;
 	int    areaOffset=0;
+	int    stepOffset = 0;
 	bool     NP=false;
 	bool     pickup=false;
 	int     pickupTime=0;
+	int     last_PickupTime = 0;
+	int     cout_pickup = 0;
 	bool    attack=false;
+
+	int     last_AttackTime = 0;
 	int     f1Time=0;
 	int     f2Time=0;
 	int     f3Time=0;
 	int     f4Time=0;
 	int     f5Time=0;
+
+	int     cout_f1 = 0;
+	int     cout_f2 = 0;
+	int     cout_f3 = 0;
+	int     cout_f4 = 0;
+	int     cout_f5 = 0;
+	int     last_f1Time = 0;
+	int     last_f2Time = 0;
+	int     last_f3Time = 0;
+	int     last_f4Time = 0;
+	int     last_f5Time = 0;
 
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigItem, name, areaOffset, NP, pickup, pickupTime, attack, f1Time, f2Time, f3Time, f4Time, f5Time);
 };

@@ -52,4 +52,6 @@ public:
 	afx_msg void OnBnClickedButtonAttack();
 	CSliderCtrl m_posOffset;
 	afx_msg void OnCbnSelchangeComboGameuser();
+	afx_msg void OnBnClickedCancel();
+	CSliderCtrl m_posOffset2;
 };

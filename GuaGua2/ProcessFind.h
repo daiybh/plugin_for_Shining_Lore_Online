@@ -22,32 +22,29 @@ public:
 	int center_X = 0;
 	int center_y = 0;
 	int move_one_offset = 100;
-
-	void move(int x, int y)
+	void ALT_Down()
 	{
-		SendMessage(hWnd, WM_MOUSEMOVE, 0, MAKELONG(x, y));
-		Key_down(0x40000);
-		LeftClick(x, y);
-		LeftClick(x, y);
-		LeftClick(x, y);
-		key_up(0x40000);
+		Key_down(VK_CONTROL);
+		//::SendMessage(hWnd, WM_KEYDOWN, VK_MENU, 0);
 	}
-	void LeftClick(int x, int y)
+	void ALT_Up()
 	{
-		send_message(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 2, x, y);
+		//key_up(VK_LMENU);
+		::SendMessage(hWnd, WM_KEYUP, VK_MENU, 0);
 	}
-	void Right_down(int x, int y)
+	void pickup()
 	{
-		send_message(MOUSEEVENTF_RIGHTDOWN, 1, x, y);
+		int X = center_X ;
+		int Y = center_y ; 
+		LeftClick(X, Y);
+		LeftClick(X, Y);
 	}
-	void Right_up(int x, int y)
+	void attackCenter()
 	{
-		send_message(MOUSEEVENTF_RIGHTUP, 1, x, y);
+		RightClick(center_X, center_y);
+		RightClick(center_X, center_y);
 	}
-	void RightClick(int x, int y)
-	{
-		send_message(MOUSEEVENTF_RIGHTUP | MOUSEEVENTF_RIGHTDOWN, 1, x, y);
-	}
+	
 	void move_left_top_one()
 	{
 		int X = center_X - move_one_offset;
@@ -102,13 +99,48 @@ public:
 		int Y = center_y + move_one_offset;
 		move(X, Y);
 	}
-	void attackCenter()
-	{
-		RightClick(center_X, center_y);
-		RightClick(center_X, center_y);
+	
+	void F1() {
+		FKey(VK_F1);		
+	}
+	void F2() {	
+		FKey(VK_F2);
+	}
+	void F3() {
+		FKey(VK_F3);
+	}
+	void F4() {
+		FKey(VK_F4);
+	}
+	void F5() {
+		FKey(VK_F5);
 	}
 private:
-
+	void FKey(byte key) {
+		Key_down(key);
+		key_up(key);
+	}
+	void move(int x, int y)
+	{
+		SendMessage(hWnd, WM_MOUSEMOVE, 0, MAKELONG(x, y));
+		LeftClick(x, y);
+	}
+	void LeftClick(int x, int y)
+	{
+		send_message(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 2, x, y);
+	}
+	void Right_down(int x, int y)
+	{
+		send_message(MOUSEEVENTF_RIGHTDOWN, 1, x, y);
+	}
+	void Right_up(int x, int y)
+	{
+		send_message(MOUSEEVENTF_RIGHTUP, 1, x, y);
+	}
+	void RightClick(int x, int y)
+	{
+		send_message(MOUSEEVENTF_RIGHTUP | MOUSEEVENTF_RIGHTDOWN, 1, x, y);
+	}
 	void send_message(int dwFlags, int cButtons, int x, int y)
 	{
 		if ((dwFlags | MOUSEEVENTF_LEFTDOWN) == dwFlags)
