@@ -56,4 +56,5 @@ public:
 	CSliderCtrl m_posOffset2;
 	afx_msg void OnBnClickedButtonRefresh();
 	afx_msg void OnBnClickedButtonStart();
+	afx_msg void OnNMReleasedcaptureSliderPosoffset(NMHDR* pNMHDR, LRESULT* pResult);
 };

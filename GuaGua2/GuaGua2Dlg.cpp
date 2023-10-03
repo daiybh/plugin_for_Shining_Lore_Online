@@ -12,6 +12,32 @@
 #define new DEBUG_NEW
 #endif
 
+#include "Config.h"
+#include "ProcessFind.h"
+
+enum timerEvent {
+	timer_updateGPS = 200,
+	timer_NP = 201,
+	timer_PICKUP,
+	timer_F1,
+	timer_F2,
+	timer_F3,
+	timer_F4,
+	timer_F5
+};
+#include <thread>
+std::thread g_thread;
+CEvent g_event(false);
+bool bExit = false;
+uint64_t loopcount = 0;
+
+int currentGPSX = 0;
+int currentGPSY = 0;
+
+int settingGPSX = 0;
+int settingGPSY = 0;
+
+ConfigItem g_item;
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -89,23 +115,12 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_BN_CLICKED(IDCANCEL, &CGuaGua2Dlg::OnBnClickedCancel)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CGuaGua2Dlg::OnBnClickedButtonRefresh)
 	ON_BN_CLICKED(IDC_BUTTON_START, &CGuaGua2Dlg::OnBnClickedButtonStart)
+	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER_POSOFFSET, &CGuaGua2Dlg::OnNMReleasedcaptureSliderPosoffset)
 END_MESSAGE_MAP()
 
 
 // CGuaGua2Dlg 消息处理程序
-#include "Config.h"
-#include "ProcessFind.h"
 
-enum timerEvent {
-	timer_updateGPS = 200,
-	timer_NP = 201,
-	timer_PICKUP,
-	timer_F1,
-	timer_F2,
-	timer_F3,
-	timer_F4,
-	timer_F5
-};
 BOOL CGuaGua2Dlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -204,16 +219,53 @@ HCURSOR CGuaGua2Dlg::OnQueryDragIcon()
 }
 
 
-int cur_centerX = 0;
-int cur_centerY = 0;
 void CGuaGua2Dlg::OnBnClickedButtonSetcenterpos()
 {
-	CString rx;
-	GetDlgItemText(IDC_STATIC_CurrentPOS, rx);
+	CString gpsText;
+	GetDlgItemText(IDC_STATIC_CurrentPOS, gpsText);
 
-	SetDlgItemText(IDC_STATIC_centerPOS, rx);
+	int pos = gpsText.Find(',');
+	settingGPSX = _wtoi(gpsText.Left(pos).GetBuffer());
+	settingGPSY = _wtoi(gpsText.Right(gpsText.GetLength() - pos - 1).GetBuffer());
+	SetDlgItemText(IDC_STATIC_centerPOS, gpsText);
+
+	gpsText.Format(L"%d,%d", settingGPSX - g_item.areaOffset, settingGPSY - g_item.areaOffset);
+	SetDlgItemText(IDC_STATIC_X1Y1, gpsText);
+
+	gpsText.Format(L"%d,%d", settingGPSX + g_item.areaOffset, settingGPSY - g_item.areaOffset);
+	SetDlgItemText(IDC_STATIC_X2Y2, gpsText);
+
+	gpsText.Format(L"%d,%d", settingGPSX + g_item.areaOffset, settingGPSY + g_item.areaOffset);
+	SetDlgItemText(IDC_STATIC_X3Y3, gpsText);
+
+	gpsText.Format(L"%d,%d", settingGPSX - g_item.areaOffset, settingGPSY + g_item.areaOffset);
+	SetDlgItemText(IDC_STATIC_X4Y4, gpsText);
 }
 
+
+void CGuaGua2Dlg::OnNMReleasedcaptureSliderPosoffset(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	// TODO: 在此添加控件通知处理程序代码
+	*pResult = 0;
+
+	g_item.areaOffset = m_posOffset.GetPos();
+
+	CString gpsText;
+	gpsText.Format(L"%d,%d", settingGPSX - g_item.areaOffset, settingGPSY - g_item.areaOffset);
+	SetDlgItemText(IDC_STATIC_X1Y1, gpsText);
+
+	gpsText.Format(L"%d,%d", settingGPSX + g_item.areaOffset, settingGPSY - g_item.areaOffset);
+	SetDlgItemText(IDC_STATIC_X2Y2, gpsText);
+
+	gpsText.Format(L"%d,%d", settingGPSX + g_item.areaOffset, settingGPSY + g_item.areaOffset);
+	SetDlgItemText(IDC_STATIC_X3Y3, gpsText);
+
+	gpsText.Format(L"%d,%d", settingGPSX - g_item.areaOffset, settingGPSY + g_item.areaOffset);
+	SetDlgItemText(IDC_STATIC_X4Y4, gpsText);
+
+
+	SetDlgItemInt(IDC_STATIC_XY_OFFSET, g_item.areaOffset);
+}
 
 void CGuaGua2Dlg::OnTRBNThumbPosChangingSliderPosoffset(NMHDR* pNMHDR, LRESULT* pResult)
 {
@@ -222,6 +274,7 @@ void CGuaGua2Dlg::OnTRBNThumbPosChangingSliderPosoffset(NMHDR* pNMHDR, LRESULT* 
 	NMTRBTHUMBPOSCHANGING* pNMTPC = reinterpret_cast<NMTRBTHUMBPOSCHANGING*>(pNMHDR);
 	// TODO: 在此添加控件通知处理程序代码
 	*pResult = 0;
+	
 }
 
 
@@ -242,64 +295,6 @@ void CGuaGua2Dlg::OnBnClickedCheckAttack()
 	// TODO: 在此添加控件通知处理程序代码
 }
 
-static std::string ConvertCStringToUTF8(CString strValue)
-{
-	std::wstring wbuffer;
-#ifdef _UNICODE
-	wbuffer.assign(strValue.GetString(), strValue.GetLength());
-#else
-	/*
-	 * 转换ANSI到UNICODE
-	 * 获取转换后长度
-	 */
-	int length = ::MultiByteToWideChar(CP_ACP, MB_ERR_INVALID_CHARS, (LPCTSTR)strValue, -1, NULL, 0);
-	wbuffer.resize(length);
-	/* 转换 */
-	MultiByteToWideChar(CP_ACP, 0, (LPCTSTR)strValue, -1, (LPWSTR)(wbuffer.data()), wbuffer.length());
-#endif
-
-	/* 获取转换后长度 */
-	int length = WideCharToMultiByte(CP_UTF8, 0, wbuffer.data(), wbuffer.size(), NULL, 0, NULL, NULL);
-	/* 获取转换后内容 */
-	std::string buffer;
-	buffer.resize(length);
-
-	WideCharToMultiByte(CP_UTF8, 0, strValue, -1, (LPSTR)(buffer.data()), length, NULL, NULL);
-	return(buffer);
-}
-
-
-static CString ConvertUTF8ToCString(std::string utf8str)
-{
-	/* 预转换，得到所需空间的大小 */
-	int nLen = ::MultiByteToWideChar(CP_UTF8, NULL,
-		utf8str.data(), utf8str.size(), NULL, 0);
-	/* 转换为Unicode */
-	std::wstring wbuffer;
-	wbuffer.resize(nLen);
-	::MultiByteToWideChar(CP_UTF8, NULL, utf8str.data(), utf8str.size(),
-		(LPWSTR)(wbuffer.data()), wbuffer.length());
-
-#ifdef UNICODE
-	return(CString(wbuffer.data(), wbuffer.length()));
-#else
-	/*
-	 * 转换为ANSI
-	 * 得到转换后长度
-	 */
-	nLen = WideCharToMultiByte(CP_ACP, 0,
-		wbuffer.data(), wbuffer.length(), NULL, 0, NULL, NULL);
-
-	std::string ansistr;
-	ansistr.resize(nLen);
-
-	/* 把unicode转成ansi */
-	WideCharToMultiByte(CP_ACP, 0, (LPWSTR)(wbuffer.data()), wbuffer.length(),
-		(LPSTR)(ansistr.data()), ansistr.size(), NULL, NULL);
-	return(CString(ansistr.data(), ansistr.length()));
-#endif
-}
-ConfigItem g_item;
 void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 {
 	{
@@ -329,11 +324,6 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		g_item = item;
 	}
 }
-#include <thread>
-std::thread g_thread;
-CEvent g_event(false);
-bool bExit = false;
-uint64_t loopcount = 0;
 void CGuaGua2Dlg::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码	
@@ -363,13 +353,143 @@ void CGuaGua2Dlg::OnBnClickedOk()
 	g_item = item;
 
 }
+bool bNeedGoCenter = false;
 
+CString goto_Center(GameObj& curGameUser,int x1, int y1, int x4, int y4)
+{
+	CString  showText;
+	if (currentGPSX < x1)
+	{
+		if (currentGPSY < y1)
+		{
+			showText = L"小于 x1 y1 往左下走";
+			curGameUser.move_left_down_one(); bNeedGoCenter = true;
+		}
+		else if (currentGPSY > y4)
+		{
+			showText = L"超出 x1 y4  往左上走";
+			curGameUser.move_left_top_one(); bNeedGoCenter = true;
+		}
+		else
+		{
+			showText = L"x1 超出 y 没有超出 往左";
+			curGameUser.move_left_one(); bNeedGoCenter = true;
+		}
+	}
+	else if (currentGPSX > x1 && currentGPSX < x4)
+	{
+		if (currentGPSY < y1)
+		{
+			showText = L"x1 没超出 y1 小了 往下走";
+			curGameUser.move_down_one(); bNeedGoCenter = true;
+		}
+		else if (currentGPSY > y4)
+		{
+			showText = L"x1 没超出 y1 大了 往上走";
+			curGameUser.move_top_one(); bNeedGoCenter = true;
+		}
+	}
+	else if (currentGPSX > x4)
+	{
+		if (currentGPSY < y1)
+		{
+			showText = L"小于 x1 y1 往右下走";
+			curGameUser.move_right_down_one(); bNeedGoCenter = true;
+		}
+		else if (currentGPSY > y4)
+		{
+			showText = L"超出 x1 y4  往右上走";
+			curGameUser.move_right_top_one(); bNeedGoCenter = true;
+		}
+		else
+		{
+			showText = L"x1 超出 y 没有超出 往右走";
+			curGameUser.move_right_one(); bNeedGoCenter = true;
+		}
+	}
+
+	else if (currentGPSY < y1)
+	{
+		if (currentGPSX < x1)
+		{
+			showText = L"小于x1  往左下走";
+			curGameUser.move_left_down_one(); bNeedGoCenter = true;
+		}
+		else if (currentGPSX > x4)
+		{
+			showText = L"大于x4  往右下走";
+			curGameUser.move_right_down_one(); bNeedGoCenter = true;
+		}
+		else
+		{
+			showText = L"y1 超出 x 没有超出 往下";
+			curGameUser.move_down_one(); bNeedGoCenter = true;
+		}
+	}
+	else if (currentGPSY > y4)
+	{
+		if (currentGPSX < x1)
+		{
+			showText = L"小于x1  往左上走";
+			curGameUser.move_left_top_one(); bNeedGoCenter = true;
+		}
+		else if (currentGPSX > x4)
+		{
+			showText = L"大于x4  往右上走";
+			curGameUser.move_right_top_one(); bNeedGoCenter = true;
+		}
+		else
+		{
+			showText = L"y1 超出 x 没有超出 往上";
+			curGameUser.move_top_one(); bNeedGoCenter = true;
+		}
+	}
+	else if (currentGPSY > y1 && currentGPSY < y4)
+	{
+		if (currentGPSX < x1)
+		{
+			showText = L"小于x1  往左走";
+			curGameUser.move_left_one(); bNeedGoCenter = true;
+		}
+		else if (currentGPSX > x4)
+		{
+			showText = L"大于x1  往右走";
+			curGameUser.move_right_one(); bNeedGoCenter = true;
+		}
+	}
+	return showText;
+}
+CString  checkIfoutGPS(GameObj& curGameUser)
+{
+	if (settingGPSX == 0 && settingGPSY == 0)
+	{
+		return L"中心点还没设置";
+	}
+	if (currentGPSX == 0 && currentGPSX == 0)
+	{
+		return L"当前坐标未获取到";
+	}
+
+
+	if (currentGPSX == settingGPSX && currentGPSY == settingGPSY)
+	{
+		bNeedGoCenter = false;
+		return L"已经在设置坐标点";
+	}
+	int offset = g_item.areaOffset;
+
+	if (bNeedGoCenter)
+	{
+		offset = 0;
+	}
+	return goto_Center(curGameUser, settingGPSX - offset, settingGPSY - offset, settingGPSX + offset, settingGPSY + offset);
+}
 
 void CGuaGua2Dlg::OnBnClickedButtonStart()
 {
 	CString rtext;
 	GetDlgItemText(IDC_BUTTON_START, rtext);
-	if (rtext == "开始 ") {
+	if (rtext == "开始") {
 		rtext = "停止";
 		g_thread = std::thread([&]()
 			{
@@ -381,10 +501,22 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 					DWORD dt = WaitForSingleObject(g_event, 1000);
 					if (dt == WAIT_OBJECT_0)break;
 
+
+					int gps = m_ComboGps.GetCurSel();
+					if (gps != -1)
+					{
+						CString gpsText = ProcessFind::getInstance()->getGPSValue(gps);
+						int pos = gpsText.Find(',');
+						currentGPSX = _wtoi(gpsText.Left(pos).GetBuffer());
+						currentGPSY = _wtoi(gpsText.Right(gpsText.GetLength() - pos - 1).GetBuffer());
+					}
 					int user = m_gameUser.GetCurSel();
 					if (user != -1)
 					{
 						GameObj& gameUser = ProcessFind::getInstance()->gameUserObjs[user];
+
+						CString x = checkIfoutGPS(gameUser);
+						SetDlgItemText(IDC_STATIC_GOCENTERINFO, x);
 						if (!bSetRange)
 						{
 							m_posOffset2.SetRange(0, (gameUser.rect.bottom - gameUser.rect.top) / 2);
@@ -472,9 +604,13 @@ void CGuaGua2Dlg::OnTimer(UINT_PTR nIDEvent)
 		CString ss;
 		if (gps != -1)
 		{
-			SetDlgItemText(IDC_STATIC_CurrentPOS, ProcessFind::getInstance()->getGPSValue(gps));
+			CString gpsText = ProcessFind::getInstance()->getGPSValue(gps);
+			int pos = gpsText.Find(',');
+			currentGPSX = _wtoi(gpsText.Left(pos).GetBuffer());
+			currentGPSY = _wtoi(gpsText.Right(gpsText.GetLength()-pos-1).GetBuffer());
+			SetDlgItemText(IDC_STATIC_CurrentPOS, gpsText);
 		}
-		ss.Format(_T("%d>>user:%d gps:%d"), loopcount, user, gps);
+		ss.Format(_T("%d>>user:%d gps:%d [%d,%d]"), loopcount, user, gps, currentGPSX, currentGPSY);
 		SetWindowText(ss);
 
 		SetDlgItemInt(IDC_STATIC_PICKUP, g_item.cout_pickup);
@@ -605,3 +741,4 @@ void CGuaGua2Dlg::OnBnClickedButtonRefresh()
 		m_ComboGps.SetItemData(ips, i);
 	}
 }
+
