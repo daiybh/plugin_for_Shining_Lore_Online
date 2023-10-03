@@ -33,7 +33,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	CComboBox m_gameUser;
-	CComboBox m_ComboGps;
 	afx_msg void OnBnClickedButtonSetcenterpos();
 	afx_msg void OnTRBNThumbPosChangingSliderPosoffset(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedCheckNp();
@@ -57,4 +56,7 @@ public:
 	afx_msg void OnBnClickedButtonRefresh();
 	afx_msg void OnBnClickedButtonStart();
 	afx_msg void OnNMReleasedcaptureSliderPosoffset(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBnClickedButtonReadmem();
+	void loadNP();
+	afx_msg void OnBnClickedButtonPickup();
 };

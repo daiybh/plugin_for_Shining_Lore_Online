@@ -219,58 +219,18 @@ public:
 		HWND gpsValueWnd;
 	};
 
-	std::vector<Finded_Obj> gpsObjs;
 	std::vector<GameObj> gameUserObjs;
-	CString getGPSValue(int pos)
-	{
-		if (pos >= gpsObjs.size())
-		{
-			return _T("");
-		}
-		TCHAR windowTitle[256];
-		GetWindowText(gpsObjs[pos].gpsValueWnd, windowTitle, sizeof(windowTitle));
-		return windowTitle + 5;
-	}
+	
 	void findObj()
 	{
-		gpsObjs.clear();
 		gameUserObjs.clear();
 		TCHAR windowTitle[256];
+		
 		{
 			HWND hWnd = NULL;
 			DWORD pid = 0;
-			while (true)
+			while (hWnd = FindWindowEx(NULL,hWnd,  L"SlOnline", NULL))
 			{
-				hWnd = FindWindowEx(NULL, hWnd, L"WTWindow", NULL);
-				if (hWnd == NULL)break;
-				GetWindowText(hWnd, windowTitle, sizeof(windowTitle));
-				CString wt = windowTitle;
-
-				if (wt.Find(_T("天使地图GPS")) != -1)
-				{
-					GetWindowThreadProcessId(hWnd, &pid);
-					printf("%s %d\n", windowTitle, pid);
-					HWND hGpsValue = nullptr;
-					while (hGpsValue = FindWindowEx(hWnd, hGpsValue, L"Afx:400000:b:10003:900015:0", NULL))
-					{
-						GetWindowText(hGpsValue, windowTitle, sizeof(windowTitle));
-						CString xt = windowTitle;
-						if (xt.Find(_T("当前坐标")) != -1)
-						{
-							break;
-						}
-					}
-					gpsObjs.emplace_back(Finded_Obj{ hWnd,  pid ,wt ,hGpsValue });
-				}
-			}
-		}
-		{
-			HWND hWnd = NULL;
-			DWORD pid = 0;
-			while (true)
-			{
-				hWnd = FindWindowEx(hWnd, NULL, L"SlOnline", NULL);
-				if (hWnd == NULL)break;
 
 				GetWindowText(hWnd, windowTitle, sizeof(windowTitle));
 				CString xt = windowTitle;

@@ -188,6 +188,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GuaGua2.h" />
     <ClInclude Include="GuaGua2Dlg.h" />
+    <ClInclude Include="ObjecInfo_HP_SP_NP.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProcessFind.h" />
     <ClInclude Include="Resource.h" />
@@ -196,6 +197,7 @@
   <ItemGroup>
     <ClCompile Include="GuaGua2.cpp" />
     <ClCompile Include="GuaGua2Dlg.cpp" />
+    <ClCompile Include="ObjecInfo_HP_SP_NP.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -15,6 +15,7 @@
 #include "Config.h"
 #include "ProcessFind.h"
 
+#include "ObjecInfo_HP_SP_NP.h"
 enum timerEvent {
 	timer_updateGPS = 200,
 	timer_NP = 201,
@@ -39,6 +40,7 @@ int settingGPSY = 0;
 
 ConfigItem g_item;
 
+ObjecInfo_HP_SP_NP hsn;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialogEx
@@ -86,7 +88,6 @@ void CGuaGua2Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO_GAMEUSER, m_gameUser);
-	DDX_Control(pDX, IDC_COMBO_GPS, m_ComboGps);
 	DDX_Control(pDX, IDC_SLIDER_POSOFFSET, m_posOffset);
 	DDX_Control(pDX, IDC_SLIDER_POSOFFSET2, m_posOffset2);
 }
@@ -116,6 +117,8 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CGuaGua2Dlg::OnBnClickedButtonRefresh)
 	ON_BN_CLICKED(IDC_BUTTON_START, &CGuaGua2Dlg::OnBnClickedButtonStart)
 	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER_POSOFFSET, &CGuaGua2Dlg::OnNMReleasedcaptureSliderPosoffset)
+	ON_BN_CLICKED(ID_BUTTON_READMEM, &CGuaGua2Dlg::OnBnClickedButtonReadmem)
+	ON_BN_CLICKED(IDC_BUTTON_PICKUP, &CGuaGua2Dlg::OnBnClickedButtonPickup)
 END_MESSAGE_MAP()
 
 
@@ -152,10 +155,7 @@ BOOL CGuaGua2Dlg::OnInitDialog()
 
 	// TODO: 在此添加额外的初始化代码
 
-	CString info = _T("1. 先选角色 \n \
-		2. 选GPS  如果下面显示的坐标是当前的就是正确的\n  \
-		3. 在游戏中跑到想在的位置 \n \
-		4.  点”选中GPS 后点这里设置中心“\n ");
+	CString info = _T("1. 先选角色 \r\n2. 在游戏中跑到想在的位置 \r\n3.点“选中GPS 后点这里设置中心”\r\n ");
 
 	SetDlgItemText(IDC_EDIT_INFO, info);
 	OnBnClickedButtonRefresh();
@@ -222,11 +222,10 @@ HCURSOR CGuaGua2Dlg::OnQueryDragIcon()
 void CGuaGua2Dlg::OnBnClickedButtonSetcenterpos()
 {
 	CString gpsText;
-	GetDlgItemText(IDC_STATIC_CurrentPOS, gpsText);
 
-	int pos = gpsText.Find(',');
-	settingGPSX = _wtoi(gpsText.Left(pos).GetBuffer());
-	settingGPSY = _wtoi(gpsText.Right(gpsText.GetLength() - pos - 1).GetBuffer());
+	hsn.getGPS(settingGPSX, settingGPSY);
+
+	gpsText.Format(L"%d,%d", settingGPSX, settingGPSY);
 	SetDlgItemText(IDC_STATIC_centerPOS, gpsText);
 
 	gpsText.Format(L"%d,%d", settingGPSX - g_item.areaOffset, settingGPSY - g_item.areaOffset);
@@ -298,7 +297,8 @@ void CGuaGua2Dlg::OnBnClickedCheckAttack()
 void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 {
 	{
-		m_gameUser.GetCurSel();
+		int user = m_gameUser.GetCurSel();
+		if (user == -1)return;
 		CString curUserName;
 		m_gameUser.GetWindowText(curUserName);
 		if (curUserName == "")return;
@@ -322,6 +322,13 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		CheckDlgButton(IDC_CHECK_ATTACK, item.attack);
 		CheckDlgButton(IDC_CHECK_PICKUP, item.pickup);
 		g_item = item;
+
+
+		int pid = ProcessFind::getInstance()->gameUserObjs[user].pid;
+
+		hsn.open(pid);
+
+
 	}
 }
 void CGuaGua2Dlg::OnBnClickedOk()
@@ -502,14 +509,10 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 					if (dt == WAIT_OBJECT_0)break;
 
 
-					int gps = m_ComboGps.GetCurSel();
-					if (gps != -1)
-					{
-						CString gpsText = ProcessFind::getInstance()->getGPSValue(gps);
-						int pos = gpsText.Find(',');
-						currentGPSX = _wtoi(gpsText.Left(pos).GetBuffer());
-						currentGPSY = _wtoi(gpsText.Right(gpsText.GetLength() - pos - 1).GetBuffer());
-					}
+
+
+					hsn.getGPS(currentGPSX, currentGPSY);
+
 					int user = m_gameUser.GetCurSel();
 					if (user != -1)
 					{
@@ -530,30 +533,30 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 						uint64_t dNow = GetTickCount();
 						if (g_item.pickup)
 						{
-							if (dNow - g_item.last_PickupTime > g_item.pickupTime * 1000)
+							if (g_item.pickupTime>0 && (dNow - g_item.last_PickupTime > g_item.pickupTime * 1000))
 							{
 								g_item.cout_pickup++; gameUser.pickup(); g_item.last_PickupTime = dNow;
 							}
 						}
 						if (g_item.attack)
 						{
-							if (dNow - g_item.last_f1Time > g_item.f1Time * 1000)
+							if (g_item.f1Time>0 && (dNow - g_item.last_f1Time > g_item.f1Time * 1000))
 							{
 								g_item.cout_f1++; gameUser.F1(); g_item.last_f1Time = dNow; gameUser.attackCenter();
 							}
-							if (dNow - g_item.last_f2Time > g_item.f2Time * 1000)
+							if (g_item.f2Time>0 && (dNow - g_item.last_f2Time > g_item.f2Time * 1000))
 							{
 								g_item.cout_f2++; gameUser.F2(); g_item.last_f2Time = dNow; gameUser.F1(); gameUser.attackCenter();
 							}
-							if (dNow - g_item.last_f3Time > g_item.f3Time * 1000)
+							if (g_item.f3Time>0 && (dNow - g_item.last_f3Time > g_item.f3Time * 1000))
 							{
 								g_item.cout_f3++; gameUser.F3(); g_item.last_f3Time = dNow; gameUser.F1(); gameUser.attackCenter();
 							}
-							if (dNow - g_item.last_f4Time > g_item.f4Time * 1000)
+							if (g_item.f4Time >0 &&(dNow - g_item.last_f4Time > g_item.f4Time * 1000))
 							{
 								g_item.cout_f4++; gameUser.F4(); g_item.last_f4Time = dNow; gameUser.F1(); gameUser.attackCenter();
 							}
-							if (dNow - g_item.last_f5Time > g_item.f5Time * 1000)
+							if (g_item.f5Time > 0 && (dNow - g_item.last_f5Time > g_item.f5Time * 1000))
 							{
 								g_item.cout_f5++; gameUser.F5(); g_item.last_f5Time = dNow; gameUser.F1(); gameUser.attackCenter();
 							}
@@ -565,7 +568,7 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 						case 2: gameUser.move_down_one(); break;
 						case 3: gameUser.move_left_one(); break;
 						}
-
+						Sleep(50);
 						//gameUser.ALT_Up();
 					}
 
@@ -600,18 +603,7 @@ void CGuaGua2Dlg::OnTimer(UINT_PTR nIDEvent)
 	if (nIDEvent == timer_updateGPS)
 	{
 		int user = m_gameUser.GetCurSel();
-		int gps = m_ComboGps.GetCurSel();
-		CString ss;
-		if (gps != -1)
-		{
-			CString gpsText = ProcessFind::getInstance()->getGPSValue(gps);
-			int pos = gpsText.Find(',');
-			currentGPSX = _wtoi(gpsText.Left(pos).GetBuffer());
-			currentGPSY = _wtoi(gpsText.Right(gpsText.GetLength()-pos-1).GetBuffer());
-			SetDlgItemText(IDC_STATIC_CurrentPOS, gpsText);
-		}
-		ss.Format(_T("%d>>user:%d gps:%d [%d,%d]"), loopcount, user, gps, currentGPSX, currentGPSY);
-		SetWindowText(ss);
+		loadNP();
 
 		SetDlgItemInt(IDC_STATIC_PICKUP, g_item.cout_pickup);
 		SetDlgItemInt(IDC_STATIC_F1, g_item.cout_f1);
@@ -706,6 +698,16 @@ void CGuaGua2Dlg::OnBnClickedButtonDownRight()
 }
 
 
+void CGuaGua2Dlg::OnBnClickedButtonPickup()
+{
+	int user = m_gameUser.GetCurSel();
+	if (user == -1)return;
+
+
+	ProcessFind::getInstance()->gameUserObjs[user].pickup();
+}
+
+
 void CGuaGua2Dlg::OnBnClickedButtonAttack()
 {
 	int user = m_gameUser.GetCurSel();
@@ -723,7 +725,6 @@ void CGuaGua2Dlg::OnBnClickedButtonRefresh()
 	// TODO: 在此添加控件通知处理程序代码
 
 	m_gameUser.ResetContent();
-	m_ComboGps.ResetContent();
 	ProcessFind::getInstance()->findObj();
 
 	for (int i = 0; i < ProcessFind::getInstance()->gameUserObjs.size(); i++)
@@ -732,13 +733,32 @@ void CGuaGua2Dlg::OnBnClickedButtonRefresh()
 		int ips = m_gameUser.AddString(gameUser.titlename);
 		m_gameUser.SetItemData(ips, i);
 	}
-	for (int i = 0; i < ProcessFind::getInstance()->gpsObjs.size(); i++)
-	{
-		auto gps = ProcessFind::getInstance()->gpsObjs[i];
-		CString title;
-		title.Format(_T("%d %s"), gps.pid, gps.titlename);
-		int ips = m_ComboGps.AddString(title);
-		m_ComboGps.SetItemData(ips, i);
-	}
+	
 }
 
+
+void CGuaGua2Dlg::OnBnClickedButtonReadmem()
+{
+	loadNP();
+}
+void CGuaGua2Dlg::loadNP()
+{
+	{
+		hsn.getGPS(currentGPSX, currentGPSY);
+		CString gpsText;
+		gpsText.Format(L"%d/%d", currentGPSX, currentGPSY);
+		
+
+		SetDlgItemText(IDC_STATIC_CurrentPOS, gpsText);
+		CString ss;
+		ss.Format(_T("%d>>user:%d gps:%d [%d]"), loopcount, m_gameUser.GetCurSel(), currentGPSX, currentGPSY);
+		SetWindowText(ss);
+
+
+	}
+
+	hsn.doRead();
+	CString s;
+	s.Format(L"%d/%d", hsn.info.np, hsn.info.npMax);
+	SetDlgItemText(IDC_STATIC_NP, s);
+}
