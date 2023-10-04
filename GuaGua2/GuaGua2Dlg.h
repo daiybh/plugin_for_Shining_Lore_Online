@@ -59,4 +59,5 @@ public:
 	afx_msg void OnBnClickedButtonReadmem();
 	void loadNP();
 	afx_msg void OnBnClickedButtonPickup();
+	afx_msg void OnBnClickedButtonShowwindow();
 };

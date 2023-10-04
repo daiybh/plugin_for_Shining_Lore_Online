@@ -119,6 +119,7 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER_POSOFFSET, &CGuaGua2Dlg::OnNMReleasedcaptureSliderPosoffset)
 	ON_BN_CLICKED(ID_BUTTON_READMEM, &CGuaGua2Dlg::OnBnClickedButtonReadmem)
 	ON_BN_CLICKED(IDC_BUTTON_PICKUP, &CGuaGua2Dlg::OnBnClickedButtonPickup)
+	ON_BN_CLICKED(IDC_BUTTON_SHOWWINDOW, &CGuaGua2Dlg::OnBnClickedButtonShowwindow)
 END_MESSAGE_MAP()
 
 
@@ -159,8 +160,8 @@ BOOL CGuaGua2Dlg::OnInitDialog()
 
 	SetDlgItemText(IDC_EDIT_INFO, info);
 	OnBnClickedButtonRefresh();
-	m_posOffset.SetRange(0, 100);
-	m_posOffset.SetPos(40);
+	m_posOffset.SetRange(0, 20);
+	m_posOffset.SetPos(5);
 	m_posOffset2.SetRange(0, 1000);
 	m_posOffset2.SetPos(40);
 
@@ -364,106 +365,33 @@ bool bNeedGoCenter = false;
 
 CString goto_Center(GameObj& curGameUser,int x1, int y1, int x4, int y4)
 {
-	CString  showText;
+	CString  showText=L""; bNeedGoCenter = true;
 	if (currentGPSX < x1)
 	{
-		if (currentGPSY < y1)
-		{
-			showText = L"小于 x1 y1 往左下走";
-			curGameUser.move_left_down_one(); bNeedGoCenter = true;
-		}
-		else if (currentGPSY > y4)
-		{
-			showText = L"超出 x1 y4  往左上走";
-			curGameUser.move_left_top_one(); bNeedGoCenter = true;
-		}
-		else
-		{
-			showText = L"x1 超出 y 没有超出 往左";
-			curGameUser.move_left_one(); bNeedGoCenter = true;
-		}
-	}
-	else if (currentGPSX > x1 && currentGPSX < x4)
-	{
-		if (currentGPSY < y1)
-		{
-			showText = L"x1 没超出 y1 小了 往下走";
-			curGameUser.move_down_one(); bNeedGoCenter = true;
-		}
-		else if (currentGPSY > y4)
-		{
-			showText = L"x1 没超出 y1 大了 往上走";
-			curGameUser.move_top_one(); bNeedGoCenter = true;
-		}
+		showText.Format(L"x(%d)小于 x1(%d) 往左", currentGPSX,x1);
+		curGameUser.move_left_one(); 
 	}
 	else if (currentGPSX > x4)
 	{
-		if (currentGPSY < y1)
-		{
-			showText = L"小于 x1 y1 往右下走";
-			curGameUser.move_right_down_one(); bNeedGoCenter = true;
-		}
-		else if (currentGPSY > y4)
-		{
-			showText = L"超出 x1 y4  往右上走";
-			curGameUser.move_right_top_one(); bNeedGoCenter = true;
-		}
-		else
-		{
-			showText = L"x1 超出 y 没有超出 往右走";
-			curGameUser.move_right_one(); bNeedGoCenter = true;
-		}
+		showText.Format(L"x(%d)于 x4(%d) 往右", currentGPSX, x4);
+		curGameUser.move_right_one();
 	}
-
 	else if (currentGPSY < y1)
 	{
-		if (currentGPSX < x1)
-		{
-			showText = L"小于x1  往左下走";
-			curGameUser.move_left_down_one(); bNeedGoCenter = true;
-		}
-		else if (currentGPSX > x4)
-		{
-			showText = L"大于x4  往右下走";
-			curGameUser.move_right_down_one(); bNeedGoCenter = true;
-		}
-		else
-		{
-			showText = L"y1 超出 x 没有超出 往下";
-			curGameUser.move_down_one(); bNeedGoCenter = true;
-		}
+		showText.Format(L"y(%d)小于 y1(%d) 往下", currentGPSY, y1);
+		curGameUser.move_down_one();
 	}
 	else if (currentGPSY > y4)
 	{
-		if (currentGPSX < x1)
-		{
-			showText = L"小于x1  往左上走";
-			curGameUser.move_left_top_one(); bNeedGoCenter = true;
-		}
-		else if (currentGPSX > x4)
-		{
-			showText = L"大于x4  往右上走";
-			curGameUser.move_right_top_one(); bNeedGoCenter = true;
-		}
-		else
-		{
-			showText = L"y1 超出 x 没有超出 往上";
-			curGameUser.move_top_one(); bNeedGoCenter = true;
-		}
+		showText.Format(L"y(%d)大于 y4(%d) 往上", currentGPSY, y4);
+		curGameUser.move_top_one();
 	}
-	else if (currentGPSY > y1 && currentGPSY < y4)
+	else
 	{
-		if (currentGPSX < x1)
-		{
-			showText = L"小于x1  往左走";
-			curGameUser.move_left_one(); bNeedGoCenter = true;
-		}
-		else if (currentGPSX > x4)
-		{
-			showText = L"大于x1  往右走";
-			curGameUser.move_right_one(); bNeedGoCenter = true;
-		}
+		showText.Format(L"正常");
+		bNeedGoCenter = false;
 	}
+
 	return showText;
 }
 CString  checkIfoutGPS(GameObj& curGameUser)
@@ -561,12 +489,15 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 								g_item.cout_f5++; gameUser.F5(); g_item.last_f5Time = dNow; gameUser.F1(); gameUser.attackCenter();
 							}
 						}
-						switch (loopcount % 4)
+						if (!bNeedGoCenter)
 						{
-						case 0:	gameUser.move_top_one(); break;
-						case 1: gameUser.move_right_one(); break;
-						case 2: gameUser.move_down_one(); break;
-						case 3: gameUser.move_left_one(); break;
+							switch (loopcount % 4)
+							{
+							case 0:	gameUser.move_top_one(); break;
+							case 1: gameUser.move_right_one(); break;
+							case 2: gameUser.move_down_one(); break;
+							case 3: gameUser.move_left_one(); break;
+							}
 						}
 						Sleep(50);
 						//gameUser.ALT_Up();
@@ -574,7 +505,6 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 
 					loopcount++;
 				}
-				loopcount = 9999999999999999999;
 			});
 
 	}
@@ -751,7 +681,10 @@ void CGuaGua2Dlg::loadNP()
 
 		SetDlgItemText(IDC_STATIC_CurrentPOS, gpsText);
 		CString ss;
-		ss.Format(_T("%d>>user:%d gps:%d [%d]"), loopcount, m_gameUser.GetCurSel(), currentGPSX, currentGPSY);
+
+		CString curUserName;
+		m_gameUser.GetWindowText(curUserName);
+		ss.Format(_T("%I64d>>user:%s gps:%d,%d"), loopcount, curUserName, currentGPSX, currentGPSY);
 		SetWindowText(ss);
 
 
@@ -761,4 +694,42 @@ void CGuaGua2Dlg::loadNP()
 	CString s;
 	s.Format(L"%d/%d", hsn.info.np, hsn.info.npMax);
 	SetDlgItemText(IDC_STATIC_NP, s);
+}
+
+
+void CGuaGua2Dlg::OnBnClickedButtonShowwindow()
+{
+    int user = m_gameUser.GetCurSel();
+    if (user == -1)
+    {
+        return;
+    }
+    
+    HWND hwnd = ProcessFind::getInstance()->gameUserObjs[user].hWnd;
+    CString rT;
+    GetDlgItemText(IDC_BUTTON_SHOWWINDOW, rT);
+    
+    if (rT == L"显示")
+    {
+        rT = L"隐藏";
+        ::ShowWindow(hwnd, 1);
+        
+        RECT rect;
+        ::GetWindowRect(m_hWnd, &rect);
+        int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+        int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+        int windowWidth = rect.right - rect.left;
+        int windowHeight = rect.bottom - rect.top;
+        
+        ::SetWindowPos(hwnd, HWND_TOP, rect.right, rect.top,
+                     screenWidth - windowWidth - 1,
+                     rect.bottom - windowHeight, SWP_NOSIZE);
+    }
+    else
+    {
+        rT = L"显示";
+        ::ShowWindow(hwnd, 0);
+    }
+    
+    SetDlgItemText(IDC_BUTTON_SHOWWINDOW, rT);
 }

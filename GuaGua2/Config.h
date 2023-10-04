@@ -5,21 +5,21 @@
 #include <fstream>
 struct ConfigItem {
 	std::string name;
-	int    areaOffset=0;
-	int    stepOffset = 0;
+	int    areaOffset=5;
+	int    stepOffset = 100;
 	bool     NP=false;
 	bool     pickup=false;
-	int     pickupTime=0;
+	int     pickupTime=1;
 	int     last_PickupTime = 0;
 	int     cout_pickup = 0;
 	bool    attack=false;
 
 	int     last_AttackTime = 0;
-	int     f1Time=0;
-	int     f2Time=0;
-	int     f3Time=0;
-	int     f4Time=0;
-	int     f5Time=0;
+	int     f1Time=1;
+	int     f2Time=2;
+	int     f3Time=3;
+	int     f4Time=4;
+	int     f5Time=5;
 
 	int     cout_f1 = 0;
 	int     cout_f2 = 0;
@@ -63,16 +63,16 @@ public:
 	}
 	void load(ConfigItem &ci) {		
 		std::string jsonPath = getJsonPath(ci.name);
-		ci.areaOffset = GetPrivateProfileIntA(ci.name.c_str(), "areaOffset", 0, jsonPath.c_str());
-		ci.NP = GetPrivateProfileIntA(ci.name.c_str(), "NP", 0, jsonPath.c_str());
-		ci.pickup = GetPrivateProfileIntA(ci.name.c_str(), "pickup", 0, jsonPath.c_str());
-		ci.pickupTime = GetPrivateProfileIntA(ci.name.c_str(), "pickupTime", 0, jsonPath.c_str());
-		ci.attack = GetPrivateProfileIntA(ci.name.c_str(), "attack", 0, jsonPath.c_str());
-		ci.f1Time = GetPrivateProfileIntA(ci.name.c_str(), "f1Time", 0, jsonPath.c_str());
-		ci.f2Time = GetPrivateProfileIntA(ci.name.c_str(), "f2Time", 0, jsonPath.c_str());
-		ci.f3Time = GetPrivateProfileIntA(ci.name.c_str(), "f3Time", 0, jsonPath.c_str());
-		ci.f4Time = GetPrivateProfileIntA(ci.name.c_str(), "f4Time", 0, jsonPath.c_str());
-		ci.f5Time = GetPrivateProfileIntA(ci.name.c_str(), "f5Time", 0, jsonPath.c_str());
+		ci.areaOffset = GetPrivateProfileIntA(ci.name.c_str(), "areaOffset", ci.areaOffset, jsonPath.c_str());
+		ci.NP = GetPrivateProfileIntA(ci.name.c_str(), "NP", ci.NP, jsonPath.c_str());
+		ci.pickup = GetPrivateProfileIntA(ci.name.c_str(), "pickup", ci.pickup, jsonPath.c_str());
+		ci.pickupTime = GetPrivateProfileIntA(ci.name.c_str(), "pickupTime", ci.pickupTime, jsonPath.c_str());
+		ci.attack = GetPrivateProfileIntA(ci.name.c_str(), "attack", ci.attack, jsonPath.c_str());
+		ci.f1Time = GetPrivateProfileIntA(ci.name.c_str(), "f1Time", ci.f1Time, jsonPath.c_str());
+		ci.f2Time = GetPrivateProfileIntA(ci.name.c_str(), "f2Time", ci.f2Time, jsonPath.c_str());
+		ci.f3Time = GetPrivateProfileIntA(ci.name.c_str(), "f3Time", ci.f3Time, jsonPath.c_str());
+		ci.f4Time = GetPrivateProfileIntA(ci.name.c_str(), "f4Time", ci.f4Time, jsonPath.c_str());
+		ci.f5Time = GetPrivateProfileIntA(ci.name.c_str(), "f5Time", ci.f5Time, jsonPath.c_str());
 	}
 private:
 	
