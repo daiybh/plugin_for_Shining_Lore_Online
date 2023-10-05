@@ -100,7 +100,10 @@ public:
 		int Y = center_y + move_one_offset;
 		move(X, Y);
 	}
-	
+	void gobackMainFun(int func)
+	{
+		FKey(VK_F1+func);
+	}
 	void F1() {
 		FKey(VK_F1);		
 	}

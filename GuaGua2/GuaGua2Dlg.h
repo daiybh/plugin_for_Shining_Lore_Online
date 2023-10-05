@@ -3,7 +3,7 @@
 //
 
 #pragma once
-
+#include <thread>
 
 // CGuaGua2Dlg 对话框
 class CGuaGua2Dlg : public CDialogEx
@@ -60,4 +60,10 @@ public:
 	void loadNP();
 	afx_msg void OnBnClickedButtonPickup();
 	afx_msg void OnBnClickedButtonShowwindow();
+
+	void workthread();
+	std::thread m_workthread;
+	int m_mainFuncType;
+	afx_msg void OnBnClickedRadioF1();
+	CButton m_radio_FUN;
 };

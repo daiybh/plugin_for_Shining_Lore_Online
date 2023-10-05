@@ -15,6 +15,7 @@ struct ConfigItem {
 	bool    attack=false;
 
 	int     last_AttackTime = 0;
+	int     mainFunc = 0;
 	int     f1Time=1;
 	int     f2Time=2;
 	int     f3Time=3;
@@ -55,6 +56,7 @@ public:
 		WritePrivateProfileStringA(ci.name.c_str(), "pickup", std::to_string(ci.pickup).c_str(), jsonPath.c_str());
 		WritePrivateProfileStringA(ci.name.c_str(), "pickupTime", std::to_string(ci.pickupTime).c_str(), jsonPath.c_str());
 		WritePrivateProfileStringA(ci.name.c_str(), "attack", std::to_string(ci.attack).c_str(), jsonPath.c_str());
+		WritePrivateProfileStringA(ci.name.c_str(), "mainFun", std::to_string(ci.mainFunc).c_str(), jsonPath.c_str());
 		WritePrivateProfileStringA(ci.name.c_str(), "f1Time", std::to_string(ci.f1Time).c_str(), jsonPath.c_str());
 		WritePrivateProfileStringA(ci.name.c_str(), "f2Time", std::to_string(ci.f2Time).c_str(), jsonPath.c_str());
 		WritePrivateProfileStringA(ci.name.c_str(), "f3Time", std::to_string(ci.f3Time).c_str(), jsonPath.c_str());
@@ -68,6 +70,7 @@ public:
 		ci.pickup = GetPrivateProfileIntA(ci.name.c_str(), "pickup", ci.pickup, jsonPath.c_str());
 		ci.pickupTime = GetPrivateProfileIntA(ci.name.c_str(), "pickupTime", ci.pickupTime, jsonPath.c_str());
 		ci.attack = GetPrivateProfileIntA(ci.name.c_str(), "attack", ci.attack, jsonPath.c_str());
+		ci.mainFunc = GetPrivateProfileIntA(ci.name.c_str(), "mainFun", ci.mainFunc, jsonPath.c_str());
 		ci.f1Time = GetPrivateProfileIntA(ci.name.c_str(), "f1Time", ci.f1Time, jsonPath.c_str());
 		ci.f2Time = GetPrivateProfileIntA(ci.name.c_str(), "f2Time", ci.f2Time, jsonPath.c_str());
 		ci.f3Time = GetPrivateProfileIntA(ci.name.c_str(), "f3Time", ci.f3Time, jsonPath.c_str());
