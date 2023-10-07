@@ -442,8 +442,8 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 {
 	CString rtext;
 	GetDlgItemText(IDC_BUTTON_START, rtext);
-	if (rtext == "开始") {
-		rtext = "停止";
+	if (rtext == L"开始") {
+		rtext = L"停止";
 		
 		int user = m_gameUser.GetCurSel();
 		if (user == -1)return;
@@ -458,7 +458,7 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 		m_workthread = std::thread(&CGuaGua2Dlg::workthread, this);
 	}
 	else {
-		rtext = "开始";
+		rtext = L"开始";
 		bExit = true;
 		g_event.SetEvent();
 
@@ -589,7 +589,7 @@ void CGuaGua2Dlg::OnBnClickedButtonPickup()
 	if (user == -1)return;
 
 
-	ProcessFind::getInstance()->gameUserObjs[user].pickup();
+	ProcessFind::getInstance()->gameUserObjs[user].alt_test();
 }
 
 
