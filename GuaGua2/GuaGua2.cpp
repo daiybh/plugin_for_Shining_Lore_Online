@@ -37,7 +37,8 @@ CGuaGua2App theApp;
 
 
 // CGuaGua2App 初始化
-
+#include <string>
+#include <corecrt_wstring.h>
 BOOL CGuaGua2App::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要

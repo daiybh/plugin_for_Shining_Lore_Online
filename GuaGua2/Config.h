@@ -3,8 +3,9 @@
 #include "json.hpp"
 #include <iostream>
 #include <fstream>
+#include <string>
 struct ConfigItem {
-	CString name;
+	std::wstring name;
 	int    areaOffset=5;
 	int    stepOffset = 100;
 	bool     NP=false;
@@ -55,37 +56,40 @@ public:
 	Config(){
 	}
 	void save(ConfigItem ci) {
-		CString jsonPath = getJsonPath(ci.name);
-
-		WritePrivateProfileString(ci.name, L"areaOffset", to_string(ci.areaOffset), jsonPath);
-		WritePrivateProfileString(ci.name, L"NP", to_string(ci.NP), jsonPath);
-		WritePrivateProfileString(ci.name, L"pickup", to_string(ci.pickup), jsonPath);
-		WritePrivateProfileString(ci.name, L"pickupTime", to_string(ci.pickupTime), jsonPath);
-		WritePrivateProfileString(ci.name, L"attack", to_string(ci.attack), jsonPath);
-		WritePrivateProfileString(ci.name, L"mainFun", to_string(ci.mainFunc), jsonPath);
-		WritePrivateProfileString(ci.name, L"f1Time", to_string(ci.f1Time), jsonPath);
-		WritePrivateProfileString(ci.name, L"f2Time", to_string(ci.f2Time), jsonPath);
-		WritePrivateProfileString(ci.name, L"f3Time", to_string(ci.f3Time), jsonPath);
-		WritePrivateProfileString(ci.name, L"f4Time", to_string(ci.f4Time), jsonPath);
-		WritePrivateProfileString(ci.name, L"f5Time", to_string(ci.f5Time), jsonPath);		
+		std::wstring jsonPathA = getJsonPath(ci.name);
+		const TCHAR* jsonPath = jsonPathA.c_str();
+		const TCHAR* pKey = ci.name.c_str();
+		WritePrivateProfileString(pKey, L"areaOffset", to_string(ci.areaOffset), jsonPath);
+		WritePrivateProfileString(pKey, L"NP", to_string(ci.NP), jsonPath);
+		WritePrivateProfileString(pKey, L"pickup", to_string(ci.pickup), jsonPath);
+		WritePrivateProfileString(pKey, L"pickupTime", to_string(ci.pickupTime), jsonPath);
+		WritePrivateProfileString(pKey, L"attack", to_string(ci.attack), jsonPath);
+		WritePrivateProfileString(pKey, L"mainFun", to_string(ci.mainFunc), jsonPath);
+		WritePrivateProfileString(pKey, L"f1Time", to_string(ci.f1Time), jsonPath);
+		WritePrivateProfileString(pKey, L"f2Time", to_string(ci.f2Time), jsonPath);
+		WritePrivateProfileString(pKey, L"f3Time", to_string(ci.f3Time), jsonPath);
+		WritePrivateProfileString(pKey, L"f4Time", to_string(ci.f4Time), jsonPath);
+		WritePrivateProfileString(pKey, L"f5Time", to_string(ci.f5Time), jsonPath);		
 	}
-	void load(ConfigItem &ci) {		
-		CString jsonPath = getJsonPath(ci.name);
-		ci.areaOffset = GetPrivateProfileInt(ci.name,L"areaOffset", ci.areaOffset, jsonPath);
-		ci.NP = GetPrivateProfileInt(ci.name,L"NP", ci.NP, jsonPath);
-		ci.pickup = GetPrivateProfileInt(ci.name,L"pickup", ci.pickup, jsonPath);
-		ci.pickupTime = GetPrivateProfileInt(ci.name,L"pickupTime", ci.pickupTime, jsonPath);
-		ci.attack = GetPrivateProfileInt(ci.name,L"attack", ci.attack, jsonPath);
-		ci.mainFunc = GetPrivateProfileInt(ci.name,L"mainFun", ci.mainFunc, jsonPath);
-		ci.f1Time = GetPrivateProfileInt(ci.name,L"f1Time", ci.f1Time, jsonPath);
-		ci.f2Time = GetPrivateProfileInt(ci.name,L"f2Time", ci.f2Time, jsonPath);
-		ci.f3Time = GetPrivateProfileInt(ci.name,L"f3Time", ci.f3Time, jsonPath);
-		ci.f4Time = GetPrivateProfileInt(ci.name,L"f4Time", ci.f4Time, jsonPath);
-		ci.f5Time = GetPrivateProfileInt(ci.name,L"f5Time", ci.f5Time, jsonPath);
+	void load(ConfigItem &ci) {
+		std::wstring jsonPathA = getJsonPath(ci.name);
+		const TCHAR* jsonPath = jsonPathA.c_str();
+		const TCHAR* pKey = ci.name.c_str();
+		ci.areaOffset = GetPrivateProfileInt(pKey,L"areaOffset", ci.areaOffset, jsonPath);
+		ci.NP = GetPrivateProfileInt(pKey,L"NP", ci.NP, jsonPath);
+		ci.pickup = GetPrivateProfileInt(pKey,L"pickup", ci.pickup, jsonPath);
+		ci.pickupTime = GetPrivateProfileInt(pKey,L"pickupTime", ci.pickupTime, jsonPath);
+		ci.attack = GetPrivateProfileInt(pKey,L"attack", ci.attack, jsonPath);
+		ci.mainFunc = GetPrivateProfileInt(pKey,L"mainFun", ci.mainFunc, jsonPath);
+		ci.f1Time = GetPrivateProfileInt(pKey,L"f1Time", ci.f1Time, jsonPath);
+		ci.f2Time = GetPrivateProfileInt(pKey,L"f2Time", ci.f2Time, jsonPath);
+		ci.f3Time = GetPrivateProfileInt(pKey,L"f3Time", ci.f3Time, jsonPath);
+		ci.f4Time = GetPrivateProfileInt(pKey,L"f4Time", ci.f4Time, jsonPath);
+		ci.f5Time = GetPrivateProfileInt(pKey,L"f5Time", ci.f5Time, jsonPath);
 	}
 private:
 	
-	CString getJsonPath(CString name)
+	std::wstring getJsonPath(std::wstring name)
 	{
 		// 获取路径
 		wchar_t pszFilePath[MAX_PATH];
@@ -95,9 +99,10 @@ private:
 		PathRemoveFileSpec(pszFilePath);
 		//PathAppend(pszFilePath, L"Dll1.dll");
 
-		CString x;
-		x.Format(L"%s\\%s.json",pszFilePath, name);
-		return x;
+		std::wstring xb(pszFilePath);
+		xb += L"\\"+name+L".json";
+
+		return xb;
 	}
 	
 	
