@@ -24,3 +24,5 @@ obj/
 /GuaGua2/Release
 /GuaGua2/x64/Release
 /Release
+detours_cmake_tpl/out/
+.vs/
