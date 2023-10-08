@@ -184,7 +184,10 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="actions.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="dll_injection.h" />
+    <ClInclude Include="dll_injector.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GuaGua2.h" />
     <ClInclude Include="GuaGua2Dlg.h" />
@@ -195,6 +198,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="actions.cpp" />
+    <ClCompile Include="dll_injection.cpp" />
     <ClCompile Include="GuaGua2.cpp" />
     <ClCompile Include="GuaGua2Dlg.cpp" />
     <ClCompile Include="ObjecInfo_HP_SP_NP.cpp" />

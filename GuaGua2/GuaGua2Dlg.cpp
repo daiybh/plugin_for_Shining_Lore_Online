@@ -129,6 +129,8 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO_F3, &CGuaGua2Dlg::OnBnClickedRadioF1)
 	ON_BN_CLICKED(IDC_RADIO_F4, &CGuaGua2Dlg::OnBnClickedRadioF1)
 	ON_BN_CLICKED(IDC_RADIO_F5, &CGuaGua2Dlg::OnBnClickedRadioF1)
+	ON_BN_CLICKED(IDC_BUTTON_INJECTION, &CGuaGua2Dlg::OnBnClickedButtonInjection)
+	ON_BN_CLICKED(IDC_BUTTON_NP, &CGuaGua2Dlg::OnBnClickedButtonNp)
 END_MESSAGE_MAP()
 
 
@@ -314,8 +316,7 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		m_gameUser.GetWindowText(curUserName);
 		if (curUserName == "")return;
 		ConfigItem item;
-		std::string sz2 = CT2A(curUserName.GetBuffer()); //转化为非unicode.
-		item.name = sz2;
+		item.name = curUserName;
 
 		Config c;
 		c.load(item);
@@ -354,8 +355,7 @@ void CGuaGua2Dlg::OnBnClickedOk()
 	if (curUserName == "")return;
 
 	ConfigItem item;
-	std::string sz2 = CT2A(curUserName.GetBuffer()); //转化为非unicode.
-	item.name = sz2;
+	item.name = curUserName;
 	item.areaOffset = m_posOffset.GetPos();
 	item.NP = IsDlgButtonChecked(IDC_CHECK_NP);
 	item.pickup = IsDlgButtonChecked(IDC_CHECK_PICKUP);
@@ -754,12 +754,19 @@ void CGuaGua2Dlg::workthread()
 		DWORD dt = WaitForSingleObject(g_event, 100);
 		if (dt == WAIT_OBJECT_0)break;
 		hsn.getGPS(currentGPSX, currentGPSY);
+		hsn.doRead();
 
 		int user = m_gameUser.GetCurSel();
 		if (user == -1)continue;
 
 		GameObj& gameUser = ProcessFind::getInstance()->gameUserObjs[user];
-		
+
+		if (hsn.info.np < 50)
+		{
+			gameUser.Press5_forNP();
+		}
+		handleAttack(gameUser);
+
 		if (checkIfoutGPS(gameUser))
 			continue;
 		
@@ -775,7 +782,6 @@ void CGuaGua2Dlg::workthread()
 				g_item.cout_pickup++; gameUser.pickup(); g_item.last_PickupTime = dNow;
 			}
 		}
-		handleAttack(gameUser);
 		if (!bNeedGoCenter)
 		{
 			switch (loopcount % 4)
@@ -797,4 +803,43 @@ void CGuaGua2Dlg::workthread()
 
 void CGuaGua2Dlg::OnBnClickedRadioF1()
 {
+}
+#include "dll_injector.h"
+
+void CGuaGua2Dlg::OnBnClickedButtonInjection()
+{
+	int user = m_gameUser.GetCurSel();
+	if (user == -1)return;
+	auto &gameObj = ProcessFind::getInstance()->gameUserObjs[user];
+	CString rstring;
+	GetDlgItemText(IDC_BUTTON_INJECTION, rstring);
+	CString dllPath=LR"(C:\Users\daiyb\Desktop\detours_cmake_tpl\out\build\x86-Debug\hooking_dll_tpl\hooking_dll_tpl.dll)";
+	
+	if (rstring == L"注射")
+	{
+		bool b = Dll_injector::action_load(gameObj.pid, dllPath.GetString());
+		CString x;
+		x.Format(L"%s %s", rstring, b ? L"成功" : L"失败");
+		AfxMessageBox(x);
+
+		rstring = L"反注射";
+	}
+	else {
+		bool b=Dll_injector::action_unload(gameObj.pid, dllPath.GetString());
+		CString x;
+		x.Format(L"%s %s", rstring, b ? L"成功" : L"失败");
+		AfxMessageBox(x);
+
+		rstring = L"注射";
+	}
+	SetDlgItemText(IDC_BUTTON_INJECTION, rstring);
+}
+
+
+void CGuaGua2Dlg::OnBnClickedButtonNp()
+{
+	int user = m_gameUser.GetCurSel();
+	if (user == -1)return;
+	auto& gameObj = ProcessFind::getInstance()->gameUserObjs[user];
+	gameObj.Press5_forNP();
 }

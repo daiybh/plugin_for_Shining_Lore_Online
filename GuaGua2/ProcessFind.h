@@ -22,6 +22,29 @@ public:
 	int center_X = 0;
 	int center_y = 0;
 	int move_one_offset = 100;
+	void Press5_forNP() {
+		Key_down('4');
+		key_up('4');
+	}
+	void alt_test() {
+
+		// 模拟按下 Alt 键  
+		//SendMessage(hWnd, WM_SYSKEYDOWN, VK_MENU, 0);
+		keybd_event(VK_MENU, 0, 0, 0);
+
+		int x = center_X;
+		int Y = center_y;
+		//for (int x = center_X; x < 1000; x += 10)
+		for (int y = center_y; y> center_y-200; y-=10)
+		{// 模拟鼠标左键单击  
+			SendMessage(hWnd, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(x, y));
+			SendMessage(hWnd, WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(x, y));
+			Sleep(100);
+		}
+		// 模拟释放 Alt 键  
+		SendMessage(hWnd, WM_SYSKEYUP, VK_MENU, 0);
+
+	}
 	void ALT_Down()
 	{
 		//Key_down(VK_MENU); 
@@ -172,7 +195,6 @@ private:
 		lParam += MapVirtualKey(key, 0) << 16;
 		//2883585
 		SendMessage(hWnd, WM_KEYDOWN, key, lParam);//Thread.Sleep(100);
-
 	}
 	void VK_SendKeyDownMsg(BYTE key) {
 		DWORD dwVKFkeyData;

@@ -66,4 +66,6 @@ public:
 	int m_mainFuncType;
 	afx_msg void OnBnClickedRadioF1();
 	CButton m_radio_FUN;
+	afx_msg void OnBnClickedButtonInjection();
+	afx_msg void OnBnClickedButtonNp();
 };

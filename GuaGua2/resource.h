@@ -57,6 +57,9 @@
 #define ID_BUTTON_READMEM               1045
 #define IDC_STATIC_SP                   1046
 #define IDC_CHECK_CONTINUE              1047
+#define IDC_BUTTON_INJECTION            1047
+#define IDC_BUTTON_INJECTION2           1048
+#define IDC_BUTTON_NP                   1048
 #define IDC_RADIO_F1                    1053
 #define IDC_RADIO_F2                    1054
 #define IDC_RADIO_F3                    1055
