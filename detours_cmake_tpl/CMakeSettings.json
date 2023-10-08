@@ -1,17 +1,6 @@
 ﻿{
   "configurations": [
     {
-      "name": "x64-Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [ "msvc_x64_x64" ],
-      "buildRoot": "${projectDir}\\out\\build\\${name}",
-      "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": ""
-    },
-    {
       "name": "x86-Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
@@ -20,7 +9,14 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x86" ]
+      "inheritEnvironments": [ "msvc_x86" ],
+      "variables": [
+        {
+          "name": "CMAKE_INSTALL_PREFIX",
+          "value": "C:/Codes/plugin_for_Shining_Lore_Online/Debug",
+          "type": "PATH"
+        }
+      ]
     },
     {
       "name": "x86-Release",
@@ -32,7 +28,13 @@
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x86" ],
-      "variables": []
+      "variables": [
+        {
+          "name": "CMAKE_INSTALL_PREFIX",
+          "value": "C:/Codes/plugin_for_Shining_Lore_Online/Release",
+          "type": "PATH"
+        }
+      ]
     }
   ]
 }
