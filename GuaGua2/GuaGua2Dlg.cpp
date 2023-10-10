@@ -16,6 +16,9 @@
 #include "ProcessFind.h"
 
 #include "ObjecInfo_HP_SP_NP.h"
+#include "..\detours_cmake_tpl\hooking_dll_tpl\sharemem.h"
+
+Sharemem* g_Sharemem = nullptr;
 enum timerEvent {
 	timer_updateGPS = 200,
 	timer_NP = 201,
@@ -298,7 +301,6 @@ void CGuaGua2Dlg::OnBnClickedCheckNp()
 
 void CGuaGua2Dlg::OnBnClickedCheckPickup()
 {
-	// TODO: 在此添加控件通知处理程序代码
 }
 
 
@@ -589,7 +591,7 @@ void CGuaGua2Dlg::OnBnClickedButtonPickup()
 	if (user == -1)return;
 
 
-	ProcessFind::getInstance()->gameUserObjs[user].alt_test();
+	ProcessFind::getInstance()->gameUserObjs[user].ALT_Down();
 }
 
 
@@ -624,6 +626,8 @@ void CGuaGua2Dlg::OnBnClickedButtonRefresh()
 
 void CGuaGua2Dlg::OnBnClickedButtonReadmem()
 {
+	static int g_a = 0;
+	g_Sharemem->writeData(g_a++%2);
 }
 void CGuaGua2Dlg::loadNP()
 {
@@ -805,7 +809,6 @@ void CGuaGua2Dlg::OnBnClickedRadioF1()
 {
 }
 #include "dll_injector.h"
-
 void CGuaGua2Dlg::OnBnClickedButtonInjection()
 {
 	int user = m_gameUser.GetCurSel();
@@ -813,7 +816,22 @@ void CGuaGua2Dlg::OnBnClickedButtonInjection()
 	auto &gameObj = ProcessFind::getInstance()->gameUserObjs[user];
 	CString rstring;
 	GetDlgItemText(IDC_BUTTON_INJECTION, rstring);
-	CString dllPath=LR"(C:\Users\daiyb\Desktop\detours_cmake_tpl\out\build\x86-Debug\hooking_dll_tpl\hooking_dll_tpl.dll)";
+
+	
+	//获取当前目录
+	// 获取路径
+	wchar_t pszFilePath[MAX_PATH];
+	memset(pszFilePath, 0, sizeof(pszFilePath) * sizeof(char));
+	GetModuleFileName(NULL, pszFilePath, MAX_PATH);
+
+	PathRemoveFileSpec(pszFilePath);
+	//PathAppend(pszFilePath, L"Dll1.dll");
+
+
+
+	CString dllPath;
+	dllPath.Format(L"%s\\hooking_dll_tpl.dll", pszFilePath);
+
 	
 	if (rstring == L"注射")
 	{
@@ -822,6 +840,8 @@ void CGuaGua2Dlg::OnBnClickedButtonInjection()
 		x.Format(L"%s %s", rstring, b ? L"成功" : L"失败");
 		AfxMessageBox(x);
 
+		g_Sharemem = new Sharemem();
+		g_Sharemem->CreateSharemem(gameObj.pid);
 		rstring = L"反注射";
 	}
 	else {
@@ -829,7 +849,7 @@ void CGuaGua2Dlg::OnBnClickedButtonInjection()
 		CString x;
 		x.Format(L"%s %s", rstring, b ? L"成功" : L"失败");
 		AfxMessageBox(x);
-
+		delete g_Sharemem;
 		rstring = L"注射";
 	}
 	SetDlgItemText(IDC_BUTTON_INJECTION, rstring);
