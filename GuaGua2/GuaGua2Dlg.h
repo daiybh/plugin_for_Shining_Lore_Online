@@ -68,4 +68,5 @@ public:
 	CButton m_radio_FUN;
 	afx_msg void OnBnClickedButtonInjection();
 	afx_msg void OnBnClickedButtonNp();
+	afx_msg void OnBnClickedCheckAlt();
 };

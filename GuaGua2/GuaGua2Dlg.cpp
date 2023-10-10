@@ -134,6 +134,7 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO_F5, &CGuaGua2Dlg::OnBnClickedRadioF1)
 	ON_BN_CLICKED(IDC_BUTTON_INJECTION, &CGuaGua2Dlg::OnBnClickedButtonInjection)
 	ON_BN_CLICKED(IDC_BUTTON_NP, &CGuaGua2Dlg::OnBnClickedButtonNp)
+	ON_BN_CLICKED(IDC_CHECK_ALT, &CGuaGua2Dlg::OnBnClickedCheckAlt)
 END_MESSAGE_MAP()
 
 
@@ -319,7 +320,7 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		if (curUserName == "")return;
 		ConfigItem item;
 		item.name = curUserName;
-
+		
 		Config c;
 		c.load(item);
 
@@ -344,6 +345,12 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		hsn.open(pid);
 		UpdateData(false);
 		UpdateData(true);
+
+		if (g_Sharemem)
+			delete g_Sharemem;
+
+		g_Sharemem = new Sharemem();
+		g_Sharemem->CreateSharemem(pid);
 
 	}
 }
@@ -590,8 +597,18 @@ void CGuaGua2Dlg::OnBnClickedButtonPickup()
 	int user = m_gameUser.GetCurSel();
 	if (user == -1)return;
 
+	auto& gameObj = ProcessFind::getInstance()->gameUserObjs[user];
 
-	ProcessFind::getInstance()->gameUserObjs[user].ALT_Down();
+
+
+	g_Sharemem->writeData(1);
+	gameObj.ALT_Down();
+	gameObj.pickup();
+
+	Sleep(1000);
+	gameObj.ALT_Up();
+
+	g_Sharemem->writeData(0);
 }
 
 
@@ -626,8 +643,6 @@ void CGuaGua2Dlg::OnBnClickedButtonRefresh()
 
 void CGuaGua2Dlg::OnBnClickedButtonReadmem()
 {
-	static int g_a = 0;
-	g_Sharemem->writeData(g_a++%2);
 }
 void CGuaGua2Dlg::loadNP()
 {
@@ -733,8 +748,9 @@ void handleAttack(GameObj& gameUser) {
 		{
 			g_item.cout_f5++; gameUser.F5(); g_item.last_f5Time = dNow;
 		}
-		gameUser.attackCenter();
 		gameUser.gobackMainFun(g_item.mainFunc);
+
+		gameUser.attack(&bExit);
 		
 
 		g_GoCenterInfo.Format(L"持续攻击 %d次", i);
@@ -777,13 +793,12 @@ void CGuaGua2Dlg::workthread()
 
 		gameUser.move_one_offset = g_item.stepOffset;
 
-		gameUser.ALT_Down();
 		uint64_t dNow = GetTickCount();
 		if (g_item.pickup)
 		{
 			if (g_item.pickupTime > 0 && (dNow - g_item.last_PickupTime > g_item.pickupTime * 1000))
 			{
-				g_item.cout_pickup++; gameUser.pickup(); g_item.last_PickupTime = dNow;
+				g_item.cout_pickup++; gameUser.pickup(&bExit); g_item.last_PickupTime = dNow;
 			}
 		}
 		if (!bNeedGoCenter)
@@ -840,8 +855,6 @@ void CGuaGua2Dlg::OnBnClickedButtonInjection()
 		x.Format(L"%s %s", rstring, b ? L"成功" : L"失败");
 		AfxMessageBox(x);
 
-		g_Sharemem = new Sharemem();
-		g_Sharemem->CreateSharemem(gameObj.pid);
 		rstring = L"反注射";
 	}
 	else {
@@ -849,7 +862,6 @@ void CGuaGua2Dlg::OnBnClickedButtonInjection()
 		CString x;
 		x.Format(L"%s %s", rstring, b ? L"成功" : L"失败");
 		AfxMessageBox(x);
-		delete g_Sharemem;
 		rstring = L"注射";
 	}
 	SetDlgItemText(IDC_BUTTON_INJECTION, rstring);
@@ -862,4 +874,19 @@ void CGuaGua2Dlg::OnBnClickedButtonNp()
 	if (user == -1)return;
 	auto& gameObj = ProcessFind::getInstance()->gameUserObjs[user];
 	gameObj.Press5_forNP();
+}
+
+
+void CGuaGua2Dlg::OnBnClickedCheckAlt()
+{
+	int user = m_gameUser.GetCurSel();
+	if (user == -1 || g_Sharemem==nullptr)return;
+	g_Sharemem->writeData(IsDlgButtonChecked(IDC_CHECK_ALT));
+
+
+	auto& gameObj = ProcessFind::getInstance()->gameUserObjs[user];
+	if (IsDlgButtonChecked(IDC_CHECK_ALT))
+		gameObj.ALT_Down();
+	else
+		gameObj.ALT_Up();
 }

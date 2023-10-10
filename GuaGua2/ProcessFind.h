@@ -56,17 +56,39 @@ public:
 		//key_up(VK_LMENU);
 		::SendMessage(hWnd, WM_KEYUP, VK_MENU, 0);
 	}
-	void pickup()
+	void pickup(bool *bExit=nullptr)
 	{
 		int X = center_X ;
 		int Y = center_y ; 
-		LeftClick(X, Y);
-		LeftClick(X, Y);
+		for (int x = center_X - 100; x < center_X + 100; x += 5)
+			for (int y = center_y; y > center_y - 200; y -= 5)
+			{// 模拟鼠标左键单击  
+
+				SendMessage(hWnd, WM_MOUSEMOVE, 0, MAKELONG(x, y));
+				LeftClick(x, y);
+				if (bExit && *bExit)return;
+				//Sleep(100);
+			}
+	}
+	void attack(bool *bExit)
+	{
+		int X = center_X;
+		int Y = center_y;
+		for (int x = center_X - 100; x < center_X + 100; x += 5)
+			for (int y = center_y; y > center_y - 200; y -= 5)
+			{// 模拟鼠标左键单击  
+
+				SendMessage(hWnd, WM_MOUSEMOVE, 0, MAKELONG(x, y));
+				RightClick(x, y);
+				Sleep(10);
+				if (*bExit)return;
+			}
 	}
 	void attackCenter()
 	{
-		RightClick(center_X, center_y);
-		RightClick(center_X, center_y);
+		int X = center_X;
+		int Y = center_y;
+		RightClick(X,Y);
 	}
 	
 	void move_left_top_one()
