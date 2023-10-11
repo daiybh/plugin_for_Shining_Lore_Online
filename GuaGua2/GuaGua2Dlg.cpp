@@ -768,6 +768,16 @@ void CGuaGua2Dlg::workthread()
 	loopcount = 0;
 	bExit = false;
 	bool bSetRange = false;
+
+	int user = m_gameUser.GetCurSel();
+	if (user == -1)
+	{
+		AfxMessageBox(L"先选择角色");
+		return;
+	}
+
+	GameObj& gameUser = ProcessFind::getInstance()->gameUserObjs[user];
+
 	while (!bExit)
 	{
 		loopcount++;
@@ -775,11 +785,6 @@ void CGuaGua2Dlg::workthread()
 		if (dt == WAIT_OBJECT_0)break;
 		hsn.getGPS(currentGPSX, currentGPSY);
 		hsn.doRead();
-
-		int user = m_gameUser.GetCurSel();
-		if (user == -1)continue;
-
-		GameObj& gameUser = ProcessFind::getInstance()->gameUserObjs[user];
 
 		if (hsn.info.np < 50)
 		{
