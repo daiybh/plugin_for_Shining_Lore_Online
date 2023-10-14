@@ -1,9 +1,10 @@
+#pragma once
 #include "actions.h"
 namespace Dll_injector {
 #define INVALID_PID (-1)
 
 
-    bool action_load(int pid, const wchar_t* dll_path)
+   inline bool action_load(int pid, const wchar_t* dll_path)
     {
         std::cout << "Selected Action: LOAD\n";
         size_t injected = 0;
@@ -19,7 +20,7 @@ namespace Dll_injector {
         return false;
     }
 
-    bool action_check(int pid, const wchar_t* dll_path)
+   inline bool action_check(int pid, const wchar_t* dll_path)
     {
         std::cout << "Selected Action: CHECK\n";
         if (is_module_in_process(pid, dll_path)) {
@@ -30,7 +31,7 @@ namespace Dll_injector {
         return false;
     }
 
-    bool action_unload(int pid, const wchar_t* dll_path)
+   inline bool action_unload(int pid, const wchar_t* dll_path)
     {
         std::cout << "Selected Action: UNLOAD\n";
 

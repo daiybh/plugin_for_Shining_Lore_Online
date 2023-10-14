@@ -12,13 +12,7 @@
 #define new DEBUG_NEW
 #endif
 
-#include "Config.h"
 #include "ProcessFind.h"
-
-#include "ObjecInfo_HP_SP_NP.h"
-#include "..\detours_cmake_tpl\hooking_dll_tpl\sharemem.h"
-
-Sharemem* g_Sharemem = nullptr;
 enum timerEvent {
 	timer_updateGPS = 200,
 	timer_NP = 201,
@@ -30,21 +24,11 @@ enum timerEvent {
 	timer_F5
 };
 
-CString g_GoCenterInfo;
 #include <thread>
-CEvent g_event(false);
-bool bExit = false;
-uint64_t loopcount = 0;
 
-int currentGPSX = 0;
-int currentGPSY = 0;
 
-int settingGPSX = 0;
-int settingGPSY = 0;
 
-ConfigItem g_item;
-
-ObjecInfo_HP_SP_NP hsn;
+GameObj* g_currentGameObj = nullptr;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialogEx
@@ -135,11 +119,16 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_INJECTION, &CGuaGua2Dlg::OnBnClickedButtonInjection)
 	ON_BN_CLICKED(IDC_BUTTON_NP, &CGuaGua2Dlg::OnBnClickedButtonNp)
 	ON_BN_CLICKED(IDC_CHECK_ALT, &CGuaGua2Dlg::OnBnClickedCheckAlt)
+	ON_BN_CLICKED(IDC_BUTTON_KILLTASK, &CGuaGua2Dlg::OnBnClickedButtonKilltask)
+	ON_BN_CLICKED(IDC_CHECK_LEFTCLICK, &CGuaGua2Dlg::OnBnClickedCheckLeftclick)
+	ON_BN_CLICKED(ID_BUTTON_SPLIT, &CGuaGua2Dlg::OnBnClickedButtonSplit)
+	ON_BN_CLICKED(ID_BUTTON_SPLIT2, &CGuaGua2Dlg::OnBnClickedButtonSplit2)
 END_MESSAGE_MAP()
 
 
 // CGuaGua2Dlg 消息处理程序
 
+#include "mouseHook.h"
 BOOL CGuaGua2Dlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -183,6 +172,7 @@ BOOL CGuaGua2Dlg::OnInitDialog()
 
 	SetTimer(timer_updateGPS, 1000, NULL);
 
+	InstallKbHook(AfxGetApp()->m_hInstance);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -240,22 +230,25 @@ void CGuaGua2Dlg::OnBnClickedButtonSetcenterpos()
 {
 	CString gpsText;
 
-	hsn.getGPS(settingGPSX, settingGPSY);
-
-	gpsText.Format(L"%d,%d", settingGPSX, settingGPSY);
+	g_currentGameObj->m_ConfigItem.areaOffset = m_posOffset.GetPos();
+	g_currentGameObj->setCurrentGPS_To_Setting();
+	gpsText.Format(L"%d,%d", g_currentGameObj->settingGPSX, g_currentGameObj->settingGPSY);
 	SetDlgItemText(IDC_STATIC_centerPOS, gpsText);
 
-	gpsText.Format(L"%d,%d", settingGPSX - g_item.areaOffset, settingGPSY - g_item.areaOffset);
+	gpsText.Format(L"%d,%d", g_currentGameObj->settingGPSX - g_currentGameObj->m_ConfigItem.areaOffset, g_currentGameObj->settingGPSY - g_currentGameObj->m_ConfigItem.areaOffset);
 	SetDlgItemText(IDC_STATIC_X1Y1, gpsText);
 
-	gpsText.Format(L"%d,%d", settingGPSX + g_item.areaOffset, settingGPSY - g_item.areaOffset);
+	gpsText.Format(L"%d,%d", g_currentGameObj->settingGPSX + g_currentGameObj->m_ConfigItem.areaOffset, g_currentGameObj->settingGPSY - g_currentGameObj->m_ConfigItem.areaOffset);
 	SetDlgItemText(IDC_STATIC_X2Y2, gpsText);
 
-	gpsText.Format(L"%d,%d", settingGPSX + g_item.areaOffset, settingGPSY + g_item.areaOffset);
+	gpsText.Format(L"%d,%d", g_currentGameObj->settingGPSX + g_currentGameObj->m_ConfigItem.areaOffset, g_currentGameObj->settingGPSY + g_currentGameObj->m_ConfigItem.areaOffset);
 	SetDlgItemText(IDC_STATIC_X3Y3, gpsText);
 
-	gpsText.Format(L"%d,%d", settingGPSX - g_item.areaOffset, settingGPSY + g_item.areaOffset);
+	gpsText.Format(L"%d,%d", g_currentGameObj->settingGPSX - g_currentGameObj->m_ConfigItem.areaOffset, g_currentGameObj->settingGPSY + g_currentGameObj->m_ConfigItem.areaOffset);
 	SetDlgItemText(IDC_STATIC_X4Y4, gpsText);
+
+
+	SetDlgItemInt(IDC_STATIC_XY_OFFSET, g_currentGameObj->m_ConfigItem.areaOffset);
 }
 
 
@@ -264,23 +257,8 @@ void CGuaGua2Dlg::OnNMReleasedcaptureSliderPosoffset(NMHDR* pNMHDR, LRESULT* pRe
 	// TODO: 在此添加控件通知处理程序代码
 	*pResult = 0;
 
-	g_item.areaOffset = m_posOffset.GetPos();
+	OnBnClickedButtonSetcenterpos();
 
-	CString gpsText;
-	gpsText.Format(L"%d,%d", settingGPSX - g_item.areaOffset, settingGPSY - g_item.areaOffset);
-	SetDlgItemText(IDC_STATIC_X1Y1, gpsText);
-
-	gpsText.Format(L"%d,%d", settingGPSX + g_item.areaOffset, settingGPSY - g_item.areaOffset);
-	SetDlgItemText(IDC_STATIC_X2Y2, gpsText);
-
-	gpsText.Format(L"%d,%d", settingGPSX + g_item.areaOffset, settingGPSY + g_item.areaOffset);
-	SetDlgItemText(IDC_STATIC_X3Y3, gpsText);
-
-	gpsText.Format(L"%d,%d", settingGPSX - g_item.areaOffset, settingGPSY + g_item.areaOffset);
-	SetDlgItemText(IDC_STATIC_X4Y4, gpsText);
-
-
-	SetDlgItemInt(IDC_STATIC_XY_OFFSET, g_item.areaOffset);
 }
 
 void CGuaGua2Dlg::OnTRBNThumbPosChangingSliderPosoffset(NMHDR* pNMHDR, LRESULT* pResult)
@@ -313,14 +291,12 @@ void CGuaGua2Dlg::OnBnClickedCheckAttack()
 void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 {
 	{
-		int user = m_gameUser.GetCurSel();
-		if (user == -1)return;
 		CString curUserName;
 		m_gameUser.GetWindowText(curUserName);
 		if (curUserName == "")return;
 		ConfigItem item;
 		item.name = curUserName;
-		
+
 		Config c;
 		c.load(item);
 
@@ -330,6 +306,7 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		SetDlgItemInt(IDC_EDIT_TIME_F3, item.f3Time);
 		SetDlgItemInt(IDC_EDIT_TIME_F4, item.f4Time);
 		SetDlgItemInt(IDC_EDIT_TIME_F5, item.f5Time);
+		SetDlgItemInt(IDC_EDIT_TIME_F6, item.kTime);
 		m_mainFuncType = item.mainFunc;
 
 		m_posOffset.SetPos(item.areaOffset);
@@ -337,20 +314,15 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		CheckDlgButton(IDC_CHECK_NP, item.NP);
 		CheckDlgButton(IDC_CHECK_ATTACK, item.attack);
 		CheckDlgButton(IDC_CHECK_PICKUP, item.pickup);
-		g_item = item;
 
 
-		int pid = ProcessFind::getInstance()->gameUserObjs[user].pid;
-
-		hsn.open(pid);
+		int user = m_gameUser.GetCurSel();
+		g_currentGameObj = &ProcessFind::getInstance()->gameUserObjs[user];
+		g_currentGameObj->m_ConfigItem = item;
 		UpdateData(false);
 		UpdateData(true);
 
-		if (g_Sharemem)
-			delete g_Sharemem;
 
-		g_Sharemem = new Sharemem();
-		g_Sharemem->CreateSharemem(pid);
 
 	}
 }
@@ -375,76 +347,15 @@ void CGuaGua2Dlg::OnBnClickedOk()
 	item.f3Time = GetDlgItemInt(IDC_EDIT_TIME_F3);
 	item.f4Time = GetDlgItemInt(IDC_EDIT_TIME_F4);
 	item.f5Time = GetDlgItemInt(IDC_EDIT_TIME_F5);
+	item.kTime = GetDlgItemInt(IDC_EDIT_TIME_F6);
 	item.mainFunc = m_mainFuncType;
 
 	item.stepOffset = m_posOffset2.GetPos();
 	Config c;
 	c.save(item);
 
-	g_item = item;
+	g_currentGameObj->m_ConfigItem = item;
 
-}
-bool bNeedGoCenter = false;
-
-CString goto_Center(GameObj& curGameUser, int x1, int y1, int x4, int y4)
-{
-	CString  showText = L""; bNeedGoCenter = true;
-	if (currentGPSX < x1)
-	{
-		showText.Format(L"x(%d)小于 x1(%d) 往左", currentGPSX, x1);
-		curGameUser.move_left_one();
-	}
-	else if (currentGPSX > x4)
-	{
-		showText.Format(L"x(%d)于 x4(%d) 往右", currentGPSX, x4);
-		curGameUser.move_right_one();
-	}
-	else if (currentGPSY < y1)
-	{
-		showText.Format(L"y(%d)小于 y1(%d) 往下", currentGPSY, y1);
-		curGameUser.move_down_one();
-	}
-	else if (currentGPSY > y4)
-	{
-		showText.Format(L"y(%d)大于 y4(%d) 往上", currentGPSY, y4);
-		curGameUser.move_top_one();
-	}
-	else
-	{
-		showText.Format(L"正常");
-		bNeedGoCenter = false;
-	}
-
-	return showText;
-}
-bool  checkIfoutGPS(GameObj& curGameUser)
-{
-	if (settingGPSX == 0 && settingGPSY == 0)
-	{
-		g_GoCenterInfo= L"中心点还没设置";
-		return false;
-	}
-	if (currentGPSX == 0 && currentGPSX == 0)
-	{
-		g_GoCenterInfo = L"当前坐标未获取到";
-		return false;
-	}
-
-
-	if (currentGPSX == settingGPSX && currentGPSY == settingGPSY)
-	{
-		bNeedGoCenter = false;
-		g_GoCenterInfo = L"已经在设置坐标点";
-		return bNeedGoCenter;
-	}
-	int offset = g_item.areaOffset;
-
-	if (bNeedGoCenter)
-	{
-		offset = 0;
-	}
-	g_GoCenterInfo = goto_Center(curGameUser, settingGPSX - offset, settingGPSY - offset, settingGPSX + offset, settingGPSY + offset);
-	return bNeedGoCenter;
 }
 
 void CGuaGua2Dlg::OnBnClickedButtonStart()
@@ -453,26 +364,16 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 	GetDlgItemText(IDC_BUTTON_START, rtext);
 	if (rtext == L"开始") {
 		rtext = L"停止";
-		
-		int user = m_gameUser.GetCurSel();
-		if (user == -1)return;
-
-
-		auto gameUser = ProcessFind::getInstance()->gameUserObjs[user];
+		if (g_currentGameObj == nullptr)return;
 		{
-			m_posOffset2.SetRange(0, (gameUser.rect.bottom - gameUser.rect.top) / 2);
+			m_posOffset2.SetRange(0, (g_currentGameObj->rect.bottom - g_currentGameObj->rect.top) / 2);
 		}
-		bExit = false;
-		g_event.ResetEvent();
-		m_workthread = std::thread(&CGuaGua2Dlg::workthread, this);
+		g_currentGameObj->startWork();
 	}
 	else {
 		rtext = L"开始";
-		bExit = true;
-		g_event.SetEvent();
+		g_currentGameObj->stop();
 
-		if (m_workthread.joinable())
-			m_workthread.join();
 	}
 	SetDlgItemText(IDC_BUTTON_START, rtext);
 }
@@ -480,10 +381,11 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 
 void CGuaGua2Dlg::OnBnClickedCancel()
 {
-	bExit = true;
-	g_event.SetEvent();
-	if (m_workthread.joinable())
-		m_workthread.join();
+	for (int i=0;i< ProcessFind::getInstance()->gameUserObjs.size();i++)
+	{
+		ProcessFind::getInstance()->gameUserObjs[i].stop();
+	}
+
 	OnCancel();
 }
 
@@ -491,20 +393,24 @@ void CGuaGua2Dlg::OnTimer(UINT_PTR nIDEvent)
 {
 	if (nIDEvent == timer_updateGPS)
 	{
-		int user = m_gameUser.GetCurSel();
-		loadNP();
 
-		SetDlgItemInt(IDC_STATIC_PICKUP, g_item.cout_pickup);
-		SetDlgItemInt(IDC_STATIC_F1, g_item.cout_f1);
-		SetDlgItemInt(IDC_STATIC_F2, g_item.cout_f2);
-		SetDlgItemInt(IDC_STATIC_F3, g_item.cout_f3);
-		SetDlgItemInt(IDC_STATIC_F4, g_item.cout_f4);
-		SetDlgItemInt(IDC_STATIC_F5, g_item.cout_f5);
+		if (g_currentGameObj)
+		{
+			loadNP();
 
-		SetDlgItemText(IDC_STATIC_GOCENTERINFO, g_GoCenterInfo);
-		
-		g_item.stepOffset = m_posOffset2.GetPos();
+			SetDlgItemText(IDC_STATIC_GOCENTERINFO2,g_currentGameObj->g_splitText );
+			SetDlgItemInt(IDC_STATIC_PICKUP, g_currentGameObj->m_ConfigItem.cout_pickup);
+			SetDlgItemInt(IDC_STATIC_F1, g_currentGameObj->m_ConfigItem.cout_f1);
+			SetDlgItemInt(IDC_STATIC_F2, g_currentGameObj->m_ConfigItem.cout_f2);
+			SetDlgItemInt(IDC_STATIC_F3, g_currentGameObj->m_ConfigItem.cout_f3);
+			SetDlgItemInt(IDC_STATIC_F4, g_currentGameObj->m_ConfigItem.cout_f4);
+			SetDlgItemInt(IDC_STATIC_F5, g_currentGameObj->m_ConfigItem.cout_f5);
+			SetDlgItemInt(IDC_STATIC_F6, g_currentGameObj->m_ConfigItem.cout_k);
 
+			SetDlgItemText(IDC_STATIC_GOCENTERINFO, g_currentGameObj->g_GoCenterInfo);
+
+			g_currentGameObj->m_ConfigItem.stepOffset = m_posOffset2.GetPos();
+		}
 	}
 
 	CDialogEx::OnTimer(nIDEvent);
@@ -513,112 +419,107 @@ void CGuaGua2Dlg::OnTimer(UINT_PTR nIDEvent)
 
 void CGuaGua2Dlg::OnBnClickedButtonTop()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
+
+	if (g_currentGameObj == nullptr)return;
 
 
-	ProcessFind::getInstance()->gameUserObjs[user].move_top_one();
+	g_currentGameObj->move_top_one();
 
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonTopLeft()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
+
+	if (g_currentGameObj == nullptr)return;
 
 
-	ProcessFind::getInstance()->gameUserObjs[user].move_left_top_one();
+	g_currentGameObj->move_top_one();
+	g_currentGameObj->move_left_one();
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonTopRight()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
 
+	if (g_currentGameObj == nullptr)return;
 
-	ProcessFind::getInstance()->gameUserObjs[user].move_right_top_one();
+	g_currentGameObj->move_top_one();
+	g_currentGameObj->move_right_one();
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonLeft()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
+
+	if (g_currentGameObj == nullptr)return;
 
 
-	ProcessFind::getInstance()->gameUserObjs[user].move_left_one();
+	g_currentGameObj->move_left_one();
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonRight()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
+
+	if (g_currentGameObj == nullptr)return;
 
 
-	ProcessFind::getInstance()->gameUserObjs[user].move_right_one();
+	g_currentGameObj->move_right_one();
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonDownLeft()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
+
+	if (g_currentGameObj == nullptr)return;
 
 
-	ProcessFind::getInstance()->gameUserObjs[user].move_left_down_one();
+	g_currentGameObj->move_down_one();
+	g_currentGameObj->move_left_one();
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonDown()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
 
+	if (g_currentGameObj == nullptr)return;
 
-	ProcessFind::getInstance()->gameUserObjs[user].move_down_one();
+	g_currentGameObj->move_down_one();
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonDownRight()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
 
+	if (g_currentGameObj == nullptr)return;
 
-	ProcessFind::getInstance()->gameUserObjs[user].move_right_down_one();
+	g_currentGameObj->trun_map();
+	return;
+	g_currentGameObj->move_down_one();
+	g_currentGameObj->move_right_one();
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonPickup()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
 
-	auto& gameObj = ProcessFind::getInstance()->gameUserObjs[user];
+	if (g_currentGameObj == nullptr)return;
 
 
 
-	g_Sharemem->writeData(1);
-	gameObj.ALT_Down();
-	gameObj.pickup();
 
-	Sleep(1000);
-	gameObj.ALT_Up();
-
-	g_Sharemem->writeData(0);
+	g_currentGameObj->doPickup();
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonAttack()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
+
+	if (g_currentGameObj == nullptr)return;
 
 
-	ProcessFind::getInstance()->gameUserObjs[user].attackCenter();
+	g_currentGameObj->attackCenter();
 }
 
 
@@ -633,7 +534,7 @@ void CGuaGua2Dlg::OnBnClickedButtonRefresh()
 
 	for (int i = 0; i < ProcessFind::getInstance()->gameUserObjs.size(); i++)
 	{
-		auto gameUser = ProcessFind::getInstance()->gameUserObjs[i];
+		auto& gameUser = ProcessFind::getInstance()->gameUserObjs[i];
 		int ips = m_gameUser.AddString(gameUser.titlename);
 		m_gameUser.SetItemData(ips, i);
 	}
@@ -646,34 +547,46 @@ void CGuaGua2Dlg::OnBnClickedButtonReadmem()
 }
 void CGuaGua2Dlg::loadNP()
 {
+	if (!g_currentGameObj)
+		return;
 	{
-		hsn.getGPS(currentGPSX, currentGPSY);
+		int currentGPSX, currentGPSY;
+		g_currentGameObj->hsn.getGPS(currentGPSX, currentGPSY);
 		CString gpsText;
 		gpsText.Format(L"%d/%d", currentGPSX, currentGPSY);
 
 
 		SetDlgItemText(IDC_STATIC_CurrentPOS, gpsText);
+
 		CString ss;
 
 		CString curUserName;
 		m_gameUser.GetWindowText(curUserName);
 
 		UpdateData(true);
-		ss.Format(_T("%I64d>>user:%s gps:%d,%d %d %d"),
-			loopcount, curUserName, currentGPSX, currentGPSY, m_mainFuncType, m_radio_FUN.GetCheck());
+		ss.Format(_T("%s %I64d>>gps:%d,%d %d %d"),
+			 curUserName, g_currentGameObj->loopcount, currentGPSX, currentGPSY, m_mainFuncType, m_radio_FUN.GetCheck());
 		SetWindowText(ss);
+
+		gpsText.Format(L"GPS->>%s--x:%.2f y:%.2f z:%x,w:%x", curUserName,
+			g_currentGameObj->hsn.bb1.x,
+			g_currentGameObj->hsn.bb1.y,
+			g_currentGameObj->hsn.bb1.z,
+			g_currentGameObj->hsn.bb1.w);
+		OutputDebugString(gpsText);
+		SetWindowText(gpsText);
 	}
 
-	hsn.doRead();
+	g_currentGameObj->hsn.doRead();
 	CString s;
-	s.Format(L"NP:%d/%d", hsn.info.np, hsn.info.npMax);
+	s.Format(L"NP:%d/%d", g_currentGameObj->hsn.info.np, g_currentGameObj->hsn.info.npMax);
 	SetDlgItemText(IDC_STATIC_NP, s);
 
-	s.Format(L"HP:%d/%d", hsn.info.HP, hsn.info.HPMax);
+	s.Format(L"HP:%d/%d", g_currentGameObj->hsn.info.HP, g_currentGameObj->hsn.info.HPMax);
 	SetDlgItemText(IDC_STATIC_HP, s);
 
 
-	s.Format(L"SP:%d/%d", hsn.info.sp, hsn.info.spMax);
+	s.Format(L"SP:%d/%d", g_currentGameObj->hsn.info.sp, g_currentGameObj->hsn.info.spMax);
 	SetDlgItemText(IDC_STATIC_SP, s);
 
 
@@ -683,13 +596,13 @@ void CGuaGua2Dlg::loadNP()
 
 void CGuaGua2Dlg::OnBnClickedButtonShowwindow()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)
+
+	if (g_currentGameObj == nullptr)
 	{
 		return;
 	}
 
-	HWND hwnd = ProcessFind::getInstance()->gameUserObjs[user].hWnd;
+	HWND hwnd = g_currentGameObj->hWnd;
 	CString rT;
 	GetDlgItemText(IDC_BUTTON_SHOWWINDOW, rT);
 
@@ -717,112 +630,7 @@ void CGuaGua2Dlg::OnBnClickedButtonShowwindow()
 
 	SetDlgItemText(IDC_BUTTON_SHOWWINDOW, rT);
 }
-void handleAttack(GameObj& gameUser) {
-	int iAttack = 1000; 
 
-	if (hsn.info.HP == hsn.info.HPMax)
-	{
-		g_GoCenterInfo.Format(L"HP 满了 不攻击");
-		return;
-	}
-	for (int i = iAttack; i>0  && !bExit && g_item.attack; i--)
-	{
-		uint64_t dNow = GetTickCount();
-		if (g_item.f1Time > 0 && (dNow - g_item.last_f1Time > g_item.f1Time * 1000))
-		{
-			g_item.cout_f1++; gameUser.F1(); g_item.last_f1Time = dNow;
-		}
-		if (g_item.f2Time > 0 && (dNow - g_item.last_f2Time > g_item.f2Time * 1000))
-		{
-			g_item.cout_f2++; gameUser.F2(); g_item.last_f2Time = dNow;
-		}
-		if (g_item.f3Time > 0 && (dNow - g_item.last_f3Time > g_item.f3Time * 1000))
-		{
-			g_item.cout_f3++; gameUser.F3(); g_item.last_f3Time = dNow;
-		}
-		if (g_item.f4Time > 0 && (dNow - g_item.last_f4Time > g_item.f4Time * 1000))
-		{
-			g_item.cout_f4++; gameUser.F4(); g_item.last_f4Time = dNow;
-		}
-		if (g_item.f5Time > 0 && (dNow - g_item.last_f5Time > g_item.f5Time * 1000))
-		{
-			g_item.cout_f5++; gameUser.F5(); g_item.last_f5Time = dNow;
-		}
-		gameUser.gobackMainFun(g_item.mainFunc);
-
-		gameUser.attack(&bExit);
-		
-
-		g_GoCenterInfo.Format(L"持续攻击 %d次", i);
-		if (i % 100 == 0)
-		{
-			Sleep(1);
-		}
-		
-	}
-
-
-}
-void CGuaGua2Dlg::workthread()
-{
-	loopcount = 0;
-	bExit = false;
-	bool bSetRange = false;
-
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)
-	{
-		AfxMessageBox(L"先选择角色");
-		return;
-	}
-
-	GameObj& gameUser = ProcessFind::getInstance()->gameUserObjs[user];
-
-	while (!bExit)
-	{
-		loopcount++;
-		DWORD dt = WaitForSingleObject(g_event, 100);
-		if (dt == WAIT_OBJECT_0)break;
-		hsn.getGPS(currentGPSX, currentGPSY);
-		hsn.doRead();
-
-		if (hsn.info.np < 50)
-		{
-			gameUser.Press5_forNP();
-		}
-		handleAttack(gameUser);
-
-		if (checkIfoutGPS(gameUser))
-			continue;
-		
-
-		gameUser.move_one_offset = g_item.stepOffset;
-
-		uint64_t dNow = GetTickCount();
-		if (g_item.pickup)
-		{
-			if (g_item.pickupTime > 0 && (dNow - g_item.last_PickupTime > g_item.pickupTime * 1000))
-			{
-				g_item.cout_pickup++; gameUser.pickup(&bExit); g_item.last_PickupTime = dNow;
-			}
-		}
-		if (!bNeedGoCenter)
-		{
-			switch (loopcount % 4)
-			{
-			case 0:	gameUser.move_top_one(); break;
-			case 1: gameUser.move_right_one(); break;
-			case 2: gameUser.move_down_one(); break;
-			case 3: gameUser.move_left_one(); break;
-			}
-		}
-		Sleep(50);
-		//gameUser.ALT_Up();
-
-
-
-	}
-}
 
 
 void CGuaGua2Dlg::OnBnClickedRadioF1()
@@ -831,67 +639,114 @@ void CGuaGua2Dlg::OnBnClickedRadioF1()
 #include "dll_injector.h"
 void CGuaGua2Dlg::OnBnClickedButtonInjection()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
-	auto &gameObj = ProcessFind::getInstance()->gameUserObjs[user];
+
+	if (g_currentGameObj == nullptr)return;
+
 	CString rstring;
 	GetDlgItemText(IDC_BUTTON_INJECTION, rstring);
 
-	
-	//获取当前目录
-	// 获取路径
-	wchar_t pszFilePath[MAX_PATH];
-	memset(pszFilePath, 0, sizeof(pszFilePath) * sizeof(char));
-	GetModuleFileName(NULL, pszFilePath, MAX_PATH);
-
-	PathRemoveFileSpec(pszFilePath);
-	//PathAppend(pszFilePath, L"Dll1.dll");
-
-
-
-	CString dllPath;
-	dllPath.Format(L"%s\\hooking_dll_tpl.dll", pszFilePath);
 
 	
-	if (rstring == L"注射")
-	{
-		bool b = Dll_injector::action_load(gameObj.pid, dllPath.GetString());
-		CString x;
-		x.Format(L"%s %s", rstring, b ? L"成功" : L"失败");
-		AfxMessageBox(x);
 
-		rstring = L"反注射";
-	}
-	else {
-		bool b=Dll_injector::action_unload(gameObj.pid, dllPath.GetString());
-		CString x;
-		x.Format(L"%s %s", rstring, b ? L"成功" : L"失败");
-		AfxMessageBox(x);
-		rstring = L"注射";
-	}
+	
 	SetDlgItemText(IDC_BUTTON_INJECTION, rstring);
 }
 
 
 void CGuaGua2Dlg::OnBnClickedButtonNp()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1)return;
-	auto& gameObj = ProcessFind::getInstance()->gameUserObjs[user];
-	gameObj.Press5_forNP();
+	if (g_currentGameObj == nullptr)return;
+	g_currentGameObj->Press5_forNP();
 }
 
 
 void CGuaGua2Dlg::OnBnClickedCheckAlt()
 {
-	int user = m_gameUser.GetCurSel();
-	if (user == -1 || g_Sharemem==nullptr)return;
-	g_Sharemem->writeData(IsDlgButtonChecked(IDC_CHECK_ALT));
-
-
-	auto& gameObj = ProcessFind::getInstance()->gameUserObjs[user];
+	if (g_currentGameObj == nullptr )return;
 	if (IsDlgButtonChecked(IDC_CHECK_ALT))
-		gameObj.ALT_Down();
+		g_currentGameObj->ALT_Down();
 	else
-		gameObj.ALT_Up();
+		g_currentGameObj->ALT_Up();
+}
+
+
+void CGuaGua2Dlg::OnBnClickedButtonKilltask()
+{
+	if (g_currentGameObj == nullptr)return;
+
+	HANDLE hProcess;
+	hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, g_currentGameObj->pid);
+	//结束进程
+	BOOL bResult = false;
+	if (hProcess)
+		bResult = TerminateProcess(hProcess, 0);
+	OnBnClickedButtonRefresh();
+}
+
+
+void CGuaGua2Dlg::OnBnClickedCheckLeftclick()
+{
+	if (g_currentGameObj == nullptr)return;
+
+	g_currentGameObj->enableLeftClick(IsDlgButtonChecked(IDC_CHECK_LEFTCLICK));
+}
+
+
+void CGuaGua2Dlg::OnBnClickedButtonSplit()
+{
+	if (g_currentGameObj == nullptr)return;
+	return
+	;
+	g_currentGameObj->doSplit();
+	SetDlgItemText(IDC_STATIC_GOCENTERINFO2, g_currentGameObj->g_splitText);
+	return;
+	CString rx;
+	GetDlgItemText(ID_BUTTON_SPLIT, rx);
+
+	if (rx == L"开始分解")
+	{
+		g_currentGameObj->bSplit = true;
+		rx = L"停止分解";
+
+		//走到坐标34 26
+		// 
+		//g_currentGameObj->settingGPSX = 3471;
+		//g_currentGameObj->settingGPSY = 2716;
+		//g_currentGameObj->m_ConfigItem.areaOffset = 0;
+		
+	}
+	else
+	{
+		rx = L"开始分解";
+
+		g_currentGameObj->bSplit = false;
+	}
+	SetDlgItemText(ID_BUTTON_SPLIT, rx);
+}
+std::thread *splitThread =nullptr;
+bool bExitSPlit = false;
+void CGuaGua2Dlg::OnBnClickedButtonSplit2()
+{
+	return;
+	if (splitThread == nullptr)
+	{
+		bExitSPlit = false;
+		splitThread = new std::thread([&]() {
+			while (!bExitSPlit)
+			{
+				g_currentGameObj->doSplit();
+				Sleep(1000);
+			}
+			});
+	}
+	else
+	{
+		bExitSPlit = true;
+
+		if (splitThread->joinable())
+			splitThread->join();
+
+		delete splitThread;
+		splitThread = nullptr;
+	}
 }

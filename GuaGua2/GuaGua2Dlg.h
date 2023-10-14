@@ -61,12 +61,14 @@ public:
 	afx_msg void OnBnClickedButtonPickup();
 	afx_msg void OnBnClickedButtonShowwindow();
 
-	void workthread();
-	std::thread m_workthread;
 	int m_mainFuncType;
 	afx_msg void OnBnClickedRadioF1();
 	CButton m_radio_FUN;
 	afx_msg void OnBnClickedButtonInjection();
 	afx_msg void OnBnClickedButtonNp();
 	afx_msg void OnBnClickedCheckAlt();
+	afx_msg void OnBnClickedButtonKilltask();
+	afx_msg void OnBnClickedCheckLeftclick();
+	afx_msg void OnBnClickedButtonSplit();
+	afx_msg void OnBnClickedButtonSplit2();
 };

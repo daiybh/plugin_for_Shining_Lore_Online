@@ -35,10 +35,6 @@ CGuaGua2App::CGuaGua2App()
 
 CGuaGua2App theApp;
 
-
-// CGuaGua2App 初始化
-#include <string>
-#include <corecrt_wstring.h>
 BOOL CGuaGua2App::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -56,13 +52,12 @@ BOOL CGuaGua2App::InitInstance()
 
 	AfxEnableControlContainer();
 
-
 	TCHAR windowTitle[256];
 
-	if(0)
+	if (0)
 	{
 		HWND hWndp = FindWindowEx(NULL, NULL, L"Notepad", NULL);
-		
+
 		HWND hWnd = FindWindowEx(hWndp, nullptr, L"RichEditD2DPT", nullptr);
 
 		::GetWindowText(hWnd, windowTitle, sizeof(windowTitle));
@@ -97,7 +92,7 @@ BOOL CGuaGua2App::InitInstance()
 		HWND hWnd = FindWindowEx(NULL, NULL, L"EVERYTHING", NULL);
 		if (hWnd != NULL)
 		{
-			hWnd = FindWindowEx( nullptr, hWnd, L"Edit", NULL);
+			hWnd = FindWindowEx(nullptr, hWnd, L"Edit", NULL);
 
 			::GetWindowText(hWnd, windowTitle, sizeof(windowTitle));
 			CString xt = windowTitle;
@@ -105,7 +100,7 @@ BOOL CGuaGua2App::InitInstance()
 			PostMessage(hWnd, WM_CHAR, 'a', 0);
 			Sleep(1000);
 			LPARAM lParam = MAKELPARAM(MK_ALT, 'D');
-			LRESULT lr1,lr2,lr3;
+			LRESULT lr1, lr2, lr3;
 			lr1 = SendMessage(hWnd, WM_SYSKEYDOWN, VK_MENU, lParam);
 			Sleep(1000);
 			lr2 = SendMessage(hWnd, WM_SYSKEYDOWN, 'D', lParam);
@@ -121,7 +116,7 @@ BOOL CGuaGua2App::InitInstance()
 	}
 	// 创建 shell 管理器，以防对话框包含
 	// 任何 shell 树视图控件或 shell 列表视图控件。
-	CShellManager *pShellManager = new CShellManager;
+	CShellManager* pShellManager = new CShellManager;
 
 	// 激活“Windows Native”视觉管理器，以便在 MFC 控件中启用主题
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));

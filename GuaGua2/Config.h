@@ -22,17 +22,20 @@ struct ConfigItem {
 	int     f3Time=3;
 	int     f4Time=4;
 	int     f5Time=5;
+	int     kTime=5;
 
 	int     cout_f1 = 0;
 	int     cout_f2 = 0;
 	int     cout_f3 = 0;
 	int     cout_f4 = 0;
 	int     cout_f5 = 0;
+	int     cout_k = 0;
 	int     last_f1Time = 0;
 	int     last_f2Time = 0;
 	int     last_f3Time = 0;
 	int     last_f4Time = 0;
 	int     last_f5Time = 0;
+	int     last_kTime = 0;
 
 	//NLOHMANN_DEFINE_TYPE_INTRUSIVE(ConfigItem, name, areaOffset, NP, pickup, pickupTime, attack, f1Time, f2Time, f3Time, f4Time, f5Time);
 };
@@ -70,6 +73,7 @@ public:
 		WritePrivateProfileString(pKey, L"f3Time", to_string(ci.f3Time), jsonPath);
 		WritePrivateProfileString(pKey, L"f4Time", to_string(ci.f4Time), jsonPath);
 		WritePrivateProfileString(pKey, L"f5Time", to_string(ci.f5Time), jsonPath);		
+		WritePrivateProfileString(pKey, L"kTime", to_string(ci.kTime), jsonPath);		
 	}
 	void load(ConfigItem &ci) {
 		std::wstring jsonPathA = getJsonPath(ci.name);
@@ -86,6 +90,7 @@ public:
 		ci.f3Time = GetPrivateProfileInt(pKey,L"f3Time", ci.f3Time, jsonPath);
 		ci.f4Time = GetPrivateProfileInt(pKey,L"f4Time", ci.f4Time, jsonPath);
 		ci.f5Time = GetPrivateProfileInt(pKey,L"f5Time", ci.f5Time, jsonPath);
+		ci.kTime = GetPrivateProfileInt(pKey,L"kTime", ci.kTime, jsonPath);
 	}
 private:
 	

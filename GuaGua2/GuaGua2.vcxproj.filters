@@ -51,6 +51,12 @@
     <ClInclude Include="dll_injection.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GamUser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mouseHook.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GuaGua2.cpp">
@@ -69,6 +75,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="dll_injection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GamUser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
