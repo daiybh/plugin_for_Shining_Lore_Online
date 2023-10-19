@@ -26,3 +26,4 @@ obj/
 /Release
 detours_cmake_tpl/out/
 .vs/
+/OP_findPIC/out/build/x86
