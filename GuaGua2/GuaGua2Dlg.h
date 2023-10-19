@@ -32,7 +32,6 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	CComboBox m_gameUser;
 	afx_msg void OnBnClickedButtonSetcenterpos();
 	afx_msg void OnTRBNThumbPosChangingSliderPosoffset(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBnClickedCheckNp();

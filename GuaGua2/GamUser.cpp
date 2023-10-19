@@ -30,13 +30,13 @@ void GameObj::workthread()
 			Press5_forNP();
 		}
 
-		bFindedRightface = bSplit;
+		bFindedRightface = true;
 		if (!bFindedRightface)
 		{
 			int oldmove_one_offset = move_one_offset;
 			for (int y = 0; y < 4; y++)
 			{
-				trun_map();
+				turn_map();
 				Sleep(1000);
 				move_one_offset = 100;
 				hsn.getGPS(currentGPSX, currentGPSY);
@@ -59,7 +59,7 @@ void GameObj::workthread()
 						g_GoCenterInfo = L"·´Ïò";
 					}
 					CString x;
-					x.Format(L"trun_mapGPS-->loopcount:%lld y=%d i=%d %d-%d=%3d %d-%d=%3d %s", loopcount, y, i, 
+					x.Format(L"turn_mapGPS-->loopcount:%lld y=%d i=%d %d-%d=%3d %d-%d=%3d %s", loopcount, y, i, 
 						curX,lastX, curX -lastX,
 						curY,lastY, curY - lastY, g_GoCenterInfo);
 					OutputDebugString(x);
@@ -67,7 +67,6 @@ void GameObj::workthread()
 			}
 			move_one_offset = oldmove_one_offset;
 		}
-		if (loopcount > 5)break;
 		if (!bFindedRightface)
 			continue;
 		handleAttack();

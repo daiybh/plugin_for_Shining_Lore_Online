@@ -186,6 +186,7 @@
   <ItemGroup>
     <ClInclude Include="actions.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="CSelectUserDlg.h" />
     <ClInclude Include="dll_injection.h" />
     <ClInclude Include="dll_injector.h" />
     <ClInclude Include="framework.h" />
@@ -197,10 +198,12 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProcessFind.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SplitDlg.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="actions.cpp" />
+    <ClCompile Include="CSelectUserDlg.cpp" />
     <ClCompile Include="dll_injection.cpp" />
     <ClCompile Include="GamUser.cpp" />
     <ClCompile Include="GuaGua2.cpp" />
@@ -212,6 +215,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SplitDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GuaGua2.rc" />

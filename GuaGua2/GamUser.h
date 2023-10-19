@@ -1,3 +1,4 @@
+#pragma once
 #include "ObjecInfo_HP_SP_NP.h"
 #include "Config.h"
 
@@ -74,6 +75,11 @@ public:
 	bool bNeedGoCenter = false;
 	void handleAttack();
 
+	void isNeedTurnFace() {
+		int lastGPSX=currentGPSX, lastGPSY = currentGPSY;
+		hsn.getGPS(currentGPSX, currentGPSY);
+
+	}
 	CString goto_Center( int x1, int y1, int x4, int y4)
 	{
 		CString  showText = L""; bNeedGoCenter = true;
@@ -81,21 +87,67 @@ public:
 		{
 			showText.Format(L"x(%d)小于 x1(%d) 往左", currentGPSX, x1);
 			this->move_left_one();
+
+			//向左了 但是x 比刚才小了，方向反了
+
+			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
+			hsn.getGPS(currentGPSX, currentGPSY);
+			if (currentGPSX < lastGPSX)
+			{
+				CString s;
+				s.Format(L"已经向左了 但是x %d 比刚才 %d 小了，方向反了",currentGPSX,lastGPSX);
+				OutputDebugString(s);
+				turn_map();
+			}
 		}
 		else if (currentGPSX > x4)
 		{
 			showText.Format(L"x(%d)于 x4(%d) 往右", currentGPSX, x4);
 			this->move_right_one();
+
+			
+
+			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
+			hsn.getGPS(currentGPSX, currentGPSY);
+			if (currentGPSX > lastGPSX)
+			{
+				CString s;
+				s.Format(L"已经往右了 但是x %d 比刚才 %d 大了，方向反了", currentGPSX, lastGPSX);
+				OutputDebugString(s);
+				turn_map();
+			}
 		}
 		else if (currentGPSY < y1)
 		{
 			showText.Format(L"y(%d)小于 y1(%d) 往下", currentGPSY, y1);
 			this->move_down_one();
+
+
+
+			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
+			hsn.getGPS(currentGPSX, currentGPSY);
+			if (currentGPSY < lastGPSY)
+			{
+				CString s;
+				s.Format(L"已经往下了 但是y %d 比刚才 %d 小了，方向反了", currentGPSY, lastGPSY);
+				OutputDebugString(s);
+				turn_map();
+			}
 		}
 		else if (currentGPSY > y4)
 		{
 			showText.Format(L"y(%d)大于 y4(%d) 往上", currentGPSY, y4);
 			this->move_top_one();
+
+			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
+			hsn.getGPS(currentGPSX, currentGPSY);
+			if (currentGPSY > lastGPSY)
+			{
+				CString s;
+				s.Format(L"已经往上了 但是y %d 比刚才 %d 大了，方向反了", currentGPSY, lastGPSY);
+				OutputDebugString(s);
+				turn_map();
+			}
 		}
 		else
 		{
@@ -357,7 +409,7 @@ public:
 	void F5() {
 		FKey(VK_F5);
 	}
-	void trun_map() {
+	void turn_map() {
 		FKey('Z');
 		
 	}

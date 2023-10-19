@@ -28,7 +28,6 @@ enum timerEvent {
 
 
 
-GameObj* g_currentGameObj = nullptr;
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialogEx
@@ -76,7 +75,7 @@ CGuaGua2Dlg::CGuaGua2Dlg(CWnd* pParent /*=nullptr*/)
 void CGuaGua2Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_COMBO_GAMEUSER, m_gameUser);
+//	DDX_Control(pDX, IDC_COMBO_GAMEUSER, m_gameUser);
 	DDX_Control(pDX, IDC_SLIDER_POSOFFSET, m_posOffset);
 	DDX_Control(pDX, IDC_SLIDER_POSOFFSET2, m_posOffset2);
 	DDX_Radio(pDX, IDC_RADIO_F1, m_mainFuncType);
@@ -103,9 +102,9 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_DOWN, &CGuaGua2Dlg::OnBnClickedButtonDown)
 	ON_BN_CLICKED(IDC_BUTTON_DOWN_RIGHT, &CGuaGua2Dlg::OnBnClickedButtonDownRight)
 	ON_BN_CLICKED(IDC_BUTTON_ATTACK, &CGuaGua2Dlg::OnBnClickedButtonAttack)
-	ON_CBN_SELCHANGE(IDC_COMBO_GAMEUSER, &CGuaGua2Dlg::OnCbnSelchangeComboGameuser)
+	//ON_CBN_SELCHANGE(IDC_COMBO_GAMEUSER, &CGuaGua2Dlg::OnCbnSelchangeComboGameuser)
 	ON_BN_CLICKED(IDCANCEL, &CGuaGua2Dlg::OnBnClickedCancel)
-	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CGuaGua2Dlg::OnBnClickedButtonRefresh)
+	//ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CGuaGua2Dlg::OnBnClickedButtonRefresh)
 	ON_BN_CLICKED(IDC_BUTTON_START, &CGuaGua2Dlg::OnBnClickedButtonStart)
 	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER_POSOFFSET, &CGuaGua2Dlg::OnNMReleasedcaptureSliderPosoffset)
 	ON_BN_CLICKED(ID_BUTTON_READMEM, &CGuaGua2Dlg::OnBnClickedButtonReadmem)
@@ -163,16 +162,26 @@ BOOL CGuaGua2Dlg::OnInitDialog()
 	CString info = _T("1. 先选角色 \r\n2. 在游戏中跑到想在的位置 \r\n3.点“选中GPS 后点这里设置中心”\r\n ");
 
 	SetDlgItemText(IDC_EDIT_INFO, info);
-	OnBnClickedButtonRefresh();
-	m_posOffset.SetRange(0, 20);
-	m_posOffset.SetPos(5);
-	m_posOffset2.SetRange(0, 1000);
+	
+	SetDlgItemText(IDC_STATIC_CURUSER,g_currentGameObj->titlename);
+	
+	//OnBnClickedButtonRefresh();
+	m_posOffset.SetRange(0, 5);
+	m_posOffset2.SetRange(0, 50);
 	m_posOffset2.SetPos(40);
 
-
+	OnCbnSelchangeComboGameuser();
+	m_posOffset.SetPos(1);
 	SetTimer(timer_updateGPS, 1000, NULL);
 
-	InstallKbHook(AfxGetApp()->m_hInstance);
+
+	GetDlgItem(ID_BUTTON_READMEM)->EnableWindow(false);
+	GetDlgItem(IDC_CHECK_LEFTCLICK)->EnableWindow(false);
+	GetDlgItem(IDC_CHECK_ALT)->EnableWindow(false);
+	GetDlgItem(IDC_BUTTON_INJECTION)->EnableWindow(false);
+	GetDlgItem(IDC_BUTTON_NP)->EnableWindow(false);
+	
+	
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -291,11 +300,8 @@ void CGuaGua2Dlg::OnBnClickedCheckAttack()
 void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 {
 	{
-		CString curUserName;
-		m_gameUser.GetWindowText(curUserName);
-		if (curUserName == "")return;
 		ConfigItem item;
-		item.name = curUserName;
+		item.name = g_currentGameObj->titlename;
 
 		Config c;
 		c.load(item);
@@ -316,8 +322,6 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		CheckDlgButton(IDC_CHECK_PICKUP, item.pickup);
 
 
-		int user = m_gameUser.GetCurSel();
-		g_currentGameObj = &ProcessFind::getInstance()->gameUserObjs[user];
 		g_currentGameObj->m_ConfigItem = item;
 		UpdateData(false);
 		UpdateData(true);
@@ -330,13 +334,9 @@ void CGuaGua2Dlg::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码	
 	UpdateData(true);
-	m_gameUser.GetCurSel();
-	CString curUserName;
-	m_gameUser.GetWindowText(curUserName);
-	if (curUserName == "")return;
 
 	ConfigItem item;
-	item.name = curUserName;
+	item.name = g_currentGameObj->titlename;
 	item.areaOffset = m_posOffset.GetPos();
 	item.NP = IsDlgButtonChecked(IDC_CHECK_NP);
 	item.pickup = IsDlgButtonChecked(IDC_CHECK_PICKUP);
@@ -393,7 +393,6 @@ void CGuaGua2Dlg::OnTimer(UINT_PTR nIDEvent)
 {
 	if (nIDEvent == timer_updateGPS)
 	{
-
 		if (g_currentGameObj)
 		{
 			loadNP();
@@ -494,7 +493,7 @@ void CGuaGua2Dlg::OnBnClickedButtonDownRight()
 
 	if (g_currentGameObj == nullptr)return;
 
-	g_currentGameObj->trun_map();
+	g_currentGameObj->turn_map();
 	return;
 	g_currentGameObj->move_down_one();
 	g_currentGameObj->move_right_one();
@@ -529,15 +528,6 @@ void CGuaGua2Dlg::OnBnClickedButtonRefresh()
 {
 	// TODO: 在此添加控件通知处理程序代码
 
-	m_gameUser.ResetContent();
-	ProcessFind::getInstance()->findObj();
-
-	for (int i = 0; i < ProcessFind::getInstance()->gameUserObjs.size(); i++)
-	{
-		auto& gameUser = ProcessFind::getInstance()->gameUserObjs[i];
-		int ips = m_gameUser.AddString(gameUser.titlename);
-		m_gameUser.SetItemData(ips, i);
-	}
 
 }
 
@@ -560,21 +550,12 @@ void CGuaGua2Dlg::loadNP()
 
 		CString ss;
 
-		CString curUserName;
-		m_gameUser.GetWindowText(curUserName);
 
 		UpdateData(true);
 		ss.Format(_T("%s %I64d>>gps:%d,%d %d %d"),
-			 curUserName, g_currentGameObj->loopcount, currentGPSX, currentGPSY, m_mainFuncType, m_radio_FUN.GetCheck());
+			 g_currentGameObj->titlename, g_currentGameObj->loopcount, currentGPSX, currentGPSY, m_mainFuncType, m_radio_FUN.GetCheck());
 		SetWindowText(ss);
-
-		gpsText.Format(L"GPS->>%s--x:%.2f y:%.2f z:%x,w:%x", curUserName,
-			g_currentGameObj->hsn.bb1.x,
-			g_currentGameObj->hsn.bb1.y,
-			g_currentGameObj->hsn.bb1.z,
-			g_currentGameObj->hsn.bb1.w);
-		OutputDebugString(gpsText);
-		SetWindowText(gpsText);
+		
 	}
 
 	g_currentGameObj->hsn.doRead();

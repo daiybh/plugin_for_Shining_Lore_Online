@@ -9,7 +9,7 @@
 #endif
 
 #include "resource.h"		// 主符号
-
+#include "GamUser.h"
 
 // CGuaGua2App:
 // 有关此类的实现，请参阅 GuaGua2.cpp
@@ -30,3 +30,5 @@ public:
 };
 
 extern CGuaGua2App theApp;
+
+extern GameObj* g_currentGameObj ;

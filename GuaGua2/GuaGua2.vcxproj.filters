@@ -57,6 +57,12 @@
     <ClInclude Include="mouseHook.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CSelectUserDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SplitDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GuaGua2.cpp">
@@ -78,6 +84,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GamUser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CSelectUserDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SplitDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

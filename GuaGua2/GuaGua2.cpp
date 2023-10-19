@@ -6,6 +6,8 @@
 #include "framework.h"
 #include "GuaGua2.h"
 #include "GuaGua2Dlg.h"
+#include "CSelectUserDlg.h"
+#include "SplitDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -35,6 +37,7 @@ CGuaGua2App::CGuaGua2App()
 
 CGuaGua2App theApp;
 
+GameObj* g_currentGameObj = nullptr;
 BOOL CGuaGua2App::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -52,68 +55,7 @@ BOOL CGuaGua2App::InitInstance()
 
 	AfxEnableControlContainer();
 
-	TCHAR windowTitle[256];
-
-	if (0)
-	{
-		HWND hWndp = FindWindowEx(NULL, NULL, L"Notepad", NULL);
-
-		HWND hWnd = FindWindowEx(hWndp, nullptr, L"RichEditD2DPT", nullptr);
-
-		::GetWindowText(hWnd, windowTitle, sizeof(windowTitle));
-		Sleep(1000);
-		hWnd = (HWND)0x00090790;
-		PostMessage(hWnd, WM_CHAR, 'u', 0);
-
-		UINT VirtualKey = MapVirtualKey(VK_RIGHT, 0);
-		PostMessage(hWnd, WM_KEYDOWN, VK_RIGHT, 0x0001 | VirtualKey << 16);
-		PostMessage(hWnd, WM_KEYUP, VK_RIGHT, 0x0001 | VirtualKey << 16 | 0xC0 << 24);
-		//Sleep(1000);
-		//CString xt = windowTitle;
-		//AfxMessageBox(xt);
-		//::SetForegroundWindow(hWnd);
-		//Sleep(1000);
-		//keybd_event(VK_MENU, MapVirtualKey(VK_MENU, 0), 0, 0);
-		//Sleep(1000);
-		//keybd_event('D', MapVirtualKey('D', 0), 0, 0);
-		//Sleep(1000);
-		//
-		//keybd_event(VK_MENU,MapVirtualKey(VK_MENU,0),KEYEVENTF_KEYUP,0);
-		//Sleep(1000);
-		//keybd_event('F', MapVirtualKey('F', 0), 0, 0);
-		Sleep(1000);
-
-		PostMessage(hWndp, WM_SYSKEYDOWN, VK_F4, 0x003E0001 | 0x20000000);
-		PostMessage(hWndp, WM_SYSKEYUP, VK_F4, 0xC03E0001 | 0x20000000);
-		exit(0);
-	}
-	if (0)
-	{
-		HWND hWnd = FindWindowEx(NULL, NULL, L"EVERYTHING", NULL);
-		if (hWnd != NULL)
-		{
-			hWnd = FindWindowEx(nullptr, hWnd, L"Edit", NULL);
-
-			::GetWindowText(hWnd, windowTitle, sizeof(windowTitle));
-			CString xt = windowTitle;
-			AfxMessageBox(xt);
-			PostMessage(hWnd, WM_CHAR, 'a', 0);
-			Sleep(1000);
-			LPARAM lParam = MAKELPARAM(MK_ALT, 'D');
-			LRESULT lr1, lr2, lr3;
-			lr1 = SendMessage(hWnd, WM_SYSKEYDOWN, VK_MENU, lParam);
-			Sleep(1000);
-			lr2 = SendMessage(hWnd, WM_SYSKEYDOWN, 'D', lParam);
-			Sleep(1000);
-			lr3 = SendMessage(hWnd, WM_SYSKEYUP, VK_MENU, lParam);
-			Sleep(1000);
-
-			CString xx;
-			xx.Format(L"%x %x %x", lr1, lr2, lr3);
-			AfxMessageBox(xx);
-		}
-		exit(0);
-	}
+	
 	// 创建 shell 管理器，以防对话框包含
 	// 任何 shell 树视图控件或 shell 列表视图控件。
 	CShellManager* pShellManager = new CShellManager;
@@ -130,6 +72,12 @@ BOOL CGuaGua2App::InitInstance()
 	// 例如修改为公司或组织名
 	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
+	
+	CSelectUserDlg sudlg;
+	if (sudlg.DoModal() != IDOK)
+	{
+		return 0;
+	}
 	CGuaGua2Dlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
