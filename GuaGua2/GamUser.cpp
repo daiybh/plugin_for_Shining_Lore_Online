@@ -113,7 +113,8 @@ void GameObj::handlePickUP()
 void GameObj::handleAttack()
 {
 	if (!m_ConfigItem.attack)return;
-	int iAttack = 1000;
+	int iAttack = 100;
+
 
 	if (hsn.info.HP == hsn.info.HPMax)
 	{
@@ -149,7 +150,7 @@ void GameObj::handleAttack()
 		}
 		this->gobackMainFun(m_ConfigItem.mainFunc);
 
-		this->attack(&bExit);
+		this->attack();
 
 
 		g_GoCenterInfo.Format(L"³ÖÐø¹¥»÷ %d´Î", i);

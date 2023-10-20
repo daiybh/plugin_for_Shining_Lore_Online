@@ -54,7 +54,7 @@ void CSelectUserDlg::OnBnClickedButton1()
 	for (int i = 0; i < ProcessFind::getInstance()->gameUserObjs.size(); i++)
 	{
 		auto& gameUser = ProcessFind::getInstance()->gameUserObjs[i];
-		int ips = m_gameUser.AddString(gameUser.titlename);
+		int ips = m_gameUser.AddString(gameUser->titlename);
 		m_gameUser.SetItemData(ips, i);
 	}
 	m_gameUser.SetCurSel(0);
@@ -64,6 +64,6 @@ void CSelectUserDlg::OnBnClickedButton1()
 void CSelectUserDlg::OnBnClickedOk()
 {
 	int user = m_gameUser.GetCurSel();
-	g_currentGameObj = &ProcessFind::getInstance()->gameUserObjs[user];
+	g_currentGameObj = ProcessFind::getInstance()->gameUserObjs[user];
 	CDialogEx::OnOK();
 }

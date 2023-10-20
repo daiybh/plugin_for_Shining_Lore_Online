@@ -36,7 +36,8 @@ public:
 	}
 	~GameObj()
 	{
-		
+		stop();
+		InjectDll(false);
 	}
 	uint64_t loopcount = 0;
 private:
@@ -49,11 +50,13 @@ public:
 
 	ConfigItem m_ConfigItem;
 
-	void InjectDll(bool bload) {
-		if(bload)
+	void InjectDll(bool bload) 
+	{
+		m_bInjected = Dll_injector::action_unload(pid, m_dllPath.GetString());
+		if (bload)
+		{
 			m_bInjected = Dll_injector::action_load(pid, m_dllPath.GetString());
-		else
-			m_bInjected = Dll_injector::action_unload(pid, m_dllPath.GetString());
+		}			
 	}
 	CString m_dllPath;
 	bool m_bInjected = false;
@@ -68,7 +71,6 @@ public:
 		if (m_workthread && m_workthread->joinable())
 			m_workthread->join();
 		m_workthread = nullptr;
-		InjectDll(false);
 	}
 	void workthread();
 	void handlePickUP();
@@ -322,19 +324,22 @@ public:
 		this->pickup(center_X -10, center_y-10);
 	}
 	
-	void attack(bool* bExit)
+	
+	void attack()
 	{
 		int X = center_X;
 		int Y = center_y;
-		for (int x = center_X - 100; x < center_X + 100; x += 5)
-			for (int y = center_y; y > center_y - 200; y -= 5)
-			{// 模拟鼠标左键单击  
-
-				SendMessage(hWnd, WM_MOUSEMOVE, 0, MAKELONG(x, y));
-				RightClick(x, y);
-				Sleep(10);
-				if (*bExit)return;
-			}
+		int x = center_X;
+		auto pRCilick = [&](int x, int y) {
+			SendMessage(hWnd, WM_MOUSEMOVE, 0, MAKELONG(x, y));
+			RightClick(x, y);
+			Sleep(1);
+			};
+		
+		pRCilick(center_X,center_y-20);//身体中心
+		pRCilick(center_X-20,center_y);//身体左
+		pRCilick(center_X+20,center_y);//身体右
+		pRCilick(center_X,center_y);//身体下		
 	}
 	void attackCenter()
 	{
@@ -344,10 +349,6 @@ public:
 	}
 
 	bool bleftClick = true;
-	void enableLeftClick(bool b)
-	{
-		bleftClick = b;
-	}
 	
 	void move_left_one()
 	{
@@ -389,6 +390,11 @@ public:
 			move(X, Y, sleep);
 		else
 			pickup(X, Y);
+	}
+	bool isBreakOp()
+	{
+		if (hsn.info.HP == hsn.info.HPMax)return true;
+		return bExit;
 	}
 	void gobackMainFun(int func)
 	{
@@ -456,7 +462,7 @@ private:
 			{// 模拟鼠标左键单击  
 
 				move(x, y);
-
+				Sleep(10);
 				if (bExit)return;
 			}
 		}

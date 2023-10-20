@@ -31,4 +31,4 @@ public:
 
 extern CGuaGua2App theApp;
 
-extern GameObj* g_currentGameObj ;
+extern std::shared_ptr<GameObj> g_currentGameObj ;

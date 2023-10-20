@@ -174,13 +174,13 @@ BOOL CGuaGua2Dlg::OnInitDialog()
 	m_posOffset.SetPos(1);
 	SetTimer(timer_updateGPS, 1000, NULL);
 
-
+#ifndef DEBUG
 	GetDlgItem(ID_BUTTON_READMEM)->EnableWindow(false);
 	GetDlgItem(IDC_CHECK_LEFTCLICK)->EnableWindow(false);
 	GetDlgItem(IDC_CHECK_ALT)->EnableWindow(false);
 	GetDlgItem(IDC_BUTTON_INJECTION)->EnableWindow(false);
 	GetDlgItem(IDC_BUTTON_NP)->EnableWindow(false);
-	
+#endif
 	
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -383,7 +383,7 @@ void CGuaGua2Dlg::OnBnClickedCancel()
 {
 	for (int i=0;i< ProcessFind::getInstance()->gameUserObjs.size();i++)
 	{
-		ProcessFind::getInstance()->gameUserObjs[i].stop();
+		ProcessFind::getInstance()->gameUserObjs[i]->stop();
 	}
 
 	OnCancel();
@@ -626,7 +626,16 @@ void CGuaGua2Dlg::OnBnClickedButtonInjection()
 	CString rstring;
 	GetDlgItemText(IDC_BUTTON_INJECTION, rstring);
 
-
+	if (rstring == L"注射")
+	{
+		g_currentGameObj->InjectDll(true);
+		rstring = L"反注射";
+	}
+	else
+	{
+		g_currentGameObj->InjectDll(false);
+		rstring = L"注射";
+	}
 	
 
 	
@@ -669,7 +678,7 @@ void CGuaGua2Dlg::OnBnClickedCheckLeftclick()
 {
 	if (g_currentGameObj == nullptr)return;
 
-	g_currentGameObj->enableLeftClick(IsDlgButtonChecked(IDC_CHECK_LEFTCLICK));
+	//g_currentGameObj->enableLeftClick(IsDlgButtonChecked(IDC_CHECK_LEFTCLICK));
 }
 
 

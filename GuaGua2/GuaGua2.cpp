@@ -37,7 +37,7 @@ CGuaGua2App::CGuaGua2App()
 
 CGuaGua2App theApp;
 
-GameObj* g_currentGameObj = nullptr;
+std::shared_ptr<GameObj> g_currentGameObj = nullptr;
 BOOL CGuaGua2App::InitInstance()
 {
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要

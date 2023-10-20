@@ -17,7 +17,7 @@ public:
 		HWND gpsValueWnd;
 	};
 
-	std::vector<GameObj> gameUserObjs;
+	std::vector<std::shared_ptr<GameObj>> gameUserObjs;
 
 	void findObj()
 	{
@@ -34,7 +34,7 @@ public:
 				CString xt = windowTitle;
 
 				GetWindowThreadProcessId(hWnd, &pid);
-				gameUserObjs.emplace_back(GameObj(hWnd, pid, xt));
+				gameUserObjs.emplace_back(std::make_shared<GameObj>(hWnd, pid, xt));
 			}
 		}
 	}
