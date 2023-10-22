@@ -64,6 +64,11 @@ void CSelectUserDlg::OnBnClickedButton1()
 void CSelectUserDlg::OnBnClickedOk()
 {
 	int user = m_gameUser.GetCurSel();
+	if (user == -1)
+	{
+		AfxMessageBox(_T("没有选中角色"));
+		return;
+	}
 	g_currentGameObj = ProcessFind::getInstance()->gameUserObjs[user];
 	CDialogEx::OnOK();
 }

@@ -16,8 +16,23 @@ void GameObj::workthread()
 		return;
 	}
 	bool bFindedRightface = false;
+	
+	GPSXY targetGPSXY[4];
+	int targetPost = 0;
 	while (!bExit)
 	{
+		//update targetGPSXY
+		targetGPSXY[0].x = settingGPSX  ;
+		targetGPSXY[0].y = settingGPSY  ;
+		targetGPSXY[1].x = settingGPSX - m_ConfigItem.areaOffset;
+		targetGPSXY[1].y = settingGPSY ;
+
+		targetGPSXY[2].x = settingGPSX - m_ConfigItem.areaOffset;
+		targetGPSXY[2].y = settingGPSY + m_ConfigItem.areaOffset;
+
+		targetGPSXY[3].x = settingGPSX ;
+		targetGPSXY[3].y = settingGPSY + m_ConfigItem.areaOffset;
+
 		loopcount++;
 		DWORD dt = WaitForSingleObject(*m_ExitEvent, 100);
 		if (dt == WAIT_OBJECT_0)break;
@@ -27,6 +42,7 @@ void GameObj::workthread()
 		move_one_offset = m_ConfigItem.stepOffset;
 		if (m_ConfigItem.NP && hsn.info.np < 50)
 		{
+			logFunc(L"press5 for NP");
 			Press5_forNP();
 		}
 
@@ -69,28 +85,31 @@ void GameObj::workthread()
 		}
 		if (!bFindedRightface)
 			continue;
+
+		//logFunc(L"handleAttack begin");
 		handleAttack();
+		//logFunc(L"handleAttack End");
+		//logFunc(L"checkIfoutGPS begin");
+		bool b = checkIfoutGPS();
 
-		if (checkIfoutGPS())
-			continue;
-
-		if (bSplit)
+		//logFunc(L"checkIfoutGPS end");
+		if (!b)
 		{
-			
+			if (goto_XY(currentGPSX, currentGPSY,targetGPSXY[targetPost %4]))
+				targetPost++;
 		}
-		else
+		b = false;
+		if (!b)
 		{
-			if (!bNeedGoCenter)
+			switch (loopcount/2 % 4)
 			{
-				switch (loopcount % 4)
-				{
-				case 0:	move_top_one(); break;
-				case 1: move_right_one(); break;
-				case 2: move_down_one(); break;
-				case 3: move_left_one(); break;
-				}
+			case 0:	move_top_one(); break;
+			case 1: move_right_one(); break;
+			case 2: move_down_one(); break;
+			case 3: move_left_one(); break;
 			}
 		}
+
 		Sleep(50);
 	}
 }
@@ -146,7 +165,7 @@ void GameObj::handleAttack()
 		}
 		if (m_ConfigItem.kTime > 0 && (dNow - m_ConfigItem.last_kTime > m_ConfigItem.kTime * 1000))
 		{
-			m_ConfigItem.cout_k++; this->FKey('K'); m_ConfigItem.last_kTime = dNow;
+			m_ConfigItem.cout_k++; this->FKey('K'); m_ConfigItem.last_kTime = dNow; logFunc(L"press K");
 		}
 		this->gobackMainFun(m_ConfigItem.mainFunc);
 

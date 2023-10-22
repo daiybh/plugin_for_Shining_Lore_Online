@@ -70,4 +70,5 @@ public:
 	afx_msg void OnBnClickedCheckLeftclick();
 	afx_msg void OnBnClickedButtonSplit();
 	afx_msg void OnBnClickedButtonSplit2();
+	CListBox m_logListBox;
 };

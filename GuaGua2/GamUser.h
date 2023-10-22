@@ -60,7 +60,14 @@ public:
 	}
 	CString m_dllPath;
 	bool m_bInjected = false;
-	void startWork() {
+	std::function<void(CString)> m_logFunc = nullptr;
+	void logFunc(CString log)
+	{
+		if (m_logFunc != nullptr)
+			m_logFunc(log);
+	}
+	void startWork(std::function<void(CString)> logFunc) {
+		m_logFunc = logFunc;
 		m_workthread =new  std::thread(&GameObj::workthread, this);
 	}
 	std::thread *m_workthread=nullptr;
@@ -82,12 +89,53 @@ public:
 		hsn.getGPS(currentGPSX, currentGPSY);
 
 	}
+	struct GPSXY {
+		int x;
+		int y;
+	};
+	bool goto_XY(int curX,int curY, GPSXY destGPS)
+	{
+		if (curX == destGPS.x && curY== destGPS.y)
+		{
+			return true;
+		}
+		CString  showText;
+		showText.Format(L"goto [%d,%d]-->[%d,%d]", curX, curY, destGPS.x, destGPS.y);
+		logFunc(showText);
+		if (curX < destGPS.x)
+		{
+			showText.Format(L"curX(%d)小于 destX(%d) 往左", curX, destGPS.x);
+			logFunc(showText);
+			this->move_left_one();
+		}
+		else if (curX > destGPS.x)
+		{
+			showText.Format(L"curX(%d)大于 destX(%d) 往右", curX, destGPS.x);
+			logFunc(showText);
+			this->move_right_one();
+		}
+		else if (curY < destGPS.y)
+		{
+			showText.Format(L"curY(%d)小于 destY(%d) 往下", curY, destGPS.y);
+			logFunc(showText);
+			this->move_down_one();
+		}
+		else if (curY > destGPS.y)
+		{
+			showText.Format(L"curY(%d)大于 destY(%d) 往上", curY, destGPS.y);
+			logFunc(showText);
+			this->move_top_one();
+		}
+		return false;
+	}
 	CString goto_Center( int x1, int y1, int x4, int y4)
 	{
 		CString  showText = L""; bNeedGoCenter = true;
 		if (currentGPSX < x1)
 		{
 			showText.Format(L"x(%d)小于 x1(%d) 往左", currentGPSX, x1);
+
+			//logFunc(showText);
 			this->move_left_one();
 
 			//向左了 但是x 比刚才小了，方向反了
@@ -99,15 +147,15 @@ public:
 				CString s;
 				s.Format(L"已经向左了 但是x %d 比刚才 %d 小了，方向反了",currentGPSX,lastGPSX);
 				OutputDebugString(s);
+				logFunc(s);
 				turn_map();
 			}
 		}
 		else if (currentGPSX > x4)
 		{
 			showText.Format(L"x(%d)于 x4(%d) 往右", currentGPSX, x4);
-			this->move_right_one();
-
-			
+			//logFunc(showText);
+			this->move_right_one();			
 
 			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
 			hsn.getGPS(currentGPSX, currentGPSY);
@@ -116,12 +164,14 @@ public:
 				CString s;
 				s.Format(L"已经往右了 但是x %d 比刚才 %d 大了，方向反了", currentGPSX, lastGPSX);
 				OutputDebugString(s);
+				logFunc(s);
 				turn_map();
 			}
 		}
 		else if (currentGPSY < y1)
 		{
 			showText.Format(L"y(%d)小于 y1(%d) 往下", currentGPSY, y1);
+			//logFunc(showText);
 			this->move_down_one();
 
 
@@ -133,12 +183,14 @@ public:
 				CString s;
 				s.Format(L"已经往下了 但是y %d 比刚才 %d 小了，方向反了", currentGPSY, lastGPSY);
 				OutputDebugString(s);
+				logFunc(s);
 				turn_map();
 			}
 		}
 		else if (currentGPSY > y4)
 		{
 			showText.Format(L"y(%d)大于 y4(%d) 往上", currentGPSY, y4);
+			//logFunc(showText);
 			this->move_top_one();
 
 			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
@@ -148,6 +200,7 @@ public:
 				CString s;
 				s.Format(L"已经往上了 但是y %d 比刚才 %d 大了，方向反了", currentGPSY, lastGPSY);
 				OutputDebugString(s);
+				logFunc(s);
 				turn_map();
 			}
 		}
@@ -306,6 +359,10 @@ public:
 	void Press5_forNP() {
 		FKey('4');
 	}
+	bool bAltDown() {
+
+		return m_Sharemem->getData() == 1;
+	}
 	
 	void ALT_Down()
 	{
@@ -313,12 +370,14 @@ public:
 		m_Sharemem->writeData(1);
 		::SendMessage(hWnd, WM_SYSKEYDOWN, VK_MENU, 0);
 		//::SendMessage(hWnd, WM_KEYDOWN, VK_MENU, 0);
+		Sleep(1000);
 	}
 	void ALT_Up()
 	{
 		m_Sharemem->writeData(0);
 		//key_up(VK_LMENU);
 		::SendMessage(hWnd, WM_KEYUP, VK_MENU, 0);
+		Sleep(1000);
 	}
 	void doPickup() {
 		this->pickup(center_X -10, center_y-10);
@@ -336,9 +395,9 @@ public:
 			Sleep(1);
 			};
 		
-		pRCilick(center_X,center_y-20);//身体中心
-		pRCilick(center_X-20,center_y);//身体左
-		pRCilick(center_X+20,center_y);//身体右
+		pRCilick(center_X,center_y-100);//身体中心
+		pRCilick(center_X-100,center_y);//身体左
+		pRCilick(center_X+100,center_y);//身体右
 		pRCilick(center_X,center_y);//身体下		
 	}
 	void attackCenter()
@@ -355,6 +414,7 @@ public:
 		int X = center_X - move_one_offset;
 		int Y = center_y;
 		g_GoCenterInfo.Format(L"move_left_one %d/%d", X, Y);
+		//logFunc(g_GoCenterInfo);
 		pickup(X, Y);
 	}
 	
@@ -363,7 +423,8 @@ public:
 	{
 		int X = center_X + move_one_offset;
 		int Y = center_y;
-		g_GoCenterInfo.Format(L"move_right_one %d/%d",X,Y);
+		g_GoCenterInfo.Format(L"move_right_one %d/%d", X, Y);
+		//logFunc(g_GoCenterInfo);
 		pickup(X, Y);
 	}
 
@@ -371,8 +432,9 @@ public:
 	void move_top_one(int sleep=0,bool bjustClick=false)
 	{
 		int X = center_X;
-		int Y = center_y - move_one_offset ;
+		int Y = center_y - move_one_offset*2 ;
 		g_GoCenterInfo.Format(L"move_top_one %d/%d", X, Y);
+		//logFunc(g_GoCenterInfo);
 		if (bjustClick)
 			move(X, Y,sleep);
 		else
@@ -384,8 +446,9 @@ public:
 	{
 		
 		int X = center_X;
-		int Y = center_y + move_one_offset;
+		int Y = center_y + move_one_offset/2;
 		g_GoCenterInfo.Format(L"move_top_one %d/%d", X, Y);
+		//logFunc(g_GoCenterInfo);
 		if (bjustClick)
 			move(X, Y, sleep);
 		else
@@ -401,21 +464,27 @@ public:
 		FKey(VK_F1 + func);
 	}
 	void F1() {
+		logFunc(L"press F1");
 		FKey(VK_F1);
 	}
 	void F2() {
+		logFunc(L"press F2");
 		FKey(VK_F2);
 	}
 	void F3() {
+		logFunc(L"press F3");
 		FKey(VK_F3);
 	}
 	void F4() {
+		logFunc(L"press F4");
 		FKey(VK_F4);
 	}
 	void F5() {
+		logFunc(L"press F5");
 		FKey(VK_F5);
 	}
 	void turn_map() {
+		logFunc(L"press Z");
 		FKey('Z');
 		
 	}
