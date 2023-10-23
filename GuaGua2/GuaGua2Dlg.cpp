@@ -173,7 +173,7 @@ BOOL CGuaGua2Dlg::OnInitDialog()
 	m_posOffset.SetPos(1);
 	SetTimer(timer_updateGPS, 1000, NULL);
 
-#ifndef DEBUG
+#ifdef DEBUG
 	GetDlgItem(ID_BUTTON_READMEM)->EnableWindow(false);
 	GetDlgItem(IDC_CHECK_LEFTCLICK)->EnableWindow(false);
 	GetDlgItem(IDC_CHECK_ALT)->EnableWindow(false);

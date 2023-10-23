@@ -88,13 +88,13 @@ My_GetAsyncKeyState(
 		if (g_Sharemem)
 		{
 			int a = g_Sharemem->getData();
-			sprintf_s(szstr, "My_GetAsyncKeyState %d (key:%x)=%x g_Sharemem a=%d", g_count, vKey, x, a);
+			sprintf_s(szstr, "%d My_GetAsyncKeyState  (key:%x)=%x g_Sharemem a=%d", g_count, vKey, x, a);
 			OutputDebugStringA(szstr);
 			if (a == 1)
 				return 0xffff8001;
 		}
 		else {
-			sprintf_s(szstr, "My_GetAsyncKeyState %d (key:%x)=%x g_Sharemem ==null", g_count, vKey, x);
+			sprintf_s(szstr, "%d My_GetAsyncKeyState (key:%x)=%x g_Sharemem ==null", g_count, vKey, x);
 			OutputDebugStringA(szstr);
 		}
 

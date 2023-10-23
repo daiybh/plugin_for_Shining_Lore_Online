@@ -134,7 +134,7 @@ void GameObj::handleAttack()
 	if (!m_ConfigItem.attack)return;
 	int iAttack = 100;
 
-
+	hsn.doRead();
 	if (hsn.info.HP == hsn.info.HPMax)
 	{
 		g_GoCenterInfo.Format(L"HP ÂúÁË ²»¹¥»÷");

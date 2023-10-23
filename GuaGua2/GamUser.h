@@ -78,6 +78,7 @@ public:
 		if (m_workthread && m_workthread->joinable())
 			m_workthread->join();
 		m_workthread = nullptr;
+		ALT_Up();
 	}
 	void workthread();
 	void handlePickUP();
@@ -369,15 +370,17 @@ public:
 		//Key_down(VK_MENU); 
 		m_Sharemem->writeData(1);
 		::SendMessage(hWnd, WM_SYSKEYDOWN, VK_MENU, 0);
+		::SendMessage(hWnd, WM_KEYUP, VK_MENU, 0);
 		//::SendMessage(hWnd, WM_KEYDOWN, VK_MENU, 0);
-		Sleep(1000);
+		
 	}
 	void ALT_Up()
 	{
 		m_Sharemem->writeData(0);
 		//key_up(VK_LMENU);
+		::SendMessage(hWnd, WM_SYSKEYDOWN, VK_MENU, 0);
 		::SendMessage(hWnd, WM_KEYUP, VK_MENU, 0);
-		Sleep(1000);
+		
 	}
 	void doPickup() {
 		this->pickup(center_X -10, center_y-10);
