@@ -372,7 +372,8 @@ void CGuaGua2Dlg::OnBnClickedButtonStart()
 		g_currentGameObj->startWork([&](CString& x) {
 			if (g_bExit)return;
 			CString logstr;
-			logstr.Format(_T("%I64d.%s"), g_count++, x);
+			CTime t1 = CTime::GetCurrentTime();
+			logstr.Format(_T("%s %s"), t1.Format(L"%M:%S"), x);
 			m_logListBox.InsertString(0,logstr);
 
 			while (m_logListBox.GetCount() > 20)
