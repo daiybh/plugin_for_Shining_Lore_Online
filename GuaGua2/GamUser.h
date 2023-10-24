@@ -78,7 +78,7 @@ public:
 		if (m_workthread && m_workthread->joinable())
 			m_workthread->join();
 		m_workthread = nullptr;
-		ALT_Up();
+		PressAlt(false);
 	}
 	void workthread();
 	void handlePickUP();
@@ -94,224 +94,9 @@ public:
 		int x;
 		int y;
 	};
-	bool goto_XY(int curX,int curY, GPSXY destGPS)
-	{
-		if (curX == destGPS.x && curY== destGPS.y)
-		{
-			return true;
-		}
-		CString  showText;
-		showText.Format(L"goto [%d,%d]-->[%d,%d]", curX, curY, destGPS.x, destGPS.y);
-		logFunc(showText);
-		if (curX < destGPS.x)
-		{
-			showText.Format(L"curX(%d)小于 destX(%d) 往左", curX, destGPS.x);
-			logFunc(showText);
-			this->move_left_one();
-		}
-		else if (curX > destGPS.x)
-		{
-			showText.Format(L"curX(%d)大于 destX(%d) 往右", curX, destGPS.x);
-			logFunc(showText);
-			this->move_right_one();
-		}
-		else if (curY < destGPS.y)
-		{
-			showText.Format(L"curY(%d)小于 destY(%d) 往下", curY, destGPS.y);
-			logFunc(showText);
-			this->move_down_one();
-		}
-		else if (curY > destGPS.y)
-		{
-			showText.Format(L"curY(%d)大于 destY(%d) 往上", curY, destGPS.y);
-			logFunc(showText);
-			this->move_top_one();
-		}
-		return false;
-	}
-	CString goto_Center( int x1, int y1, int x4, int y4)
-	{
-		CString  showText = L""; bNeedGoCenter = true;
-		if (currentGPSX < x1)
-		{
-			showText.Format(L"x(%d)小于 x1(%d) 往左", currentGPSX, x1);
-
-			//logFunc(showText);
-			this->move_left_one();
-
-			//向左了 但是x 比刚才小了，方向反了
-
-			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
-			hsn.getGPS(currentGPSX, currentGPSY);
-			if (currentGPSX < lastGPSX)
-			{
-				CString s;
-				s.Format(L"已经向左了 但是x %d 比刚才 %d 小了，方向反了",currentGPSX,lastGPSX);
-				OutputDebugString(s);
-				logFunc(s);
-				turn_map();
-			}
-		}
-		else if (currentGPSX > x4)
-		{
-			showText.Format(L"x(%d)于 x4(%d) 往右", currentGPSX, x4);
-			//logFunc(showText);
-			this->move_right_one();			
-
-			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
-			hsn.getGPS(currentGPSX, currentGPSY);
-			if (currentGPSX > lastGPSX)
-			{
-				CString s;
-				s.Format(L"已经往右了 但是x %d 比刚才 %d 大了，方向反了", currentGPSX, lastGPSX);
-				OutputDebugString(s);
-				logFunc(s);
-				turn_map();
-			}
-		}
-		else if (currentGPSY < y1)
-		{
-			showText.Format(L"y(%d)小于 y1(%d) 往下", currentGPSY, y1);
-			//logFunc(showText);
-			this->move_down_one();
-
-
-
-			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
-			hsn.getGPS(currentGPSX, currentGPSY);
-			if (currentGPSY < lastGPSY)
-			{
-				CString s;
-				s.Format(L"已经往下了 但是y %d 比刚才 %d 小了，方向反了", currentGPSY, lastGPSY);
-				OutputDebugString(s);
-				logFunc(s);
-				turn_map();
-			}
-		}
-		else if (currentGPSY > y4)
-		{
-			showText.Format(L"y(%d)大于 y4(%d) 往上", currentGPSY, y4);
-			//logFunc(showText);
-			this->move_top_one();
-
-			int lastGPSX = currentGPSX, lastGPSY = currentGPSY;
-			hsn.getGPS(currentGPSX, currentGPSY);
-			if (currentGPSY > lastGPSY)
-			{
-				CString s;
-				s.Format(L"已经往上了 但是y %d 比刚才 %d 大了，方向反了", currentGPSY, lastGPSY);
-				OutputDebugString(s);
-				logFunc(s);
-				turn_map();
-			}
-		}
-		else
-		{
-			showText.Format(L"正常");
-			bNeedGoCenter = false;
-		}
-
-		return showText;
-	}
-	CString g_splitText = L"";
-	bool gotoSplitPoint() {
-		int splitPointX = 3475;
-		int splitPointY = 2715;
-
-		int winWith = (rect.right - rect.left);
-		int winHeight = (rect.bottom - rect.top) ;
-		winHeight = 960;
-		winWith = 960*2;
-		int lastCurX = 0, lastCurY = 0;
-		int continueSameCount = 0;
-		do
-		{
-			hsn.getGPS(currentGPSX, currentGPSY);
-
-			int curX = hsn.bb1.x/1;
-			int curY = hsn.bb1.y/1;
-
-			
-			int destX = splitPointX / 1;
-			int destY = splitPointY / 1;
-			if (curX == destX && curY == destY)
-				break;
-			if (lastCurX == curX && lastCurY == curY)
-				continueSameCount++;
-			else
-			{
-				lastCurX = curX;
-				lastCurY = curY;
-				continueSameCount = 0;
-			}
-			int X = center_X;
-			int Y = center_y;
-
-			if (curX != destX)
-			{
-				X += (curX - destX)*winWith/960;
-			}
-			if (curY != destY)
-			{
-				Y -= (curY - destY)*winHeight/960;
-			}
-			CString x;
-			x.Format(L"\ngotoSplitPoint [%d,%d,%d,%d]  X[%d->%d] Y[%d->%d]\n",
-				curX, splitPointX, curY, splitPointY,X,center_X,Y,center_y);
-			OutputDebugString(x);
-
-			if (continueSameCount > 10)
-			{
-				break;
-			}
-			this->moveMouse(X, Y);
-			Sleep(1000);
-			this->ALT_Down();
-			this->LeftClick(X, Y);
-
-			this->ALT_Up();
-			Sleep(1000);
-		} while (1);
-		return 1;
-	}
-	bool doSplit() {
-		{
-			gotoSplitPoint();
-			hsn.getGPS(currentGPSX, currentGPSY);
-			if (((int)hsn.bb1.x)/100 != 34 || int(hsn.bb1.y/100) != 27)
-			{				
-				g_splitText=  L"请移动到 3475/2715";
-				return false;
-			}
-			//点箱子
-			this->move_one_offset = 80;
-			int X = center_X;
-			int Y = center_y-move_one_offset;
-
-			this->moveMouse(X, Y);
-			Sleep(1000);
-			this->LeftClick(X, Y);
-			Sleep(1000);
-			//点分解
-			
-			Y = center_y + 75;
-			this->moveMouse(X, Y);
-			Sleep(1000);
-			this->LeftClick(X, Y);
-			Sleep(1000);
-			//
-			//点第一行
-			Y -= 36;
-			this->moveMouse(X, Y);
-			Sleep(1000);
-			this->LeftClick(X, Y);
-			//
-			CString x;
-			x.Format(L"成功\n最佳位置在 3475/2715\n    当前（%d/%d）",currentGPSX,currentGPSY);
-			g_splitText= x;
-			return true;
-		}
-	}
+	bool goto_XY(int curX,int curY, GPSXY destGPS);
+	CString goto_Center( int x1, int y1, int x4, int y4);
+	
 	bool  checkIfoutGPS()
 	{
 		if (settingGPSX == 0 && settingGPSY == 0)
@@ -358,29 +143,18 @@ public:
 	int center_y = 0;
 	int move_one_offset = 100;
 	void Press5_forNP() {
-		FKey('4');
+		FKey('5');
 	}
 	bool bAltDown() {
 
 		return m_Sharemem->getData() == 1;
 	}
 	
-	void ALT_Down()
-	{
-		//Key_down(VK_MENU); 
-		m_Sharemem->writeData(1);
+	void PressAlt(bool bDown)
+	{		 
+		m_Sharemem->writeData(bDown?1:0);
 		::SendMessage(hWnd, WM_SYSKEYDOWN, VK_MENU, 0);
-		::SendMessage(hWnd, WM_KEYUP, VK_MENU, 0);
-		//::SendMessage(hWnd, WM_KEYDOWN, VK_MENU, 0);
-		
-	}
-	void ALT_Up()
-	{
-		m_Sharemem->writeData(0);
-		//key_up(VK_LMENU);
-		::SendMessage(hWnd, WM_SYSKEYDOWN, VK_MENU, 0);
-		::SendMessage(hWnd, WM_KEYUP, VK_MENU, 0);
-		
+		::SendMessage(hWnd, WM_KEYUP, VK_MENU, 0);		
 	}
 	void doPickup() {
 		this->pickup(center_X -10, center_y-10);
@@ -500,48 +274,7 @@ public:
 		send_message(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 2, x, y);
 	}
 private:
-	void pickup(int DestX,int DestY )
-	{
-		this->ALT_Down();
-		int x1, x2, y1, y2;
-		x1 = x2 = center_X;
-		y1 = y2 = center_y;
-		if (DestX > center_X)
-		{
-			x1 = center_X;
-			x2 = DestX;
-		}
-		else if (DestX < center_X)
-		{
-			x2 = center_X;
-			x1 = DestX;
-		}
-		else if (DestY < center_y)
-		{
-			y2 = center_y;
-			y1 = DestY;
-		}
-		else if (DestY > center_y)
-		{
-			y1 = center_y;
-			y2 = DestY;
-
-		}
-
-		for (int x = x1; x <= x2; x += 5)
-		{
-			for (int y = y1; y <=  y2; y += 5)
-			{// 模拟鼠标左键单击  
-
-				move(x, y);
-				Sleep(10);
-				if (bExit)return;
-			}
-		}
-
-		Sleep(1000);
-		this->ALT_Up();
-	}
+	void pickup(int DestX,int DestY );
 	void FKey(byte key) {
 		Key_down(key);
 		key_up(key);

@@ -50,8 +50,8 @@ public:
 	void getGPS(int& x, int& y)
 	{
 		readMem(0x0099c134, (0x0400E0c8 - 0x0400df00), &bb1, sizeof(bb1));
-		x = (int)bb1.x / 100;
-		y = (int)bb1.y / 100;		
+		x = (int)bb1.x / 10;
+		y = (int)bb1.y / 10;		
 	}
 	struct Info {
 		int HP = 0;

@@ -121,6 +121,7 @@ BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_ALT, &CGuaGua2Dlg::OnBnClickedCheckAlt)
 	ON_BN_CLICKED(IDC_BUTTON_KILLTASK, &CGuaGua2Dlg::OnBnClickedButtonKilltask)
 	ON_BN_CLICKED(IDC_CHECK_LEFTCLICK, &CGuaGua2Dlg::OnBnClickedCheckLeftclick)
+	ON_BN_CLICKED(IDC_CHECK_PRESSK, &CGuaGua2Dlg::OnBnClickedCheck2)
 END_MESSAGE_MAP()
 
 
@@ -348,6 +349,7 @@ void CGuaGua2Dlg::OnBnClickedOk()
 	item.f5Time = GetDlgItemInt(IDC_EDIT_TIME_F5);
 	item.kTime = GetDlgItemInt(IDC_EDIT_TIME_F6);
 	item.mainFunc = m_mainFuncType;
+	item.bPressK = IsDlgButtonChecked(IDC_CHECK_PRESSK);
 
 	item.stepOffset = m_posOffset2.GetPos();
 	Config c;
@@ -673,9 +675,9 @@ void CGuaGua2Dlg::OnBnClickedCheckAlt()
 {
 	if (g_currentGameObj == nullptr )return;
 	if (IsDlgButtonChecked(IDC_CHECK_ALT))
-		g_currentGameObj->ALT_Down();
+		g_currentGameObj->PressAlt(true);
 	else
-		g_currentGameObj->ALT_Up();
+		g_currentGameObj->PressAlt(false);
 }
 
 
@@ -708,4 +710,10 @@ void CGuaGua2Dlg::OnBnClickedButtonSplit()
 void CGuaGua2Dlg::OnBnClickedButtonSplit2()
 {
 
+}
+
+
+void CGuaGua2Dlg::OnBnClickedCheck2()
+{
+	g_currentGameObj->m_ConfigItem.bPressK = IsDlgButtonChecked(IDC_CHECK_PRESSK);
 }

@@ -23,6 +23,7 @@ struct ConfigItem {
 	int     f4Time=4;
 	int     f5Time=5;
 	int     kTime=5;
+	bool    bPressK = false;
 
 	int     cout_f1 = 0;
 	int     cout_f2 = 0;
@@ -65,6 +66,7 @@ public:
 		WritePrivateProfileString(pKey, L"areaOffset", to_string(ci.areaOffset), jsonPath);
 		WritePrivateProfileString(pKey, L"NP", to_string(ci.NP), jsonPath);
 		WritePrivateProfileString(pKey, L"pickup", to_string(ci.pickup), jsonPath);
+		WritePrivateProfileString(pKey, L"bPressK", to_string(ci.bPressK), jsonPath);
 		WritePrivateProfileString(pKey, L"pickupTime", to_string(ci.pickupTime), jsonPath);
 		WritePrivateProfileString(pKey, L"attack", to_string(ci.attack), jsonPath);
 		WritePrivateProfileString(pKey, L"mainFun", to_string(ci.mainFunc), jsonPath);
@@ -82,6 +84,7 @@ public:
 		ci.areaOffset = GetPrivateProfileInt(pKey,L"areaOffset", ci.areaOffset, jsonPath);
 		ci.NP = GetPrivateProfileInt(pKey,L"NP", ci.NP, jsonPath);
 		ci.pickup = GetPrivateProfileInt(pKey,L"pickup", ci.pickup, jsonPath);
+		ci.bPressK = GetPrivateProfileInt(pKey,L"bPressK", ci.bPressK, jsonPath);
 		ci.pickupTime = GetPrivateProfileInt(pKey,L"pickupTime", ci.pickupTime, jsonPath);
 		ci.attack = GetPrivateProfileInt(pKey,L"attack", ci.attack, jsonPath);
 		ci.mainFunc = GetPrivateProfileInt(pKey,L"mainFun", ci.mainFunc, jsonPath);
