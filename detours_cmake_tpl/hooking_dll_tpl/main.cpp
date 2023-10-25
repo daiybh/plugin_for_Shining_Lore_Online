@@ -13,26 +13,26 @@ HWND GetCurrentWindowHandle()
 	HWND hWnd = GetForegroundWindow();
 	return hWnd;
 }
-
-// 获取当前窗口的名称  
-LPCTSTR GetCurrentWindowName()
-{
-	HWND hWnd = GetCurrentWindowHandle();
-
-	// 获取窗口的标题文本长度  
-	int length = GetWindowTextLength(hWnd);
-
-	// 分配用于存储窗口标题文本的缓冲区  
-	TCHAR* buffer = new TCHAR[length + 1];
-
-	// 获取窗口的标题文本  
-	GetWindowText(hWnd, buffer, length + 1);
-	TCHAR szstr[256];
-	wsprintf(szstr, "GetCurrentWindowName %d (%s)  %x %d", g_count, buffer, (int)hWnd, GetCurrentProcessId());
-	OutputDebugStringA(szstr);
-	OutputDebugString(buffer);
-	return buffer;
-}
+//
+//// 获取当前窗口的名称  
+//LPCTSTR GetCurrentWindowName()
+//{
+//	HWND hWnd = GetCurrentWindowHandle();
+//
+//	// 获取窗口的标题文本长度  
+//	int length = GetWindowTextLength(hWnd);
+//
+//	// 分配用于存储窗口标题文本的缓冲区  
+//	TCHAR* buffer = new TCHAR[length + 1];
+//
+//	// 获取窗口的标题文本  
+//	GetWindowText(hWnd, buffer, length + 1);
+//	TCHAR szstr[256];
+//	wsprintf(szstr, "GetCurrentWindowName %d (%s)  %x %d", g_count, buffer, (int)hWnd, GetCurrentProcessId());
+//	OutputDebugStringA(szstr);
+//	OutputDebugString(buffer);
+//	return buffer;
+//}
 
 
 
@@ -82,18 +82,15 @@ My_GetAsyncKeyState(
 	SHORT x = pGetAsyncKeyState(vKey);
 
 	if (vKey == 0x12)
-	{
-		GetCurrentWindowName();
-		char szstr[256];
+	{	
 		if (g_Sharemem)
 		{
 			int a = g_Sharemem->getData();
-			sprintf_s(szstr, "%d My_GetAsyncKeyState  (key:%x)=%x g_Sharemem a=%d", g_count, vKey, x, a);
-			OutputDebugStringA(szstr);
 			if (a == 1)
 				return 0xffff8001;
 		}
 		else {
+			char szstr[256];
 			sprintf_s(szstr, "%d My_GetAsyncKeyState (key:%x)=%x g_Sharemem ==null", g_count, vKey, x);
 			OutputDebugStringA(szstr);
 		}
