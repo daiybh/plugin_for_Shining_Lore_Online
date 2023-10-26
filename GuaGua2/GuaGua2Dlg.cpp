@@ -289,6 +289,7 @@ void CGuaGua2Dlg::OnBnClickedCheckNp()
 
 void CGuaGua2Dlg::OnBnClickedCheckPickup()
 {
+	g_currentGameObj->m_ConfigItem.pickup = IsDlgButtonChecked(IDC_CHECK_PICKUP);
 }
 
 

@@ -96,26 +96,32 @@ void GameObj::workthread()
 				m_ConfigItem.cout_k++; this->FKey('K'); m_ConfigItem.last_kTime = dNow; logFunc(L"press K");
 			}
 		}
+		
 		//logFunc(L"handleAttack End");
 		//logFunc(L"checkIfoutGPS begin");
 		bool b = checkIfoutGPS();
-
-		//logFunc(L"checkIfoutGPS end");
-		if (!b)
+		if(b)continue;
+		
+		if ( m_ConfigItem.pickup)
 		{
-			if (goto_XY(currentGPSX, currentGPSY,targetGPSXY[targetPost %4]))
-				targetPost++;
+			logFunc(L"pickup begin");
+			pickup(center_X - move_one_offset, center_y - move_one_offset);
 		}
-		b = false;
-		if (!b)
-		{
-			switch (loopcount/2 % 4)
-			{
-			case 0:	move_top_one(); break;
-			case 1: move_right_one(); break;
-			case 2: move_down_one(); break;
-			case 3: move_left_one(); break;
-			}
+		else {
+			//b = true;
+		////logFunc(L"checkIfoutGPS end");
+		//if (!b)
+		//{
+		//	if (goto_XY(currentGPSX, currentGPSY,targetGPSXY[targetPost %4]))
+		//		targetPost++;
+		//}
+				switch (loopcount / 2 % 4)
+				{
+				case 0:	move_top_one(); break;
+				case 1: move_right_one(); break;
+				case 2: move_down_one(); break;
+				case 3: move_left_one(); break;
+				}
 		}
 
 		Sleep(50);
@@ -336,15 +342,17 @@ void GameObj::pickup(int DestX, int DestY)
 		y2 = DestY;
 
 	}
-
-	for (int x = x1; x <= x2; x += 5)
+	
 	{
-		for (int y = y1; y <= y2; y += 5)
-		{// Ä£ÄâÊó±ê×ó¼üµ¥»÷  
+		for (int x = x1; x <= x2; x += 5)
+		{
+			for (int y = y1; y <= y2; y += 5)
+			{// Ä£ÄâÊó±ê×ó¼üµ¥»÷  
 
-			move(x, y);
-			Sleep(10);
-			if (bExit)return;
+				move(x, y);
+				Sleep(100);
+				if (bExit)return;
+			}
 		}
 	}
 	PressAlt(false);
