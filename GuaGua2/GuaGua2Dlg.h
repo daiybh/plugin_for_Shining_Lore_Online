@@ -72,4 +72,5 @@ public:
 	afx_msg void OnBnClickedButtonSplit2();
 	CListBox m_logListBox;
 	afx_msg void OnBnClickedCheck2();
+	CSliderCtrl m_posOffset3;
 };

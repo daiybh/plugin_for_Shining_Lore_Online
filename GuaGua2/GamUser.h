@@ -141,7 +141,8 @@ public:
 	RECT rect;
 	int center_X = 0;
 	int center_y = 0;
-	int move_one_offset = 100;
+	int move_one_offset_horizontal = 100;
+	int move_one_offset_vertical = 100;
 	void Press5_forNP() {
 		FKey('5');
 	}
@@ -188,7 +189,7 @@ public:
 	
 	void move_left_one()
 	{
-		int X = center_X - move_one_offset;
+		int X = center_X - move_one_offset_horizontal;
 		int Y = center_y;
 		g_GoCenterInfo.Format(L"move_left_one %d/%d", X, Y);
 		//logFunc(g_GoCenterInfo);
@@ -198,7 +199,7 @@ public:
 
 	void move_right_one()
 	{
-		int X = center_X + move_one_offset;
+		int X = center_X + move_one_offset_horizontal;
 		int Y = center_y;
 		g_GoCenterInfo.Format(L"move_right_one %d/%d", X, Y);
 		//logFunc(g_GoCenterInfo);
@@ -209,7 +210,7 @@ public:
 	void move_top_one(int sleep=0,bool bjustClick=false)
 	{
 		int X = center_X;
-		int Y = center_y - move_one_offset*2 ;
+		int Y = center_y - move_one_offset_vertical*2 ;
 		g_GoCenterInfo.Format(L"move_top_one %d/%d", X, Y);
 		//logFunc(g_GoCenterInfo);
 		if (bjustClick)
@@ -223,7 +224,7 @@ public:
 	{
 		
 		int X = center_X;
-		int Y = center_y + move_one_offset/2;
+		int Y = center_y + move_one_offset_vertical /2;
 		g_GoCenterInfo.Format(L"move_top_one %d/%d", X, Y);
 		//logFunc(g_GoCenterInfo);
 		if (bjustClick)

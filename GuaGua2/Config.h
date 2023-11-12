@@ -7,7 +7,8 @@
 struct ConfigItem {
 	std::wstring name;
 	int    areaOffset=5;
-	int    stepOffset = 100;
+	int    stepOffset_horizontal = 100;
+	int    stepOffset_vertical = 100;
 	bool     NP=false;
 	bool     pickup=false;
 	int     pickupTime=1;

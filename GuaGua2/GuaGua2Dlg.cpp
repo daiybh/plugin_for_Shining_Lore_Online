@@ -81,6 +81,7 @@ void CGuaGua2Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_RADIO_F1, m_mainFuncType);
 	DDX_Control(pDX, IDC_RADIO_F1, m_radio_FUN);
 	DDX_Control(pDX, IDC_LIST1, m_logListBox);
+	DDX_Control(pDX, IDC_SLIDER_POSOFFSET3, m_posOffset3);
 }
 
 BEGIN_MESSAGE_MAP(CGuaGua2Dlg, CDialogEx)
@@ -317,7 +318,8 @@ void CGuaGua2Dlg::OnCbnSelchangeComboGameuser()
 		m_mainFuncType = item.mainFunc;
 
 		m_posOffset.SetPos(item.areaOffset);
-		m_posOffset2.SetPos(item.stepOffset);
+		m_posOffset2.SetPos(item.stepOffset_horizontal);
+		m_posOffset3.SetPos(item.stepOffset_vertical);
 		CheckDlgButton(IDC_CHECK_NP, item.NP);
 		CheckDlgButton(IDC_CHECK_ATTACK, item.attack);
 		CheckDlgButton(IDC_CHECK_PICKUP, item.pickup);
@@ -352,7 +354,8 @@ void CGuaGua2Dlg::OnBnClickedOk()
 	item.mainFunc = m_mainFuncType;
 	item.bPressK = IsDlgButtonChecked(IDC_CHECK_PRESSK);
 
-	item.stepOffset = m_posOffset2.GetPos();
+	item.stepOffset_horizontal = m_posOffset2.GetPos();
+	item.stepOffset_vertical = m_posOffset3.GetPos();
 	Config c;
 	c.save(item);
 
@@ -586,7 +589,8 @@ void CGuaGua2Dlg::loadNP()
 
 	SetDlgItemText(IDC_STATIC_GOCENTERINFO, g_currentGameObj->g_GoCenterInfo);
 
-	g_currentGameObj->m_ConfigItem.stepOffset = m_posOffset2.GetPos();
+	g_currentGameObj->m_ConfigItem.stepOffset_horizontal = m_posOffset2.GetPos();
+	g_currentGameObj->m_ConfigItem.stepOffset_vertical = m_posOffset3.GetPos();
 
 	gpsText.Format(L"设置:%d/%d 偏移%d \r\n当前:%d/%d", 
 		g_currentGameObj->settingGPSX, g_currentGameObj->settingGPSY,

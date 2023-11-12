@@ -39,7 +39,8 @@ void GameObj::workthread()
 		hsn.getGPS(currentGPSX, currentGPSY);
 		hsn.doRead();
 
-		move_one_offset = m_ConfigItem.stepOffset;
+		move_one_offset_horizontal = m_ConfigItem.stepOffset_horizontal;
+		move_one_offset_vertical = m_ConfigItem.stepOffset_vertical;
 		if (m_ConfigItem.NP && hsn.info.np < 50)
 		{
 			logFunc(L"press5 for NP");
@@ -49,12 +50,14 @@ void GameObj::workthread()
 		bFindedRightface = true;
 		if (!bFindedRightface)
 		{
-			int oldmove_one_offset = move_one_offset;
+			int oldmove_one_offset_horizontal = move_one_offset_horizontal;
+			int oldmove_one_offset_vertical = move_one_offset_vertical;
 			for (int y = 0; y < 4; y++)
 			{
 				turn_map();
 				Sleep(1000);
-				move_one_offset = 100;
+				move_one_offset_horizontal = 100;
+				move_one_offset_vertical = 100;
 				hsn.getGPS(currentGPSX, currentGPSY);
 				int lastX = hsn.bb1.x;
 				int lastY = hsn.bb1.y;
@@ -81,7 +84,8 @@ void GameObj::workthread()
 					OutputDebugString(x);
 				}
 			}
-			move_one_offset = oldmove_one_offset;
+			move_one_offset_horizontal = oldmove_one_offset_horizontal;
+			move_one_offset_vertical = oldmove_one_offset_vertical;
 		}
 		if (!bFindedRightface)
 			continue;
@@ -105,7 +109,7 @@ void GameObj::workthread()
 		if ( m_ConfigItem.pickup)
 		{
 			logFunc(L"pickup begin");
-			pickup(center_X - move_one_offset, center_y - move_one_offset);
+			pickup(center_X - move_one_offset_horizontal, center_y - move_one_offset_vertical);
 		}
 		else {
 			//b = true;

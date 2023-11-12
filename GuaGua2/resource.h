@@ -46,6 +46,7 @@
 #define IDC_STATIC_PICKUP               1033
 #define IDC_SLIDER_POSOFFSET2           1034
 #define IDC_BUTTON_REFRESH              1035
+#define IDC_SLIDER_POSOFFSET3           1035
 #define IDC_BUTTON_START                1036
 #define IDC_STATIC_GOCENTERINFO         1037
 #define IDC_BUTTON_PICKUP               1038
@@ -75,7 +76,6 @@
 #define IDC_STATIC_F6                   1061
 #define IDC_STATIC_CURUSER              1062
 #define IDC_LIST1                       1063
-#define IDC_CHECK2                      1064
 #define IDC_CHECK_PRESSK                1064
 
 // Next default values for new objects
