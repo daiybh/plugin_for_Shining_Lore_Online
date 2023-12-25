@@ -95,7 +95,7 @@ void GameObj::workthread()
 		if (m_ConfigItem.bPressK)
 		{
 			uint64_t dNow = GetTickCount();
-			if (m_ConfigItem.kTime > 0 && (dNow - m_ConfigItem.last_kTime > m_ConfigItem.kTime * 1000))
+			if (m_ConfigItem.kTime > 0 && (dNow - m_ConfigItem.last_kTime > m_ConfigItem.kTime ))
 			{
 				m_ConfigItem.cout_k++; this->FKey('K'); m_ConfigItem.last_kTime = dNow; logFunc(L"press K");
 			}

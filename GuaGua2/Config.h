@@ -77,12 +77,18 @@ public:
 		WritePrivateProfileString(pKey, L"f4Time", to_string(ci.f4Time), jsonPath);
 		WritePrivateProfileString(pKey, L"f5Time", to_string(ci.f5Time), jsonPath);		
 		WritePrivateProfileString(pKey, L"kTime", to_string(ci.kTime), jsonPath);		
+
+
+		WritePrivateProfileString(pKey, L"stepOffset_horizontal", to_string(ci.stepOffset_horizontal), jsonPath);
+		WritePrivateProfileString(pKey, L"stepOffset_vertical", to_string(ci.stepOffset_vertical), jsonPath);
 	}
 	void load(ConfigItem &ci) {
 		std::wstring jsonPathA = getJsonPath(ci.name);
 		const TCHAR* jsonPath = jsonPathA.c_str();
 		const TCHAR* pKey = ci.name.c_str();
 		ci.areaOffset = GetPrivateProfileInt(pKey,L"areaOffset", ci.areaOffset, jsonPath);
+		ci.stepOffset_horizontal = GetPrivateProfileInt(pKey,L"stepOffset_horizontal", ci.stepOffset_horizontal, jsonPath);
+		ci.stepOffset_vertical = GetPrivateProfileInt(pKey,L"stepOffset_vertical", ci.stepOffset_vertical, jsonPath);
 		ci.NP = GetPrivateProfileInt(pKey,L"NP", ci.NP, jsonPath);
 		ci.pickup = GetPrivateProfileInt(pKey,L"pickup", ci.pickup, jsonPath);
 		ci.bPressK = GetPrivateProfileInt(pKey,L"bPressK", ci.bPressK, jsonPath);
